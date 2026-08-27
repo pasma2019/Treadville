@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --soil: #16110d;       /* volcanic soil — base dark */
+  --soil-raised: #221a13;
+  --parchment: #ece3ce;  /* unbleached linen, not stock cream */
+  --line: rgba(236, 227, 206, 0.14);
+
+  /* Per-category accent — the "terroir" switches, the system doesn't */
+  --accent-coffee: #a8461f;
+  --accent-tea: #5c7440;
+  --accent-horticulture: #93a13c;
+  --accent-grains: #c99a3d;
+  --accent: var(--accent-coffee);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--soil);
+  color: var(--parchment);
+  font-family: var(--font-body), sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--soil);
+}
