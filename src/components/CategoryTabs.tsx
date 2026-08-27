@@ -1,14 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { categoryAccent } from "@/lib/accents";
 import type { Category } from "@/lib/types";
-
-const ACCENT_VAR: Record<string, string> = {
-  coffee: "var(--accent-coffee)",
-  tea: "var(--accent-tea)",
-  horticulture: "var(--accent-horticulture)",
-  grains: "var(--accent-grains)",
-};
 
 export default function CategoryTabs({
   categories,
@@ -21,14 +15,24 @@ export default function CategoryTabs({
     <div className="flex flex-wrap gap-3">
       {categories.map((cat) => {
         const active = cat.slug === activeSlug;
+        const accent = categoryAccent(cat.slug);
+        if (active) {
+          return (
+            <Link
+              key={cat.id}
+              href={`/shop/${cat.slug}`}
+              style={{ borderColor: accent, color: accent }}
+              className="border px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors"
+            >
+              {cat.name}
+            </Link>
+          );
+        }
         return (
           <Link
             key={cat.id}
             href={`/shop/${cat.slug}`}
-            style={active ? { borderColor: ACCENT_VAR[cat.slug], color: ACCENT_VAR[cat.slug] } : undefined}
-            className={`border px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors ${
-              active ? "" : "border-[var(--line)] text-[var(--parchment)]/60 hover:text-[var(--parchment)]"
-            }`}
+            className="border border-[var(--line)] px-4 py-2 font-mono text-xs uppercase tracking-widest text-[var(--parchment)]/60 transition-colors hover:text-[var(--parchment)]"
           >
             {cat.name}
           </Link>

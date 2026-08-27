@@ -1,17 +1,68 @@
 @import "tailwindcss";
 
-:root {
-  --soil: #16110d;       /* volcanic soil — base dark */
-  --soil-raised: #221a13;
-  --parchment: #ece3ce;  /* unbleached linen, not stock cream */
-  --line: rgba(236, 227, 206, 0.14);
+/* ============================================================
+   TREADVILLE — DESIGN TOKENS
+   Primary source of the visual system. Future pages consume
+   these tokens; do not scatter arbitrary values across components.
+   ============================================================ */
 
-  /* Per-category accent — the "terroir" switches, the system doesn't */
+:root {
+  /* --- Volcanic / espresso dark surfaces --- */
+  --soil: #16110d;            /* volcanic soil — base dark */
+  --soil-raised: #201812;     /* raised dark surface (espresso) */
+  --soil-muted: #0e0b08;      /* deepest dark — for light-page overlays */
+  --espresso: #241a12;        /* espresso field surface */
+
+  /* --- Bone / ivory light surfaces --- */
+  --bone: #f4efe4;            /* primary light surface */
+  --ivory: #efe8d8;           /* soft ivory panel */
+  --linen: #e6dfcd;           /* deeper sacrifice panel / hairline on light */
+  --parchment: #ece3ce;       /* unbleached linen text light-on-dark */
+
+  /* --- Restrained metallics --- */
+  --bronze: #b08d57;          /* muted bronze for subtle metallic moments */
+  --copper: #a8461f;          /* roasted-copper primary accent (== accent-coffee) */
+
+  /* --- Category accents ("terroir" switches, the system doesn't) --- */
   --accent-coffee: #a8461f;
   --accent-tea: #5c7440;
   --accent-horticulture: #93a13c;
   --accent-grains: #c99a3d;
   --accent: var(--accent-coffee);
+
+  /* --- Lines / borders --- */
+  --line: rgba(236, 227, 206, 0.14);        /* hairline on dark */
+  --line-strong: rgba(236, 227, 206, 0.28);
+  --line-light: rgba(22, 17, 13, 0.16);     /* hairline on light */
+
+  /* --- Shadows (subtle, no glow-floods) --- */
+  --shadow-soft: 0 1px 2px rgba(14, 11, 8, 0.24);
+  --shadow-lift: 0 8px 24px rgba(14, 11, 8, 0.28);
+  --shadow-float: 0 16px 40px rgba(14, 11, 8, 0.32);
+
+  /* --- Glass material --- */
+  --glass-bg: rgba(20, 15, 11, 0.55);
+  --glass-bg-light: rgba(244, 239, 228, 0.12);
+  --glass-border: rgba(236, 227, 206, 0.18);
+  --glass-border-light: rgba(22, 17, 13, 0.14);
+  --glass-blur: 16px;
+  --glass-blur-strong: 24px;
+
+  /* --- Motion --- */
+  --dur-fast: 160ms;
+  --dur: 260ms;
+  --dur-slow: 520ms;
+  --dur-slower: 900ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- Content widths --- */
+  --content-narrow: 42rem;
+  --content: 64rem;          /* 1024px — previous max-w-6xl equivalent */
+  --content-wide: 76rem;
+  --content-rail: 7rem;      /* standard horizontal padding */
+  --content-rail-sm: 1.5rem;
 }
 
 * {
@@ -23,6 +74,7 @@ body {
   background: var(--soil);
   color: var(--parchment);
   font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -53,4 +105,176 @@ h3,
 ::selection {
   background: var(--accent);
   color: var(--soil);
+}
+
+/* ============================================================
+   SURFACE HELPERS — dark/light moments can alternate.
+   A page/component opts into a light surface when it needs
+   contrast against the dark base.
+   ============================================================ */
+
+.surface-light {
+  background: var(--bone);
+  color: var(--soil);
+}
+
+.surface-dark {
+  background: var(--soil);
+  color: var(--parchment);
+}
+
+/* ============================================================
+   GLASS MATERIAL — for floating nav, cart drawer, hero
+   overlays, product metadata, contextual controls.
+   Use with restraint: a material, not a design system.
+   ============================================================ */
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.glass-light {
+  background: var(--glass-bg-light);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.glass-strong {
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+}
+
+/* ============================================================
+   MOTION FOUNDATION — reveal/stagger primitives.
+   transform + opacity only, premium ease, reduced-motion aware.
+   ============================================================ */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--dur-slow) var(--ease-smooth),
+    transform var(--dur-slow) var(--ease-smooth);
+}
+
+[data-reveal][data-reveal-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal][data-reveal-delay="1"] {
+  transition-delay: 120ms;
+}
+
+[data-reveal][data-reveal-delay="2"] {
+  transition-delay: 240ms;
+}
+
+[data-reveal][data-reveal-delay="3"] {
+  transition-delay: 360ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   BUTTON FOUNDATION — consumed by the <Button> primitive.
+   Premium type, subtle lift, smooth background, honored hover,
+   accessible focus, touch-friendly.
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 0.875rem 1.5rem;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Primary — roasted copper field, soil type */
+.btn-primary {
+  background: var(--accent);
+  color: var(--soil);
+}
+
+.btn-primary:hover {
+  background: var(--copper);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Ghost — hairline, dark-friendly */
+.btn-ghost {
+  background: transparent;
+  color: var(--parchment);
+  border-color: var(--line-strong);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Light — for use on light surfaces */
+.btn-light {
+  background: var(--bone);
+  color: var(--soil);
+}
+
+.btn-light:hover {
+  background: var(--ivory);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ============================================================
+   FOCUS VISIBILITY — global, accessible, not animation-only.
+   ============================================================ */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

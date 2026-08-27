@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "./CartContext";
+import type { Category } from "@/lib/types";
 
-export default function SiteHeader() {
+export default function SiteHeader({ categories }: { categories: Category[] }) {
   const { openCart, count } = useCart();
 
   return (
@@ -14,11 +15,14 @@ export default function SiteHeader() {
           TREADVILLE
         </Link>
         <nav className="hidden gap-8 font-mono text-xs uppercase tracking-widest text-[var(--parchment)]/70 md:flex">
-          <Link href="/shop" className="hover:text-accent">Shop</Link>
-          <Link href="/shop/coffee" className="hover:text-accent">Coffee</Link>
-          <Link href="/shop/tea" className="hover:text-accent">Tea</Link>
-          <Link href="/shop/horticulture" className="hover:text-accent">Horticulture</Link>
-          <Link href="/shop/grains" className="hover:text-accent">Grains</Link>
+          <Link href="/shop" className="hover:text-accent">
+            Shop
+          </Link>
+          {categories.map((cat) => (
+            <Link key={cat.id} href={`/shop/${cat.slug}`} className="hover:text-accent">
+              {cat.name}
+            </Link>
+          ))}
         </nav>
         <button onClick={openCart} className="relative flex items-center gap-2 font-mono text-xs uppercase tracking-widest">
           <ShoppingBag size={18} />

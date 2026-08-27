@@ -5,6 +5,7 @@ import { CartProvider } from "@/components/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import { getCategories } from "@/lib/queries";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -31,12 +32,14 @@ export const metadata: Metadata = {
     "Specialty coffee, tea, horticulture, and grains — sourced across Kenya's volcanic highlands and fertile plains.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const categories = await getCategories();
+
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
         <CartProvider>
-          <SiteHeader />
+          <SiteHeader categories={categories} />
           {children}
           <SiteFooter />
           <CartDrawer />
