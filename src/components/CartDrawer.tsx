@@ -1,37 +1,88 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { useCart } from "./CartContext";
 import Link from "next/link";
 
 export default function CartDrawer() {
   const { lines, isOpen, closeCart, removeFromCart, total } = useCart();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  const wasOpen = useRef(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        e.preventDefault();
+        closeCart();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+      wasOpen.current = true;
+      const timer = setTimeout(() => closeButtonRef.current?.focus(), 60);
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener("keydown", handleKeyDown);
+        document.body.style.overflow = "";
+      };
+    }
+    document.body.style.overflow = "";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, closeCart]);
 
   return (
     <>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60" onClick={closeCart} aria-hidden />
-      )}
+      <div
+        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-300 ease-out ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={closeCart}
+        aria-hidden
+        role="presentation"
+      />
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-full max-w-sm border-l border-[var(--line)] bg-[var(--soil-raised)] p-6 transition-transform duration-300 ${
+        ref={panelRef}
+        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col border-l border-[var(--glass-border)] bg-[var(--soil-raised)]/95 backdrop-blur transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
+        aria-label="Shopping cart"
         aria-hidden={!isOpen}
+        onKeyDown={(e) => e.key === "Escape" && closeCart()}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-[var(--glass-border)] px-6 py-6">
           <h2 className="font-display text-xl">Your order</h2>
-          <button onClick={closeCart} aria-label="Close cart" className="text-[var(--parchment)]/70 hover:text-[var(--parchment)]">
+          <button
+            ref={closeButtonRef}
+            onClick={closeCart}
+            aria-label="Close cart"
+            className="text-[var(--parchment)]/70 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          >
             <X size={20} />
           </button>
         </div>
 
         {lines.length === 0 ? (
-          <p className="mt-8 text-sm text-[var(--parchment)]/60">Nothing here yet — add a product to get started.</p>
+          <div className="flex flex-1 flex-col items-center justify-center px-6">
+            <p className="max-w-[20rem] text-center text-sm leading-relaxed text-[var(--parchment)]/60">
+              Nothing here yet — add a product to get started.
+            </p>
+          </div>
         ) : (
-          <ul className="mt-8 space-y-5">
-            {lines.map((line) => (
-              <li key={line.product.id} className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-4">
-                <div>
+          <ul className="flex-1 space-y-0 overflow-y-auto px-6 py-2">
+            {lines.map((line, idx) => (
+              <li
+                key={line.product.id}
+                className={`flex items-start justify-between gap-3 py-4 ${
+                  idx < lines.length - 1 ? "border-b border-[var(--glass-border)]" : ""
+                }`}
+              >
+                <div className="min-w-0">
                   <p className="font-display text-base leading-tight">{line.product.name}</p>
                   <p className="mt-1 font-mono text-xs text-[var(--parchment)]/60">
                     {line.qty} × KSh {line.product.price?.toLocaleString() ?? "—"}
@@ -39,7 +90,8 @@ export default function CartDrawer() {
                 </div>
                 <button
                   onClick={() => removeFromCart(line.product.id)}
-                  className="font-mono text-xs uppercase tracking-wide text-[var(--parchment)]/50 hover:text-accent"
+                  aria-label={`Remove ${line.product.name}`}
+                  className="shrink-0 font-mono text-xs uppercase tracking-wide text-[var(--parchment)]/50 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                 >
                   Remove
                 </button>
@@ -48,19 +100,21 @@ export default function CartDrawer() {
           </ul>
         )}
 
-        <div className="mt-8 border-t border-[var(--line)] pt-4">
-          <div className="flex items-center justify-between font-mono text-sm">
+        <div className="border-t border-[var(--glass-border)] bg-[var(--soil-raised)]/60 px-6 py-5">
+          <div className="flex items-baseline justify-between font-mono text-sm">
             <span className="text-[var(--parchment)]/70">Subtotal</span>
-            <span>KSh {total.toLocaleString()}</span>
+            <span className="font-display text-base text-[var(--parchment)]">
+              KSh {total.toLocaleString()}
+            </span>
           </div>
           <Link
             href="/checkout"
             onClick={closeCart}
-            className="mt-4 block w-full bg-accent px-4 py-3 text-center font-mono text-xs uppercase tracking-widest text-[var(--soil)]"
+            className="mt-4 block w-full bg-[var(--accent)] px-4 py-3 text-center font-mono text-xs uppercase tracking-widest text-[var(--soil)] transition-colors hover:bg-[var(--copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)]"
           >
             Proceed to checkout
           </Link>
-          <p className="mt-3 text-center text-xs text-[var(--parchment)]/40">
+          <p className="mt-3 text-center text-[10px] uppercase tracking-widest text-[var(--parchment)]/40">
             Prototype checkout — no payment is processed.
           </p>
         </div>
