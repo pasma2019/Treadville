@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Archivo, Space_Mono } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/CartContext";
 import CartDrawer from "@/components/CartDrawer";
@@ -7,23 +7,17 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { getCategories } from "@/lib/queries";
 
-const display = Fraunces({
+const display = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
 
-const body = Archivo({
+const body = DM_Sans({
   subsets: ["latin"],
   variable: "--font-body",
   weight: ["400", "500", "600"],
-});
-
-const mono = Space_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -36,7 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const categories = await getCategories();
 
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
         <CartProvider>
           <SiteHeader categories={categories} />

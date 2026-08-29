@@ -7,6 +7,7 @@ type RevealProps = {
   delay?: 0 | 1 | 2 | 3;
   className?: string;
   children?: ReactNode;
+  id?: string;
 };
 
 export default function Reveal({ as: Tag = "div", delay = 0, className, children, ...rest }: RevealProps) {

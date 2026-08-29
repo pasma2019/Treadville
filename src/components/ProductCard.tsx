@@ -1,34 +1,47 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
+import ProductImage from "@/components/ProductImage";
+import CategoryMark, { accentFor } from "@/components/CategoryMark";
 
-export default function ProductCard({ product }: { product: Product }) {
+type ProductCardProps = {
+  product: Product;
+  categorySlug?: string;
+  index?: number;
+  forceIdentity?: boolean;
+};
+
+export default function ProductCard({ product, categorySlug, index, forceIdentity = false }: ProductCardProps) {
+  const slug = categorySlug ?? "default";
+  const accent = accentFor(slug);
+  const eyebrowIndex =
+    typeof index === "number"
+      ? `N° ${String(index + 1).padStart(2, "0")}`
+      : "Lot";
+
   return (
     <Link
       href={`/product/${product.slug}`}
       className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--soil)]"
       aria-label={`View ${product.name}${product.price ? `, KSh ${product.price.toLocaleString()}` : ""}`}
+      style={{ ["--accent" as string]: accent }}
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--soil-raised)] shadow-[var(--shadow-soft)] transition-shadow duration-500 ease-out group-hover:shadow-[var(--shadow-lift)] group-focus-visible:shadow-[var(--shadow-lift)]">
-        {product.image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+        {product.image_url && !forceIdentity ? (
+          <ProductImage
             src={product.image_url}
             alt={product.name}
-            loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.06]"
           />
         ) : (
-          <div className="flex h-full items-center justify-center font-mono text-xs text-[var(--parchment)]/30">
-            Image pending
-          </div>
+          <ProductIdentity slug={slug} name={product.name} eyebrow={eyebrowIndex} />
         )}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[var(--soil)]/55 to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-visible:opacity-100"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[var(--soil)]/70 to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-visible:opacity-100"
         />
       </div>
       <div className="mt-4 flex items-baseline justify-between gap-3">
-        <p className="font-display text-base leading-tight text-[var(--parchment)] transition-colors duration-300 ease-out group-hover:text-[var(--parchment)]">
+        <p className="font-display text-base leading-tight text-[var(--parchment)]">
           {product.name}
         </p>
         {product.price ? (
@@ -42,5 +55,81 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
     </Link>
+  );
+}
+
+function ProductIdentity({
+  slug,
+  name,
+  eyebrow,
+}: {
+  slug: string;
+  name: string;
+  eyebrow: string;
+}) {
+  const gradient =
+    slug === "coffee"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(255, 220, 168, 0.22) 0%, rgba(14, 11, 8, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(168, 70, 31, 0.42) 0%, rgba(22, 17, 13, 0) 60%),linear-gradient(180deg, #2a160c 0%, #14080a 100%)"
+      : slug === "tea"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(196, 220, 168, 0.18) 0%, rgba(14, 18, 12, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(92, 116, 64, 0.40) 0%, rgba(22, 17, 13, 0) 60%),linear-gradient(180deg, #161c12 0%, #0a100a 100%)"
+      : slug === "horticulture"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(196, 220, 168, 0.16) 0%, rgba(14, 18, 8, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(147, 161, 60, 0.40) 0%, rgba(22, 17, 13, 0) 60%),linear-gradient(180deg, #1a1c0e 0%, #0d1006 100%)"
+      : slug === "grains"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(232, 196, 124, 0.22) 0%, rgba(14, 11, 8, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(201, 154, 61, 0.40) 0%, rgba(22, 17, 13, 0) 60%),linear-gradient(180deg, #21180a 0%, #14100a 100%)"
+      : "radial-gradient(80% 60% at 50% 20%, rgba(232, 196, 124, 0.16) 0%, rgba(14, 11, 8, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(168, 70, 31, 0.30) 0%, rgba(22, 17, 13, 0) 60%),linear-gradient(180deg, #1f1610 0%, #15100a 100%)";
+
+  return (
+    <div
+      className="absolute inset-0 flex flex-col justify-between p-5 md:p-7"
+      style={{ background: gradient }}
+    >
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-30 mix-blend-soft-light"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, rgba(236, 227, 206, 0.20) 1px, transparent 0)",
+          backgroundSize: "5px 5px",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(50% 35% at 50% 30%, rgba(255, 240, 220, 0.18) 0%, rgba(14, 11, 8, 0) 70%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-5 top-5 h-px"
+        style={{ background: "var(--accent)", opacity: 0.55 }}
+      />
+      <div className="relative flex items-start justify-between">
+        <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[var(--parchment)]/55">
+          {eyebrow}
+        </p>
+      </div>
+      {/* Editorial centre composition — single large mark as "lot signature" */}
+      <div className="relative flex flex-1 items-center justify-center">
+        <CategoryMark
+          slug={slug}
+          className="h-32 w-32 opacity-[0.18] transition-opacity duration-700 ease-out group-hover:opacity-30 md:h-40 md:w-40"
+          style={{ strokeWidth: 0.8 }}
+        />
+      </div>
+      <div className="relative">
+        <p
+          className="font-display text-[1.85rem] italic leading-[1.02] tracking-[-0.018em] text-[var(--parchment)] md:text-[2.25rem]"
+          style={{ textWrap: "balance" }}
+        >
+          {name}
+        </p>
+        <div className="mt-3 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.32em] text-[var(--parchment)]/45">
+          <span aria-hidden className="h-px w-6 bg-[var(--parchment)]/30" />
+          <span>Treadville · {slug === "default" ? "Lot" : slug}</span>
+        </div>
+      </div>
+    </div>
   );
 }

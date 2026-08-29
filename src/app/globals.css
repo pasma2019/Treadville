@@ -12,16 +12,26 @@
   --soil-raised: #201812;     /* raised dark surface (espresso) */
   --soil-muted: #0e0b08;      /* deepest dark — for light-page overlays */
   --espresso: #241a12;        /* espresso field surface */
+  --obsidian: #0a0805;        /* near-black cinematic backdrop */
+  --charcoal: #1a1410;        /* elevated charcoal panel */
+  --graphite: #221a14;        /* tertiary dark surface */
 
   /* --- Bone / ivory light surfaces --- */
   --bone: #f4efe4;            /* primary light surface */
   --ivory: #efe8d8;           /* soft ivory panel */
   --linen: #e6dfcd;           /* deeper sacrifice panel / hairline on light */
   --parchment: #ece3ce;       /* unbleached linen text light-on-dark */
+  --cream: #f7f2e6;           /* brighter cream for highlight moments */
+  --champagne: #d9c39a;       /* warm metallic highlight */
 
   /* --- Restrained metallics --- */
   --bronze: #b08d57;          /* muted bronze for subtle metallic moments */
+  --gold: #c9a24a;            /* metallic campaign gold — hero accents */
+  --gold-soft: #d9c39a;       /* champagne highlight */
   --copper: #a8461f;          /* roasted-copper primary accent (== accent-coffee) */
+  --amber: #c99a3d;           /* warm amber for grains/highlight */
+  --jade: #5c7440;            /* deep botanical green for tea */
+  --emerald: #2d4a35;         /* deeper emerald for tea environments */
 
   /* --- Category accents ("terroir" switches, the system doesn't) --- */
   --accent-coffee: #a8461f;
@@ -34,11 +44,13 @@
   --line: rgba(236, 227, 206, 0.14);        /* hairline on dark */
   --line-strong: rgba(236, 227, 206, 0.28);
   --line-light: rgba(22, 17, 13, 0.16);     /* hairline on light */
+  --line-glow: rgba(236, 227, 206, 0.06);   /* barely-there on dark */
 
   /* --- Shadows (subtle, no glow-floods) --- */
   --shadow-soft: 0 1px 2px rgba(14, 11, 8, 0.24);
   --shadow-lift: 0 8px 24px rgba(14, 11, 8, 0.28);
   --shadow-float: 0 16px 40px rgba(14, 11, 8, 0.32);
+  --shadow-cinema: 0 24px 80px rgba(0, 0, 0, 0.55);   /* for hero foreground depth */
 
   /* --- Glass material --- */
   --glass-bg: rgba(20, 15, 11, 0.55);
@@ -48,21 +60,49 @@
   --glass-blur: 16px;
   --glass-blur-strong: 24px;
 
+  /* Cinematic glass — for hero foreground overlays. Slightly lighter
+     than glass-strong so the background composition remains visible.
+     Tuned thin: low opacity, moderate blur, luminous top edge. */
+  --glass-cinema-bg: rgba(14, 11, 8, 0.30);
+  --glass-cinema-border: rgba(236, 227, 206, 0.18);
+  --glass-cinema-blur: 18px;
+
+  /* --- Typography (Phase 2D.4) ---
+     Display: Cormorant Garamond (--font-display)
+     Interface/body: DM Sans (--font-body)
+     Labels previously set in a monospace face now resolve to DM Sans,
+     keeping the letterspaced-label system without the developer feel. */
+  --font-mono: var(--font-body);
+
   /* --- Motion --- */
   --dur-fast: 160ms;
   --dur: 260ms;
   --dur-slow: 520ms;
   --dur-slower: 900ms;
+  --dur-cinema: 1400ms;        /* for hero chapter crossfade */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cinema: cubic-bezier(0.7, 0, 0.2, 1);
 
   /* --- Content widths --- */
   --content-narrow: 42rem;
   --content: 64rem;          /* 1024px — previous max-w-6xl equivalent */
   --content-wide: 76rem;
+  --content-cinema: 92rem;   /* hero composition runway */
   --content-rail: 7rem;      /* standard horizontal padding */
   --content-rail-sm: 1.5rem;
+
+  /* --- Sticky site header height (properties: py-5 + border-b) ---
+     The hero uses this to fill exactly the remaining viewport so
+     bottom slide controls stay on-screen. */
+  --site-header-h: 65px;
+
+  /* --- Cinematic display scale (Phase 2D) ---
+     Headline hierarchy for editorial moments. */
+  --display-1: clamp(3rem, 7vw + 0.5rem, 7.5rem);
+  --display-2: clamp(2.5rem, 5.5vw + 0.5rem, 5.75rem);
+  --display-3: clamp(2rem, 3.5vw + 0.5rem, 3.75rem);
 }
 
 * {
@@ -82,7 +122,7 @@ h2,
 h3,
 .font-display {
   font-family: var(--font-display), serif;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.01em;
 }
 
@@ -144,6 +184,8 @@ h3,
 }
 
 .glass-strong {
+  background: rgba(20, 15, 11, 0.60);
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur-strong));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong));
 }
@@ -277,4 +319,157 @@ textarea:focus-visible {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ============================================================
+   PHASE 2D — CINEMATIC SYSTEM
+   Glass material tuned for the hero foreground, gradient
+   backdrops that read as light rather than CSS, and editorial
+   scale utilities for the homepage.
+   ============================================================ */
+
+.glass-cinema {
+  background: var(--glass-cinema-bg);
+  border: 1px solid var(--glass-cinema-border);
+  box-shadow:
+    inset 0 1px 0 rgba(236, 227, 206, 0.10),
+    0 24px 50px rgba(0, 0, 0, 0.32);
+}
+
+.glass-light-cinema {
+  background: rgba(244, 239, 228, 0.07);
+  border: 1px solid rgba(244, 239, 228, 0.16);
+  box-shadow: inset 0 1px 0 rgba(244, 239, 228, 0.08);
+}
+
+/* Floating navigation — transparent at the top of the page, resolving
+   into a quiet glass strip once the reader starts scrolling so it never
+   reads as a boxed developer bar. */
+.site-nav {
+  background: rgba(14, 11, 8, 0.66);
+  border-bottom: 1px solid rgba(236, 227, 206, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(236, 227, 206, 0.06),
+    0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+/* Editorial display scale — driven by CSS variables for fluid type. */
+.display-1 {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+  font-size: var(--display-1);
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+}
+
+.display-2 {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+  font-size: var(--display-2);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+
+.display-3 {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+  font-size: var(--display-3);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+/* Crossfade primitive used by HeroSlideshow. We control crossfade via
+   opacity + transform only, so motion stays cheap. */
+.chapter {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity var(--dur-cinema) var(--ease-cinema),
+    transform 6000ms var(--ease-cinema);
+  pointer-events: none;
+}
+
+.chapter-active {
+  opacity: 1;
+  transform: scale(1.0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter,
+  .chapter-active {
+    transition: opacity 0.01ms;
+    transform: none;
+  }
+}
+
+/* Hairline divider with a soft accent, used for editorial section rules. */
+.rule-accent {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--line-strong) 12%,
+    var(--line-strong) 88%,
+    transparent 100%
+  );
+}
+
+.rule-accent::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4rem;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* Cinematic "spotlight" used for product/composition lighting hints
+   in the hero chapters. Aimed at the product side of the frame so the
+   light reads as a single scene light, not a centered CSS blob. */
+.spotlight-warm {
+  background: radial-gradient(
+    46% 42% at 70% 44%,
+    rgba(255, 216, 160, 0.34) 0%,
+    rgba(255, 216, 160, 0) 68%
+  );
+}
+
+.spotlight-emerald {
+  background: radial-gradient(
+    46% 42% at 72% 44%,
+    rgba(196, 220, 168, 0.26) 0%,
+    rgba(196, 220, 168, 0) 68%
+  );
+}
+
+.spotlight-amber {
+  background: radial-gradient(
+    46% 42% at 70% 46%,
+    rgba(236, 200, 128, 0.30) 0%,
+    rgba(236, 200, 128, 0) 68%
+  );
+}
+
+.spotlight-bone {
+  background: radial-gradient(
+    46% 42% at 70% 44%,
+    rgba(244, 239, 228, 0.26) 0%,
+    rgba(244, 239, 228, 0) 68%
+  );
+}
+
+/* Soft scrim under the fixed navigation so links stay legible over
+   brighter chapter frames while the header itself stays transparent. */
+.hero-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 6, 3, 0.55) 0%,
+    rgba(10, 6, 3, 0.22) 45%,
+    rgba(10, 6, 3, 0) 100%
+  );
 }

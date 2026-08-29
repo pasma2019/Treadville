@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "./CartContext";
 import type { Category } from "@/lib/types";
@@ -9,9 +10,18 @@ import type { Category } from "@/lib/types";
 export default function SiteHeader({ categories }: { categories: Category[] }) {
   const { openCart, count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -38,69 +48,77 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
   const handleMenuClose = () => {
     setMenuOpen(false);
     hamburgerRef.current?.focus();
   };
 
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/" && pathname.startsWith(href));
+
+  const desktopLink = (href: string, label: string) => {
+    const active = isActive(href);
+    return (
+      <Link
+        href={href}
+        aria-current={active ? "page" : undefined}
+        className={`group relative text-sm font-medium tracking-[0.01em] transition-colors duration-[var(--dur-fast)] focus-visible:outline-none ${
+          active
+            ? "text-[var(--parchment)]"
+            : "text-[var(--parchment)]/70 hover:text-[var(--parchment)] focus-visible:text-[var(--parchment)]"
+        }`}
+      >
+        {label}
+        <span
+          aria-hidden
+          className={`absolute inset-x-0 -bottom-1.5 h-px origin-left bg-[var(--accent)] transition-transform duration-[var(--dur)] ease-[var(--ease-out)] ${
+            active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+          }`}
+        />
+      </Link>
+    );
+  };
+
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--glass-border)] bg-[var(--soil)]/85 backdrop-blur supports-[backdrop-filter]:bg-[var(--soil)]/[0.72]">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Link href="/" className="font-display text-base tracking-wider">
-          TREADVILLE
+    <header
+      className={`sticky top-0 z-40 transition-[background-color,border-color,box-shadow] duration-300 ease-[var(--ease-out)] ${
+        scrolled
+          ? "site-nav backdrop-blur-[var(--glass-cinema-blur)]"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-[var(--site-header-h)] max-w-6xl items-center justify-between px-6">
+        <Link href="/" className="group flex items-center gap-3" onClick={handleMenuClose}>
+          <span className="font-display text-[1.4rem] font-semibold uppercase leading-none tracking-[0.14em] text-[var(--parchment)] transition-colors duration-[var(--dur-fast)] group-hover:text-white">
+            Treadville
+          </span>
+          <span aria-hidden className="hidden h-4 w-px bg-[var(--parchment)]/20 sm:block" />
+          <span className="hidden text-[9px] uppercase tracking-[0.4em] text-[var(--parchment)]/50 sm:block">
+            Kenya
+          </span>
         </Link>
 
-        <div
-          ref={menuRef}
-          id="site-mobile-menu"
-          aria-hidden={!menuOpen}
-          className={`fixed inset-0 z-40 bg-[var(--soil-raised)]/95 backdrop-blur transition-opacity duration-300 ease-out md:static md:relative md:flex md:items-center md:gap-8 md:bg-transparent md:backdrop-blur-none ${
-            menuOpen
-              ? "flex flex-col items-center justify-center opacity-100"
-              : "pointer-events-none hidden opacity-0 md:flex md:pointer-events-auto md:opacity-100"
-          }`}
+        <nav
+          aria-label="Main navigation"
+          className="hidden items-center gap-9 md:flex"
         >
-          <nav
-            aria-label="Main navigation"
-            className="flex flex-col items-center gap-6 md:flex-row md:gap-8"
-          >
-            <Link
-              ref={firstLinkRef}
-              href="/shop"
-              className="font-mono text-xs uppercase tracking-widest text-[var(--parchment)]/70 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
-              onClick={handleMenuClose}
-            >
-              Shop
-            </Link>
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/shop/${cat.slug}`}
-                className="font-mono text-xs uppercase tracking-widest text-[var(--parchment)]/70 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
-                onClick={handleMenuClose}
-              >
-                {cat.name}
-              </Link>
-            ))}
-          </nav>
-          <button
-            onClick={handleMenuClose}
-            aria-label="Close menu"
-            className="mt-10 font-mono text-xs uppercase tracking-widest text-[var(--parchment)]/60 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)] md:hidden"
-          >
-            Close
-          </button>
-        </div>
+          {desktopLink("/shop", "Shop")}
+          {categories.map((cat) => desktopLink(`/shop/${cat.slug}`, cat.name))}
+        </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-5">
           <button
             onClick={openCart}
             aria-label={`Open cart (${count} items)`}
-            className="relative flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[var(--parchment)]/70 transition-colors hover:text-[var(--parchment)]"
+            className="relative flex items-center gap-2 rounded-full px-2 text-sm text-[var(--parchment)]/70 transition-colors duration-[var(--dur-fast)] hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
           >
             <ShoppingBag size={18} />
             {count > 0 && (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-[10px] text-[var(--soil)]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-[10px] leading-none text-[var(--soil)]">
                 {count}
               </span>
             )}
@@ -111,10 +129,54 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="site-mobile-menu"
-            className="md:hidden text-[var(--parchment)]/70 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
+            className="flex items-center gap-2 text-xs font-medium tracking-[0.06em] text-[var(--parchment)]/70 transition-colors duration-[var(--dur-fast)] hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)] md:hidden"
           >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+            <span className="hidden sm:inline">{menuOpen ? "Close" : "Menu"}</span>
           </button>
+        </div>
+      </div>
+
+      <div
+        ref={menuRef}
+        id="site-mobile-menu"
+        aria-hidden={!menuOpen}
+        className={`fixed inset-0 top-[var(--site-header-h)] z-30 flex flex-col overflow-y-auto bg-[var(--soil-muted)]/[0.96] backdrop-blur-xl transition-opacity duration-300 ease-out md:hidden ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <nav
+          aria-label="Mobile navigation"
+          className="flex flex-col gap-2 px-8 py-8"
+        >
+          <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--parchment)]/40">
+            Catalogue
+          </p>
+          <Link
+            ref={firstLinkRef}
+            href="/shop"
+            onClick={handleMenuClose}
+            aria-current={isActive("/shop") ? "page" : undefined}
+            className="font-display text-3xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
+          >
+            Shop all
+          </Link>
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/shop/${cat.slug}`}
+              onClick={handleMenuClose}
+              aria-current={isActive(`/shop/${cat.slug}`) ? "page" : undefined}
+              className="font-display text-3xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
+            >
+              {cat.name}
+            </Link>
+          ))}
+        </nav>
+        <div className="mt-auto border-t border-[var(--parchment)]/10 px-8 py-6">
+          <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--parchment)]/40">
+            Volcanic Highlands · Kenya
+          </p>
         </div>
       </div>
     </header>
