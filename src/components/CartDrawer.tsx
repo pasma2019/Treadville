@@ -6,7 +6,7 @@ import { useCart } from "./CartContext";
 import Link from "next/link";
 
 export default function CartDrawer() {
-  const { lines, isOpen, closeCart, removeFromCart, total } = useCart();
+  const { lines, isOpen, closeCart, removeFromCart, count } = useCart();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLElement>(null);
   const wasOpen = useRef(false);
@@ -85,7 +85,7 @@ export default function CartDrawer() {
                 <div className="min-w-0">
                   <p className="font-display text-base leading-tight">{line.product.name}</p>
                   <p className="mt-1 font-mono text-xs text-[var(--parchment)]/60">
-                    {line.qty} × KSh {line.product.price?.toLocaleString() ?? "—"}
+                    Quantity · {line.qty}
                   </p>
                 </div>
                 <button
@@ -101,10 +101,12 @@ export default function CartDrawer() {
         )}
 
         <div className="border-t border-[var(--glass-border)] bg-[var(--soil-raised)]/60 px-6 py-5">
-          <div className="flex items-baseline justify-between font-mono text-sm">
-            <span className="text-[var(--parchment)]/70">Subtotal</span>
+          <div className="flex items-baseline justify-between">
+            <span className="font-mono text-xs uppercase tracking-[0.28em] text-[var(--parchment)]/70">
+              Items
+            </span>
             <span className="font-display text-base text-[var(--parchment)]">
-              KSh {total.toLocaleString()}
+              {count} {count === 1 ? "product" : "products"}
             </span>
           </div>
           <Link

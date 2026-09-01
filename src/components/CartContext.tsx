@@ -12,6 +12,7 @@ type CartContextValue = {
   closeCart: () => void;
   addToCart: (product: Product, qty?: number) => void;
   removeFromCart: (productId: string) => void;
+  clearCart: () => void;
   total: number;
   count: number;
 };
@@ -37,6 +38,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setLines((prev) => prev.filter((l) => l.product.id !== productId));
   };
 
+  const clearCart = () => setLines([]);
+
   const total = useMemo(() => lines.reduce((sum, l) => sum + (l.product.price ?? 0) * l.qty, 0), [lines]);
   const count = useMemo(() => lines.reduce((sum, l) => sum + l.qty, 0), [lines]);
 
@@ -49,6 +52,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         closeCart: () => setIsOpen(false),
         addToCart,
         removeFromCart,
+        clearCart,
         total,
         count,
       }}
