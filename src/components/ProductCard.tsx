@@ -22,7 +22,7 @@ export default function ProductCard({ product, categorySlug, index, forceIdentit
     <Link
       href={`/product/${product.slug}`}
       className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--soil)]"
-      aria-label={`View ${product.name}${product.price ? `, KSh ${product.price.toLocaleString()}` : ""}`}
+      aria-label={`View ${product.name}`}
       style={{ ["--accent" as string]: accent }}
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--soil-raised)] shadow-[var(--shadow-soft)] transition-shadow duration-500 ease-out group-hover:shadow-[var(--shadow-lift)] group-focus-visible:shadow-[var(--shadow-lift)]">
@@ -44,15 +44,9 @@ export default function ProductCard({ product, categorySlug, index, forceIdentit
         <p className="font-display text-base leading-tight text-[var(--parchment)]">
           {product.name}
         </p>
-        {product.price ? (
-          <p className="shrink-0 whitespace-nowrap font-mono text-xs text-[var(--parchment)]/60">
-            KSh {product.price.toLocaleString()}
-          </p>
-        ) : (
-          <p className="shrink-0 whitespace-nowrap font-mono text-xs text-[var(--accent)]">
-            Request quote
-          </p>
-        )}
+        <p className="shrink-0 whitespace-nowrap font-mono text-xs uppercase tracking-[0.28em] text-[var(--accent)]">
+          Enquire
+        </p>
       </div>
     </Link>
   );

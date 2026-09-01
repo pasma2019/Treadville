@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProductBySlug, getProducts } from "@/lib/queries";
+import { getCategories, getProductBySlug, getProducts } from "@/lib/queries";
 import ProductDetailClient from "./ProductDetailClient";
 import ProductCard from "@/components/ProductCard";
 
@@ -10,9 +10,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const product = await getProductBySlug(slug);
   if (!product || product.status !== "published") notFound();
 
+  const categories = await getCategories();
+  const category = categories.find((c) => c.id === product.category_id) ?? null;
+  const categorySlug = category?.slug ?? "";
+
   const related = (await getProducts({ publishedOnly: true }))
     .filter((p) => p.category_id === product.category_id && p.id !== product.id)
     .slice(0, 3);
+
+  const isCoffee = categorySlug === "coffee";
+  const isTea = categorySlug === "tea";
+  const isGrains = categorySlug === "grains";
+  const isHorticulture = categorySlug === "horticulture";
 
   return (
     <main>
@@ -29,17 +38,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
 
         <div>
-          <p className="font-mono text-xs uppercase tracking-widest text-accent">Single origin</p>
+          {isCoffee ? (
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">Single origin</p>
+          ) : isTea ? (
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">Highland tea</p>
+          ) : isGrains ? (
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">Grain &amp; nut</p>
+          ) : isHorticulture ? (
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">Horticultural product</p>
+          ) : (
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">Treadville product</p>
+          )}
           <h1 className="mt-3 font-display text-4xl italic leading-tight">{product.name}</h1>
           <p className="mt-5 text-sm leading-relaxed text-[var(--parchment)]/70">{product.description}</p>
-
-          <div className="mt-8 flex items-baseline gap-3">
-            {product.price ? (
-              <span className="font-mono text-2xl">KSh {product.price.toLocaleString()}</span>
-            ) : (
-              <span className="font-mono text-lg text-accent">Request quote for bulk/export</span>
-            )}
-          </div>
 
           <ProductDetailClient product={product} />
 
@@ -61,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <h2 className="font-display text-2xl">You may also like</h2>
           <div className="mt-8 grid grid-cols-2 gap-8 md:grid-cols-3">
             {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} categorySlug={categorySlug} />
             ))}
           </div>
         </section>

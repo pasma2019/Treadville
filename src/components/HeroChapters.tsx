@@ -41,10 +41,10 @@ export type Chapter = {
 
 export const CHAPTERS: Chapter[] = [
   {
-    id: "masai-coffee",
+    id: "treadville-coffee",
     index: 0,
     number: "01",
-    eyebrow: "Masai Coffee · Single Origin",
+    eyebrow: "Treadville Specialty Coffee · Single Origin",
     title: "The volcanic highlands, in a single cup.",
     subtitle:
       "Specialty Arabica from Mt. Kenya. Selected, processed, and presented under one standard of quality.",
@@ -81,7 +81,7 @@ export const CHAPTERS: Chapter[] = [
       { label: "Crema", value: "Bronze · Persistent" },
       { label: "Note", value: "Cocoa · Citrus" },
     ],
-    ctaLabel: "Discover Masai Coffee",
+    ctaLabel: "Discover Treadville Coffee",
     ctaHref: "/shop/coffee",
     secondaryCtaLabel: "See the catalogue",
     secondaryCtaHref: "/shop",
@@ -103,7 +103,7 @@ export const CHAPTERS: Chapter[] = [
     eyebrow: "Highland Tea",
     title: "Mist, leaf, and slow growth.",
     subtitle:
-      "Teadville's tea programme — highland mist, single-estate processing, and the discipline of long-form agriculture.",
+      "Treadville's tea programme — highland mist, single-estate processing, and the discipline of long-form agriculture.",
     meta: [
       { label: "Altitude", value: "Highland" },
       { label: "Process", value: "Orthodox · Slow" },
@@ -346,8 +346,8 @@ function CoffeeProductVisual({ className, style }: VisualProps) {
           <circle r="74" fill="#0d0603" opacity="0.55" />
           <circle r="74" fill="none" stroke="#c99a3d" strokeWidth="1.2" opacity="0.6" />
           <circle r="63" fill="none" stroke="#c99a3d" strokeWidth="0.7" opacity="0.3" />
-          <text textAnchor="middle" fontFamily="serif" fontStyle="italic" fontSize="36" fill="#ece3ce" letterSpacing="0.04em">
-            Masai
+          <text textAnchor="middle" fontFamily="serif" fontStyle="italic" fontSize="32" fill="#ece3ce" letterSpacing="0.04em">
+            Treadville
           </text>
           <rect x="-44" y="24" width="88" height="1" fill="#c99a3d" opacity="0.35" />
           <text textAnchor="middle" fontFamily="monospace" fontSize="10" fill="#c99a3d" letterSpacing="0.42em" y="42" opacity="0.85">
@@ -362,8 +362,8 @@ function CoffeeProductVisual({ className, style }: VisualProps) {
         <g transform="translate(1000 506)">
           <rect x="-104" y="-52" width="208" height="104" rx="4" fill="url(#ca-band)" />
           <rect x="-96" y="-44" width="192" height="88" rx="3" fill="none" stroke="#e8c47c" strokeWidth="0.6" opacity="0.5" />
-          <text textAnchor="middle" fontFamily="monospace" fontSize="16" y="-14" fill="#f4ead2" letterSpacing="0.36em">
-            MASAI
+          <text textAnchor="middle" fontFamily="monospace" fontSize="13" y="-14" fill="#f4ead2" letterSpacing="0.36em">
+            TREADVILLE
           </text>
           <rect x="-64" y="-5" width="128" height="1" fill="#2a140a" opacity="0.5" />
           <text textAnchor="middle" fontFamily="monospace" fontSize="9" y="8" fill="#2a140a" letterSpacing="0.34em" opacity="0.9">

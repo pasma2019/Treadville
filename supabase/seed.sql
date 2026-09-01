@@ -9,19 +9,19 @@ insert into categories (name, slug, description, image_url, sort_order) values
   ('Grains', 'grains', 'Demo category — real Treadville grains catalogue to be supplied by client.', '/images/category-grains.jpg', 4);
 
 insert into products (category_id, name, slug, description, price, image_url, featured, stock, status)
-select id, 'Masai Coffee Moka Espresso', 'masai-coffee-moka-espresso',
+select id, 'Treadville Specialty Coffee — Moka Espresso', 'treadville-moka-espresso',
   'A strong, aromatic espresso blend with a rich body and smooth crema, balanced with roasted cocoa, caramel sweetness, and subtle citrus brightness.',
   900, '/images/product-moka-espresso.jpg', true, 25, 'published'
 from categories where slug = 'coffee';
 
 insert into products (category_id, name, slug, description, price, image_url, featured, stock, status)
-select id, 'Masai Coffee Supreme', 'masai-coffee-supreme',
-  'Full-bodied with a smooth finish — roasted cocoa, subtle berry brightness, and a lingering aromatic warmth. Packaging inspired by Maasai heritage.',
+select id, 'Treadville Specialty Coffee — Supreme', 'treadville-supreme',
+  'Full-bodied with a smooth finish — roasted cocoa, subtle berry brightness, and a lingering aromatic warmth.',
   900, '/images/product-supreme.jpg', false, 30, 'published'
 from categories where slug = 'coffee';
 
 insert into products (category_id, name, slug, description, price, image_url, featured, stock, status)
-select id, 'Masai Coffee Kenya AA — Gold Enticing', 'masai-coffee-kenya-aa-gold',
+select id, 'Treadville Kenya AA — Gold Enticing', 'treadville-kenya-aa-gold',
   'Premium AA-grade coffee from Kenya''s high-altitude regions — large beans, rich oils, and an exceptional flavor profile.',
   1300, '/images/product-kenya-aa.jpg', true, 15, 'published'
 from categories where slug = 'coffee';
