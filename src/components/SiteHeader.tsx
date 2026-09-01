@@ -108,7 +108,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
           </span>
           <span aria-hidden className="hidden h-4 w-px bg-[var(--parchment)]/20 sm:block" />
           <span className="hidden text-[9px] uppercase tracking-[0.4em] text-[var(--parchment)]/50 sm:block">
-            Kenya
+            Africa
           </span>
         </Link>
 

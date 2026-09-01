@@ -7,6 +7,7 @@ import CategoryDiscovery from "@/components/CategoryDiscovery";
 import Provenance from "@/components/Provenance";
 import Reveal from "@/components/Reveal";
 import FeaturedSection from "@/components/FeaturedSection";
+import JournalPreview from "@/components/JournalPreview";
 import type { Product } from "@/lib/types";
 export const metadata: Metadata = {
   description:
@@ -60,6 +61,8 @@ export default async function HomePage() {
         ]}
         closing={contentMap.provenance_closing || "The collection follows."}
       />
+
+      <JournalPreview />
 
       {featured.length > 0 && (() => {
         const lead = featured[0];
@@ -171,36 +174,67 @@ export default async function HomePage() {
             </div>
             <div className="md:col-span-5">
               <ul className="space-y-4">
-                <li>
-                  <Link
-                    href="/contact"
-                    className="group block border border-[var(--line-on-light)] bg-[var(--warm-white)] p-6 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
-                  >
-                    <p className="label-on-light">General enquiry</p>
-                    <p className="mt-2 font-display text-xl italic text-[var(--ink)]">Talk to Treadville</p>
-                    <p className="mt-1 text-sm text-[var(--ink-muted)]">Speak with our team about any product line.</p>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact?type=sample"
-                    className="group block border border-[var(--line-on-light)] bg-[var(--warm-white)] p-6 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
-                  >
-                    <p className="label-on-light">Sample request</p>
-                    <p className="mt-2 font-display text-xl italic text-[var(--ink)]">Request a sample</p>
-                    <p className="mt-1 text-sm text-[var(--ink-muted)]">Cup, taste, and evaluate before you commit.</p>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact?type=quote"
-                    className="group block border border-[var(--line-on-light)] bg-[var(--warm-white)] p-6 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
-                  >
-                    <p className="label-on-light">Export &amp; wholesale</p>
-                    <p className="mt-2 font-display text-xl italic text-[var(--ink)]">Request a quote</p>
-                    <p className="mt-1 text-sm text-[var(--ink-muted)]">Volume pricing and shipping terms for international buyers.</p>
-                  </Link>
-                </li>
+                {[
+                  {
+                    href: "/contact",
+                    eyebrow: "General enquiry",
+                    headline: "Talk to Treadville",
+                    note: "Speak with our team about any product line.",
+                    accent: "var(--copper)",
+                    icon: "→",
+                  },
+                  {
+                    href: "/contact?type=sample",
+                    eyebrow: "Sample request",
+                    headline: "Request a sample",
+                    note: "Cup, taste, and evaluate before you commit.",
+                    accent: "var(--jade)",
+                    icon: "→",
+                  },
+                  {
+                    href: "/contact?type=quote",
+                    eyebrow: "Export & wholesale",
+                    headline: "Request a quote",
+                    note: "Volume pricing and shipping terms for international buyers.",
+                    accent: "var(--gold)",
+                    icon: "→",
+                  },
+                ].map((card) => (
+                  <li key={card.href}>
+                    <Link
+                      href={card.href}
+                      className="group flex items-start gap-5 border p-5 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
+                      style={{
+                        borderColor: "var(--line-on-light)",
+                        background: "var(--warm-white)",
+                      }}
+                    >
+                      <div
+                        className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center border font-mono text-[11px] transition-all duration-[var(--dur)] group-hover:w-10"
+                        style={{
+                          borderColor: card.accent,
+                          color: card.accent,
+                        }}
+                      >
+                        {card.icon}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className="label-on-light"
+                          style={{ color: card.accent }}
+                        >
+                          {card.eyebrow}
+                        </p>
+                        <p className="mt-1 font-display text-xl italic text-[var(--ink)]">
+                          {card.headline}
+                        </p>
+                        <p className="mt-1 text-sm text-[var(--ink-muted)]">
+                          {card.note}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </Reveal>

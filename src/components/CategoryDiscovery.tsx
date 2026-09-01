@@ -245,7 +245,7 @@ function LeadChapter({ cat }: { cat: Category }) {
               {cat.name}
             </h3>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--parchment)]/75 md:text-base">
-              {a.descriptor}
+              {cat.description || a.descriptor}
             </p>
             <div className="mt-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--parchment)]/85">
               <span
@@ -291,7 +291,7 @@ function CompanionChapter({ cat, index }: { cat: Category; index: number }) {
             {cat.name}
           </h3>
           <p className="mt-2 text-xs leading-relaxed text-[var(--parchment)]/70 md:text-sm">
-            {a.descriptor}
+            {cat.description || a.descriptor}
           </p>
           <div className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--parchment)]/75">
             <span
