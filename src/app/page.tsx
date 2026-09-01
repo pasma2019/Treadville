@@ -56,6 +56,7 @@ export default async function HomePage() {
         closing={contentMap.provenance_closing || "The collection follows."}
       />
 
+      {/* FEATURED — light premium, products on bright backgrounds */}
       {featured.length > 0 && (() => {
         const lead = featured[0];
         const supporting = featured.slice(1);
@@ -71,48 +72,40 @@ export default async function HomePage() {
         return (
           <section
             aria-labelledby="featured-heading"
-            className="relative border-b border-[var(--line)] px-6 py-24 md:py-32"
-            style={{ background: "var(--soil)" }}
+            className="relative surface-warm border-y border-[var(--line-on-light)] px-6 py-24 md:py-36"
           >
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(60% 50% at 0% 0%, rgba(168, 70, 31, 0.08) 0%, transparent 50%)," +
-                  "radial-gradient(50% 40% at 100% 100%, rgba(176, 141, 87, 0.06) 0%, transparent 60%)",
-              }}
-            />
             <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
-              <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-12 md:gap-10">
+              <Reveal variant="light" as="div" delay={0} className="grid grid-cols-1 items-end gap-8 md:grid-cols-12 md:gap-10">
                 <div className="md:col-span-7">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-[var(--parchment)]/50">
-                    {featuredEyebrow} · Lot cards
-                  </p>
+                  <p className="label-on-light">{featuredEyebrow} · Lot cards</p>
                   <h2
                     id="featured-heading"
-                    className="mt-4 max-w-[18ch] font-display text-3xl italic leading-[1.05] tracking-[-0.02em] text-[var(--parchment)] md:text-6xl"
+                    className="mt-4 max-w-[18ch] font-display text-3xl italic leading-[1.05] tracking-[-0.02em] text-[var(--ink)] md:text-6xl"
                   >
                     {featuredHeadline}
                   </h2>
                 </div>
                 <div className="md:col-span-5">
-                  <p className="max-w-md text-sm leading-relaxed text-[var(--parchment)]/60 md:text-base">
+                  <p className="body-on-light max-w-md md:text-lg">
                     {featuredIntro}
                   </p>
                 </div>
-              </div>
+              </Reveal>
 
               <div className="mt-14 md:mt-20">
                 <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-12">
                   <div className="lg:col-span-7">
                     <div className="relative">
                       {leadCategoryName ? (
-                        <div className="pointer-events-none absolute right-5 top-5 z-10 hidden font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--parchment)]/70 sm:block">
+                        <div className="pointer-events-none absolute right-5 top-5 z-10 hidden label-on-light sm:block">
                           Lead · {leadCategoryName}
                         </div>
                       ) : null}
-                      <ProductCard product={lead} categorySlug={leadCategory?.slug} index={0} forceIdentity />
+                      <ProductCardLight
+                        product={lead}
+                        categorySlug={leadCategory?.slug}
+                        index={0}
+                      />
                     </div>
                   </div>
                   {supporting.length > 0 ? (
@@ -122,11 +115,15 @@ export default async function HomePage() {
                         return (
                           <div key={p.id} className="relative">
                             {cat ? (
-                              <div className="pointer-events-none absolute right-5 top-5 z-10 hidden font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--parchment)]/60 sm:block">
+                              <div className="pointer-events-none absolute right-5 top-5 z-10 hidden label-on-light sm:block">
                                 {cat.name}
                               </div>
                             ) : null}
-                            <ProductCard product={p} categorySlug={cat?.slug} index={i + 1} forceIdentity />
+                            <ProductCardLight
+                              product={p}
+                              categorySlug={cat?.slug}
+                              index={i + 1}
+                            />
                           </div>
                         );
                       })}
@@ -135,19 +132,13 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line)] pt-6 md:mt-20">
-                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--parchment)]/40">
-                  The full collection
-                </p>
+              <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line-on-light)] pt-6 md:mt-20">
+                <p className="label-on-light">The full collection</p>
                 <Link
                   href="/shop"
-                  className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--parchment)]/70 transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
+                  className="btn-light-link"
                 >
-                  <span>View all</span>
-                  <span
-                    aria-hidden
-                    className="h-px w-6 bg-[var(--parchment)]/40 transition-[width,background-color] duration-[var(--dur)] ease-[var(--ease-out)] group-hover:w-10 group-hover:bg-[var(--accent)] group-focus-visible:w-10 group-focus-visible:bg-[var(--accent)]"
-                  />
+                  View all
                 </Link>
               </div>
             </div>
@@ -155,71 +146,51 @@ export default async function HomePage() {
         );
       })()}
 
+      {/* STORY — light editorial with stats */}
       <section
         aria-labelledby="story-heading"
-        className="relative border-t border-[var(--line-light)] border-b border-[var(--line)] px-6 py-32 md:py-44"
-        style={{ background: "var(--bone)", color: "var(--soil)" }}
+        className="relative surface-ivory px-6 py-24 md:py-36"
       >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-50"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(22, 17, 13, 0.04) 1px, transparent 0)",
-            backgroundSize: "8px 8px",
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(70% 50% at 20% 100%, rgba(168, 70, 31, 0.06) 0%, transparent 60%)",
-          }}
-        />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
-          <Reveal as="div" delay={0} className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
+          <Reveal variant="light" as="div" delay={0} className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
             <div className="md:col-span-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--soil)]/45">
+              <p className="label-on-light">
                 {contentMap.story_eyebrow || "The Treadville approach"}
               </p>
               <h2
                 id="story-heading"
-                className="mt-6 max-w-[16ch] font-display text-3xl leading-[1.02] tracking-[-0.025em] text-[var(--soil)] md:text-5xl lg:text-[4.5rem]"
+                className="mt-6 max-w-[16ch] font-display text-3xl leading-[1.02] tracking-[-0.025em] text-[var(--ink)] md:text-5xl lg:text-[4.5rem]"
               >
                 {contentMap.story_headline ||
                   "Three decades of Kenyan agriculture — now growing beyond coffee."}
               </h2>
             </div>
             <div className="md:col-span-7">
-              <p className="max-w-[42ch] text-base leading-relaxed text-[var(--soil)]/70 md:text-lg">
+              <p className="max-w-[42ch] text-base leading-relaxed text-[var(--ink-soft)] md:text-lg">
                 {contentMap.about_blurb ||
                   "Over 30 years of expertise in Kenyan agriculture — now expanding from specialty coffee into tea, horticulture, and grains, with the same standard of quality and traceability."}
               </p>
 
-              {/* Visual anchor — oversized editorial stat, no fake photo */}
-              <div className="mt-12 grid grid-cols-2 gap-6 border-t border-[var(--line-light)] pt-10 md:grid-cols-3 md:gap-10">
+              <div className="mt-12 grid grid-cols-2 gap-6 border-t border-[var(--line-on-light)] pt-10 md:grid-cols-3 md:gap-10">
                 <div>
-                  <p className="font-display text-5xl leading-none tracking-[-0.02em] text-[var(--soil)] md:text-6xl lg:text-7xl">
-                    30<span className="text-[var(--soil)]/40">+</span>
+                  <p className="editorial-stat">
+                    30<span className="editorial-stat-soft">+</span>
                   </p>
-                  <p className="mt-3 max-w-[18ch] font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--soil)]/55">
+                  <p className="mt-3 max-w-[18ch] label-on-light">
                     Years in Kenyan agriculture
                   </p>
                 </div>
                 <div>
-                  <p className="font-display text-5xl leading-none tracking-[-0.02em] text-[var(--soil)] md:text-6xl lg:text-7xl">
-                    04
-                  </p>
-                  <p className="mt-3 max-w-[18ch] font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--soil)]/55">
+                  <p className="editorial-stat">04</p>
+                  <p className="mt-3 max-w-[18ch] label-on-light">
                     Categories under one standard
                   </p>
                 </div>
                 <div>
-                  <p className="font-display text-5xl leading-none tracking-[-0.02em] text-[var(--soil)] md:text-6xl lg:text-7xl">
-                    80<span className="text-[var(--soil)]/40">+</span>
+                  <p className="editorial-stat">
+                    80<span className="editorial-stat-soft">+</span>
                   </p>
-                  <p className="mt-3 max-w-[18ch] font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--soil)]/55">
+                  <p className="mt-3 max-w-[18ch] label-on-light">
                     SCA specialty score
                   </p>
                 </div>
@@ -228,20 +199,190 @@ export default async function HomePage() {
           </Reveal>
 
           <Reveal
+            variant="light"
             as="div"
             delay={1}
-            className="mt-20 flex items-center gap-4 border-t border-[var(--line-light)] pt-8 md:mt-28"
+            className="mt-20 flex items-center gap-4 border-t border-[var(--line-on-light)] pt-8 md:mt-28"
           >
-            <span aria-hidden className="font-mono text-[9px] uppercase tracking-[0.4em] text-[var(--soil)]/40">
+            <span aria-hidden className="label-on-light">
               Treadville
             </span>
-            <span aria-hidden className="h-px flex-1 max-w-[6rem] bg-[var(--line-light)]" />
-            <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-[var(--soil)]/50">
+            <span aria-hidden className="h-px flex-1 max-w-[6rem] bg-[var(--line-on-light)]" />
+            <p className="label-on-light">
               {contentMap.story_closing || "Est. 30+ years · Kenya"}
             </p>
           </Reveal>
         </div>
       </section>
+
+      {/* ENQUIRY CTA — light, premium close */}
+      <section
+        aria-labelledby="enquiry-heading"
+        className="relative surface-cream px-6 py-24 md:py-36"
+      >
+        <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
+          <Reveal variant="light" as="div" delay={0} className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
+            <div className="md:col-span-7">
+              <p className="label-on-light">Engage with Treadville</p>
+              <h2
+                id="enquiry-heading"
+                className="mt-6 max-w-[18ch] font-display text-3xl leading-[1.02] tracking-[-0.025em] text-[var(--ink)] md:text-5xl lg:text-[4rem]"
+              >
+                A conversation, not a checkout.
+              </h2>
+              <p className="mt-6 max-w-[44ch] text-base leading-relaxed text-[var(--ink-soft)] md:text-lg">
+                Whether you are sourcing for a roastery, an importer, a retail
+                shelf, or a private-label programme, our team responds to
+                every enquiry directly.
+              </p>
+            </div>
+            <div className="md:col-span-5">
+              <ul className="space-y-4">
+                <li>
+                  <Link
+                    href="/contact"
+                    className="group block border border-[var(--line-on-light)] bg-[var(--warm-white)] p-6 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
+                  >
+                    <p className="label-on-light">General enquiry</p>
+                    <p className="mt-2 font-display text-xl italic text-[var(--ink)]">Talk to Treadville</p>
+                    <p className="mt-1 text-sm text-[var(--ink-muted)]">Speak with our team about any product line.</p>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact?type=sample"
+                    className="group block border border-[var(--line-on-light)] bg-[var(--warm-white)] p-6 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
+                  >
+                    <p className="label-on-light">Sample request</p>
+                    <p className="mt-2 font-display text-xl italic text-[var(--ink)]">Request a sample</p>
+                    <p className="mt-1 text-sm text-[var(--ink-muted)]">Cup, taste, and evaluate before you commit.</p>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact?type=quote"
+                    className="group block border border-[var(--line-on-light)] bg-[var(--warm-white)] p-6 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
+                  >
+                    <p className="label-on-light">Export &amp; wholesale</p>
+                    <p className="mt-2 font-display text-xl italic text-[var(--ink)]">Request a quote</p>
+                    <p className="mt-1 text-sm text-[var(--ink-muted)]">Volume pricing and shipping terms for international buyers.</p>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </section>
     </main>
+  );
+}
+
+import type { Product } from "@/lib/types";
+import ProductImage from "@/components/ProductImage";
+import CategoryMark, { accentFor } from "@/components/CategoryMark";
+
+function ProductCardLight({
+  product,
+  categorySlug,
+  index,
+}: {
+  product: Product;
+  categorySlug?: string;
+  index?: number;
+}) {
+  const slug = categorySlug ?? "default";
+  const accent = accentFor(slug);
+  const eyebrowIndex =
+    typeof index === "number" ? `N° ${String(index + 1).padStart(2, "0")}` : "Lot";
+
+  return (
+    <Link
+      href={`/product/${product.slug}`}
+      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+      aria-label={`View ${product.name}`}
+      style={{ ["--accent" as string]: accent }}
+    >
+      <div className="stage-product-card relative aspect-[4/5] w-full overflow-hidden">
+        {product.image_url ? (
+          <ProductImage
+            src={product.image_url}
+            alt={product.name}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.06]"
+          />
+        ) : (
+          <ProductIdentityLight slug={slug} name={product.name} eyebrow={eyebrowIndex} />
+        )}
+      </div>
+      <div className="mt-5 flex items-baseline justify-between gap-3">
+        <p className="font-display text-lg italic leading-tight text-[var(--ink)]">
+          {product.name}
+        </p>
+        <p
+          className="shrink-0 whitespace-nowrap label-on-light"
+          style={{ color: accent }}
+        >
+          Enquire
+        </p>
+      </div>
+    </Link>
+  );
+}
+
+function ProductIdentityLight({
+  slug,
+  name,
+  eyebrow,
+}: {
+  slug: string;
+  name: string;
+  eyebrow: string;
+}) {
+  return (
+    <div className="absolute inset-0 flex flex-col justify-between p-5 md:p-7">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-30"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, rgba(26, 20, 16, 0.10) 1px, transparent 0)",
+          backgroundSize: "5px 5px",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(60% 40% at 50% 30%, rgba(168, 70, 31, 0.08) 0%, transparent 70%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-5 top-5 h-px bg-[var(--accent)]"
+        style={{ opacity: 0.65 }}
+      />
+      <div className="relative flex items-start justify-between">
+        <p className="label-on-light">{eyebrow}</p>
+      </div>
+      <div className="relative flex flex-1 items-center justify-center">
+        <CategoryMark
+          slug={slug}
+          className="h-32 w-32 opacity-[0.28] transition-opacity duration-700 ease-out group-hover:opacity-40 md:h-40 md:w-40"
+          style={{ strokeWidth: 0.8 }}
+        />
+      </div>
+      <div className="relative">
+        <p
+          className="font-display text-[1.85rem] italic leading-[1.02] tracking-[-0.018em] text-[var(--ink)] md:text-[2.25rem]"
+          style={{ textWrap: "balance" }}
+        >
+          {name}
+        </p>
+        <div className="mt-3 flex items-center gap-2 label-on-light">
+          <span aria-hidden className="h-px w-6 bg-[var(--ink-faint)]" />
+          <span>Treadville · {slug === "default" ? "Lot" : slug}</span>
+        </div>
+      </div>
+    </div>
   );
 }
