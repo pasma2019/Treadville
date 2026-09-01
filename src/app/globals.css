@@ -938,6 +938,53 @@ select.field-dark option {
 }
 
 /* ============================================================
+   LIGHT FORM FIELDS — admin surfaces
+   ============================================================ */
+
+.field-light {
+  width: 100%;
+  border: 1px solid var(--line-on-light);
+  background: var(--warm-white);
+  padding: 0.75rem 1rem;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transition: border-color var(--dur-fast) var(--ease-out);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.field-light::placeholder {
+  color: var(--ink-whisper);
+}
+
+.field-light:focus {
+  outline: none;
+  border-color: var(--champagne);
+  background: var(--ivory);
+}
+
+select.field-light {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23c4ad84' stroke-width='1.5'><path d='M3 4.5l3 3 3-3'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px 12px;
+  padding-right: 2.5rem;
+  color: var(--ink);
+}
+
+select.field-light option {
+  background: var(--warm-white);
+  color: var(--ink);
+}
+
+textarea.field-light {
+  resize: vertical;
+}
+
+/* ============================================================
    CATEGORY ACCENT TINTING — light-mode utility helpers
    ============================================================ */
 
