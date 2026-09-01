@@ -16,14 +16,6 @@
   --charcoal: #1a1410;        /* elevated charcoal panel */
   --graphite: #221a14;        /* tertiary dark surface */
 
-  /* --- Bone / ivory light surfaces --- */
-  --bone: #f4efe4;            /* primary light surface */
-  --ivory: #efe8d8;           /* soft ivory panel */
-  --linen: #e6dfcd;           /* deeper sacrifice panel / hairline on light */
-  --parchment: #ece3ce;       /* unbleached linen text light-on-dark */
-  --cream: #f7f2e6;           /* brighter cream for highlight moments */
-  --champagne: #d9c39a;       /* warm metallic highlight */
-
   /* --- Restrained metallics --- */
   --bronze: #b08d57;          /* muted bronze for subtle metallic moments */
   --gold: #c9a24a;            /* metallic campaign gold — hero accents */
