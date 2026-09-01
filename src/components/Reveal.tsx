@@ -4,13 +4,14 @@ import { useEffect, useRef, type ElementType, type ReactNode } from "react";
 
 type RevealProps = {
   as?: ElementType;
-  delay?: 0 | 1 | 2 | 3;
+  delay?: 0 | 1 | 2 | 3 | 4 | 5;
   className?: string;
   children?: ReactNode;
   id?: string;
+  variant?: "dark" | "light";
 };
 
-export default function Reveal({ as: Tag = "div", delay = 0, className, children, ...rest }: RevealProps) {
+export default function Reveal({ as: Tag = "div", delay = 0, className, children, variant = "dark", ...rest }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -32,6 +33,21 @@ export default function Reveal({ as: Tag = "div", delay = 0, className, children
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  if (variant === "light") {
+    return (
+      <Tag
+        ref={ref}
+        data-reveal-light=""
+        data-reveal-visible="false"
+        data-reveal-delay={delay || undefined}
+        className={className}
+        {...rest}
+      >
+        {children}
+      </Tag>
+    );
+  }
 
   return (
     <Tag
