@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import { getCategories, getProducts } from "@/lib/queries";
 import CategoryTabs from "@/components/CategoryTabs";
 import Reveal from "@/components/Reveal";
 import ProductCard from "@/components/ProductCard";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Shop",
+  description:
+    "Browse the full Treadville catalogue — specialty coffee, tea, horticulture, and grains. Request samples, place wholesale enquiries, or explore export options.",
+};
 
 export default async function ShopPage() {
   const [categories, products] = await Promise.all([

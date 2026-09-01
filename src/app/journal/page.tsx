@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+
+export const metadata: Metadata = {
+  title: "Journal",
+  description:
+    "Field notes from Kenya — writing on terroir, sourcing, processing, and the people behind Treadville's agricultural products.",
+};
 
 const ESSAYS = [
   {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getCategories, getFeaturedProducts, getSiteContent } from "@/lib/queries";
 import ProductCard from "@/components/ProductCard";
@@ -7,6 +8,11 @@ import Provenance from "@/components/Provenance";
 import Reveal from "@/components/Reveal";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  description:
+    "Premium Kenyan agricultural products — specialty coffee, tea, horticulture, and grains. Traceable origins, exceptional quality, built for global markets.",
+};
 
 export default async function HomePage() {
   const [categories, featured, content] = await Promise.all([

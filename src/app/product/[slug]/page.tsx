@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getCategories, getProductBySlug, getProducts } from "@/lib/queries";
 import ProductDetailClient from "./ProductDetailClient";
 import Reveal from "@/components/Reveal";
@@ -15,6 +16,20 @@ const EYEBROW_MAP: Record<string, string> = {
   horticulture: "Horticultural product",
   grains: "Grain & nut",
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+  if (!product) return {};
+  return {
+    title: product.name,
+    description: product.description || `${product.name} — available from Treadville.`,
+  };
+}
 
 export default async function ProductPage({
   params,

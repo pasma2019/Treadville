@@ -21,9 +21,47 @@ const body = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Treadville — Premium African Products",
+  title: {
+    default: "Treadville — Premium Kenyan Agricultural Products",
+    template: "%s · Treadville",
+  },
   description:
-    "Specialty coffee, tea, horticulture, and grains — sourced across Kenya's volcanic highlands and fertile plains.",
+    "Specialty coffee, tea, horticulture, and grains sourced across Kenya's volcanic highlands and fertile plains. Traceable origins. Exceptional quality.",
+  keywords: [
+    "Kenyan coffee",
+    "specialty coffee Kenya",
+    "Kenyan tea",
+    "Kenyan agricultural export",
+    "Kirinyaga coffee",
+    "Mt Kenya coffee",
+    "Treadville",
+    "Kenya coffee exporter",
+    "Kenyan horticulture",
+    "Kenyan grains",
+  ],
+  authors: [{ name: "Treadville Company Limited" }],
+  creator: "Treadville Company Limited",
+  publisher: "Treadville Company Limited",
+  metadataBase: new URL("https://treadville.co.ke"),
+  openGraph: {
+    type: "website",
+    locale: "en_KE",
+    url: "https://treadville.co.ke",
+    siteName: "Treadville",
+    title: "Treadville — Premium Kenyan Agricultural Products",
+    description:
+      "Specialty coffee, tea, horticulture, and grains sourced across Kenya's volcanic highlands.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Treadville — Premium Kenyan Agricultural Products",
+    description:
+      "Specialty coffee, tea, horticulture, and grains sourced across Kenya's volcanic highlands.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

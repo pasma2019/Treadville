@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getCategories, getCategoryBySlug, getProducts } from "@/lib/queries";
 import CategoryTabs from "@/components/CategoryTabs";
 import Reveal from "@/components/Reveal";
@@ -8,6 +9,22 @@ import ProductImage from "@/components/ProductImage";
 import CategoryMark, { accentFor } from "@/components/CategoryMark";
 
 export const revalidate = 0;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { category: slug } = await params;
+  const cat = await getCategoryBySlug(slug);
+  if (!cat) return {};
+  return {
+    title: cat.name,
+    description:
+      cat.description ||
+      `Browse Treadville ${cat.name.toLowerCase()} products. Traceable origins. Exceptional quality.`,
+  };
+}
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category: slug } = await params;

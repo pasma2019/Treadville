@@ -7,6 +7,15 @@ import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "./CartContext";
 import type { Category } from "@/lib/types";
 
+const IA_LINKS = [
+  { href: "/origins", label: "Origins" },
+  { href: "/quality", label: "Quality" },
+  { href: "/export", label: "Export" },
+  { href: "/about", label: "About" },
+  { href: "/journal", label: "Journal" },
+  { href: "/contact", label: "Contact" },
+];
+
 export default function SiteHeader({ categories }: { categories: Category[] }) {
   const { openCart, count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -60,10 +69,11 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && pathname.startsWith(href));
 
-  const desktopLink = (href: string, label: string) => {
+  const navLink = (href: string, label: string) => {
     const active = isActive(href);
     return (
       <Link
+        key={href}
         href={href}
         aria-current={active ? "page" : undefined}
         className={`group relative text-sm font-medium tracking-[0.01em] transition-colors duration-[var(--dur-fast)] focus-visible:outline-none ${
@@ -104,16 +114,37 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
 
         <nav
           aria-label="Main navigation"
-          className="hidden items-center gap-9 md:flex"
+          className="hidden items-center gap-7 xl:gap-8"
         >
-          {desktopLink("/shop", "Shop")}
-          {categories.map((cat) => desktopLink(`/shop/${cat.slug}`, cat.name))}
+          <Link
+            href="/shop"
+            aria-current={isActive("/shop") ? "page" : undefined}
+            className={`group relative text-sm font-semibold tracking-[0.06em] uppercase transition-colors duration-[var(--dur-fast)] focus-visible:outline-none ${
+              isActive("/shop")
+                ? "text-[var(--parchment)]"
+                : "text-[var(--parchment)]/80 hover:text-[var(--parchment)] focus-visible:text-[var(--parchment)]"
+            }`}
+          >
+            Shop
+            <span
+              aria-hidden
+              className={`absolute inset-x-0 -bottom-1.5 h-px origin-left bg-[var(--accent)] transition-transform duration-[var(--dur)] ease-[var(--ease-out)] ${
+                isActive("/shop") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+              }`}
+            />
+          </Link>
+          {categories.map((cat) => navLink(`/shop/${cat.slug}`, cat.name))}
+          <span
+            aria-hidden
+            className="h-3 w-px bg-[var(--parchment)]/15"
+          />
+          {IA_LINKS.map(({ href, label }) => navLink(href, label))}
         </nav>
 
         <div className="flex items-center gap-3 md:gap-5">
           <button
             onClick={openCart}
-            aria-label={`Open cart (${count} items)`}
+            aria-label={`Open enquiry cart (${count} items)`}
             className="relative flex items-center gap-2 rounded-full px-2 text-sm text-[var(--parchment)]/70 transition-colors duration-[var(--dur-fast)] hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
           >
             <ShoppingBag size={18} />
@@ -137,19 +168,20 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
         </div>
       </div>
 
+      {/* Mobile full-screen menu */}
       <div
         ref={menuRef}
         id="site-mobile-menu"
         aria-hidden={!menuOpen}
-        className={`fixed inset-0 top-[var(--site-header-h)] z-30 flex flex-col overflow-y-auto bg-[var(--soil-muted)]/[0.96] backdrop-blur-xl transition-opacity duration-300 ease-out md:hidden ${
+        className={`fixed inset-0 top-[var(--site-header-h)] z-30 flex flex-col overflow-y-auto bg-[var(--soil-muted)]/[0.97] backdrop-blur-xl transition-opacity duration-300 ease-out md:hidden ${
           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
         <nav
           aria-label="Mobile navigation"
-          className="flex flex-col gap-2 px-8 py-8"
+          className="flex flex-col gap-0 px-8 py-8"
         >
-          <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--parchment)]/40">
+          <p className="mb-4 mt-2 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--parchment)]/40">
             Catalogue
           </p>
           <Link
@@ -157,9 +189,13 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             href="/shop"
             onClick={handleMenuClose}
             aria-current={isActive("/shop") ? "page" : undefined}
-            className="font-display text-3xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
+            className="group flex items-center justify-between border-b border-[rgba(212,190,145,0.12)] py-4 font-display text-2xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
           >
             Shop all
+            <span
+              aria-hidden
+              className="h-px w-6 bg-[var(--parchment)]/30 transition-all duration-300 group-hover:w-10 group-hover:bg-[var(--accent)]"
+            />
           </Link>
           {categories.map((cat) => (
             <Link
@@ -167,12 +203,36 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
               href={`/shop/${cat.slug}`}
               onClick={handleMenuClose}
               aria-current={isActive(`/shop/${cat.slug}`) ? "page" : undefined}
-              className="font-display text-3xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
+              className="group flex items-center justify-between border-b border-[rgba(212,190,145,0.12)] py-4 font-display text-2xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
             >
               {cat.name}
+              <span
+                aria-hidden
+                className="h-px w-4 bg-[var(--parchment)]/30 transition-all duration-300 group-hover:w-8 group-hover:bg-[var(--accent)]"
+              />
+            </Link>
+          ))}
+
+          <p className="mb-4 mt-8 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--parchment)]/40">
+            Company
+          </p>
+          {IA_LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={handleMenuClose}
+              aria-current={isActive(href) ? "page" : undefined}
+              className="group flex items-center justify-between border-b border-[rgba(212,190,145,0.12)] py-4 font-mono text-sm uppercase tracking-[0.24em] text-[var(--parchment)]/75 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
+            >
+              {label}
+              <span
+                aria-hidden
+                className="h-px w-4 bg-[var(--parchment)]/30 transition-all duration-300 group-hover:w-8 group-hover:bg-[var(--accent)]"
+              />
             </Link>
           ))}
         </nav>
+
         <div className="mt-auto border-t border-[var(--parchment)]/10 px-8 py-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--parchment)]/40">
             Volcanic Highlands · Kenya

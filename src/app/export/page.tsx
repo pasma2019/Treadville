@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+
+export const metadata: Metadata = {
+  title: "Export",
+  description:
+    "Treadville export capabilities — documentation, compliance, and logistics from Nairobi to ports worldwide. For importers, distributors, and hospitality buyers.",
+};
 
 const DESTINATIONS = [
   { region: "Europe", markets: "Specialty importers, roasters, distributors" },

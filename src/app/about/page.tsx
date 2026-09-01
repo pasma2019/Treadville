@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Treadville is a Kenyan agricultural platform working to transform agricultural resources into real wealth through market development, processing, and global networking.",
+};
 
 const PILLARS = [
   {

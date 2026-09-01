@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+
+export const metadata: Metadata = {
+  title: "Quality",
+  description:
+    "Treadville's quality standards — SCA cupping, KEPHIS compliance, SGS verification, USDA registered warehousing. The references that matter.",
+};
 
 const STANDARDS = [
   {

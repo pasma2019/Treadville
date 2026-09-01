@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+
+export const metadata: Metadata = {
+  title: "Origins",
+  description:
+    "The story of Treadville's Kenyan terroir — volcanic soils, glacial water, and the slopes of Mt. Kenya that give our products their character.",
+};
 
 export default function OriginsPage() {
   return (
