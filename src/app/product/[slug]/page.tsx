@@ -1,82 +1,259 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getCategories, getProductBySlug, getProducts } from "@/lib/queries";
 import ProductDetailClient from "./ProductDetailClient";
-import ProductCard from "@/components/ProductCard";
+import Reveal from "@/components/Reveal";
+import CategoryMark, { accentFor } from "@/components/CategoryMark";
+import type { Product } from "@/lib/types";
+import ProductImage from "@/components/ProductImage";
 
 export const revalidate = 0;
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+const EYEBROW_MAP: Record<string, string> = {
+  coffee: "Single origin",
+  tea: "Highland tea",
+  horticulture: "Horticultural product",
+  grains: "Grain & nut",
+};
+
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product || product.status !== "published") notFound();
 
   const categories = await getCategories();
-  const category = categories.find((c) => c.id === product.category_id) ?? null;
+  const category =
+    categories.find((c) => c.id === product.category_id) ?? null;
   const categorySlug = category?.slug ?? "";
+  const accent = accentFor(categorySlug);
 
   const related = (await getProducts({ publishedOnly: true }))
     .filter((p) => p.category_id === product.category_id && p.id !== product.id)
     .slice(0, 3);
 
-  const isCoffee = categorySlug === "coffee";
-  const isTea = categorySlug === "tea";
-  const isGrains = categorySlug === "grains";
-  const isHorticulture = categorySlug === "horticulture";
+  const eyebrow =
+    EYEBROW_MAP[categorySlug] ??
+    (category ? "Treadville product" : "Product");
 
   return (
-    <main>
-      <section className="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-2">
-        <div className="aspect-square w-full overflow-hidden bg-[var(--soil-raised)]">
-          {product.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full items-center justify-center font-mono text-xs text-[var(--parchment)]/30">
-              Image pending
+    <main className="surface-warm">
+      <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-10 pb-20 md:pt-14">
+        <Reveal variant="light" as="nav" delay={0} aria-label="Breadcrumb">
+          <ol className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)]">
+            <li>
+              <Link href="/shop" className="transition-colors hover:text-[var(--ink)]">
+                Shop
+              </Link>
+            </li>
+            <li aria-hidden className="opacity-40">
+              /
+            </li>
+            <li>
+              <Link
+                href={`/shop/${categorySlug}`}
+                className="transition-colors hover:text-[var(--ink)]"
+              >
+                {category?.name ?? "Category"}
+              </Link>
+            </li>
+            <li aria-hidden className="opacity-40">
+              /
+            </li>
+            <li
+              aria-current="page"
+              className="truncate text-[var(--ink-faint)]"
+            >
+              {product.name}
+            </li>
+          </ol>
+        </Reveal>
+
+        <div className="mt-10 grid grid-cols-1 gap-12 md:grid-cols-[1fr_480px] md:gap-16 lg:gap-20">
+          <Reveal variant="light" as="div" delay={0} className="min-w-0">
+            <div className="stage-product relative aspect-[5/6] w-full overflow-hidden">
+              {product.image_url ? (
+                <ProductImage
+                  src={product.image_url}
+                  alt={product.name}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 opacity-20"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle at 1px 1px, rgba(26, 20, 16, 0.10) 1px, transparent 0)",
+                      backgroundSize: "6px 6px",
+                    }}
+                  />
+                  <CategoryMark
+                    slug={categorySlug}
+                    className="h-28 w-28 opacity-30"
+                  />
+                  <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--ink-muted)]">
+                    Image coming soon
+                  </p>
+                </div>
+              )}
             </div>
-          )}
+          </Reveal>
+
+          <Reveal variant="light" as="div" delay={1} className="min-w-0">
+            <div className="md:pt-4">
+              <p
+                className="label-on-light"
+                style={{ color: accent }}
+              >
+                {eyebrow}
+              </p>
+              <h1 className="mt-3 max-w-[22ch] font-display text-3xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-4xl lg:text-5xl">
+                {product.name}
+              </h1>
+              <p className="mt-5 max-w-[48ch] body-on-light md:text-base">
+                {product.description}
+              </p>
+
+              <div className="mt-8 border-t border-[var(--line-on-light)] pt-8">
+                <p
+                  className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)]"
+                >
+                  Request this product
+                </p>
+                <ProductDetailClient product={product} accent={accent} />
+              </div>
+
+              <div className="mt-8 grid grid-cols-2 gap-4 rounded-sm border border-[var(--line-on-light)] p-4">
+                <div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
+                    Availability
+                  </p>
+                  <p className="mt-1 body-on-light">
+                    {product.stock > 0
+                      ? `${product.stock} units available`
+                      : "Made to order"}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
+                    Delivery
+                  </p>
+                  <p className="mt-1 body-on-light">
+                    Nairobi · Nationwide · Export
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 inline-flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/shop/${categorySlug}`}
+                  className="btn-light-link"
+                  style={{ color: accent }}
+                >
+                  More {category?.name ?? "products"}
+                </Link>
+                <span
+                  aria-hidden
+                  className="h-px w-4 bg-[var(--line-on-light)]"
+                />
+                <Link href="/contact" className="btn-light-link">
+                  Speak to us
+                </Link>
+              </div>
+            </div>
+          </Reveal>
         </div>
 
-        <div>
-          {isCoffee ? (
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">Single origin</p>
-          ) : isTea ? (
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">Highland tea</p>
-          ) : isGrains ? (
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">Grain &amp; nut</p>
-          ) : isHorticulture ? (
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">Horticultural product</p>
-          ) : (
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">Treadville product</p>
-          )}
-          <h1 className="mt-3 font-display text-4xl italic leading-tight">{product.name}</h1>
-          <p className="mt-5 text-sm leading-relaxed text-[var(--parchment)]/70">{product.description}</p>
-
-          <ProductDetailClient product={product} />
-
-          <dl className="mt-10 grid grid-cols-2 gap-4 border-t border-[var(--line)] pt-6 font-mono text-xs uppercase tracking-widest text-[var(--parchment)]/50">
-            <div>
-              <dt>Availability</dt>
-              <dd className="mt-1 text-[var(--parchment)]">{product.stock > 0 ? `${product.stock} in stock` : "Made to order"}</dd>
+        {related.length > 0 && (
+          <section
+            aria-labelledby="related-heading"
+            className="mt-20 border-t border-[var(--line-on-light)] pt-16"
+          >
+            <Reveal variant="light" as="div" delay={0}>
+              <h2
+                id="related-heading"
+                className="font-display text-2xl italic text-[var(--ink)]"
+              >
+                You may also like
+              </h2>
+            </Reveal>
+            <div className="mt-8 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3">
+              {related.map((p, i) => (
+                <Reveal
+                  key={p.id}
+                  variant="light"
+                  as="div"
+                  delay={(i as 0 | 1 | 2)}
+                >
+                  <RelatedCard product={p} categorySlug={categorySlug} />
+                </Reveal>
+              ))}
             </div>
-            <div>
-              <dt>Delivery</dt>
-              <dd className="mt-1 text-[var(--parchment)]">Nairobi + nationwide, export on request</dd>
-            </div>
-          </dl>
-        </div>
-      </section>
-
-      {related.length > 0 && (
-        <section className="mx-auto max-w-6xl border-t border-[var(--line)] px-6 py-16">
-          <h2 className="font-display text-2xl">You may also like</h2>
-          <div className="mt-8 grid grid-cols-2 gap-8 md:grid-cols-3">
-            {related.map((p) => (
-              <ProductCard key={p.id} product={p} categorySlug={categorySlug} />
-            ))}
-          </div>
-        </section>
-      )}
+          </section>
+        )}
+      </div>
     </main>
+  );
+}
+
+function RelatedCard({
+  product,
+  categorySlug,
+}: {
+  product: Product;
+  categorySlug: string;
+}) {
+  const accent = accentFor(categorySlug);
+  return (
+    <Link
+      href={`/product/${product.slug}`}
+      className="group block focus-visible:outline-none"
+    >
+      <div className="stage-product-card relative aspect-[4/5] w-full overflow-hidden">
+        {product.image_url ? (
+          <ProductImage
+            src={product.image_url}
+            alt={product.name}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.06]"
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col justify-between p-5">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-25"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 1px 1px, rgba(26, 20, 16, 0.12) 1px, transparent 0)",
+                backgroundSize: "5px 5px",
+              }}
+            />
+            <div className="flex flex-1 items-center justify-center">
+              <CategoryMark
+                slug={categorySlug}
+                className="h-16 w-16 opacity-[0.22] transition-opacity duration-700 ease-out group-hover:opacity-35"
+              />
+            </div>
+            <div className="relative">
+              <p className="font-display text-base italic leading-tight text-[var(--ink)]">
+                {product.name}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="mt-4">
+        <p className="font-display text-sm italic leading-tight text-[var(--ink)]">
+          {product.name}
+        </p>
+        <p className="mt-1 label-on-light" style={{ color: accent }}>
+          Enquire
+        </p>
+      </div>
+    </Link>
   );
 }

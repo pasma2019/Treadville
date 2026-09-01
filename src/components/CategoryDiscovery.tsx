@@ -341,28 +341,28 @@ export default function CategoryDiscovery({ categories }: { categories: Category
 
       <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
         <Reveal
+          variant="light"
           as="div"
           delay={0}
           className="grid grid-cols-1 items-end gap-8 md:grid-cols-12 md:gap-10"
         >
           <div className="md:col-span-7">
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-[var(--soil)]/55">
-              Our terroir · Four chapters
-            </p>
+            <p className="label-on-light">The Treadville world · Four chapters</p>
             <h2
               id="terroir-heading"
-              className="mt-4 max-w-[18ch] font-display text-3xl italic leading-[1.05] tracking-[-0.015em] text-[var(--soil)] md:text-6xl"
+              className="mt-4 max-w-[18ch] font-display text-3xl italic leading-[1.05] tracking-[-0.015em] text-[var(--ink)] md:text-6xl"
             >
-              One estate. <span className="text-[var(--soil)]/60">Four distinct origins.</span>
+              One platform. <span className="text-[var(--ink-muted)]">Four distinct origins.</span>
             </h2>
           </div>
           <div className="md:col-span-5">
-            <p className="max-w-md text-sm leading-relaxed text-[var(--soil)]/65 md:text-base">
-              Coffee built the name. Tea, horticulture, and grains carry it forward — each
-              with its own character, under one standard of quality.
+            <p className="body-on-light max-w-md md:text-lg">
+              Coffee built the name. Tea, horticulture, and grains carry it
+              forward — each with its own character, under one standard of
+              quality.
             </p>
-            <div className="mt-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--soil)]/70">
-              <span aria-hidden className="h-px w-10 bg-[var(--soil)]/40" />
+            <div className="mt-6 inline-flex items-center gap-3 label-on-light">
+              <span aria-hidden className="h-px w-10 bg-[var(--ink-faint)]" />
               <span>Scroll for chapters</span>
             </div>
           </div>
