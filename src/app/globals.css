@@ -891,6 +891,53 @@ textarea:focus-visible {
 }
 
 /* ============================================================
+   DARK FORM FIELDS — contact form inputs
+   ============================================================ */
+
+.field-dark {
+  width: 100%;
+  border: 1px solid rgba(212, 190, 145, 0.20);
+  background: rgba(20, 15, 7, 0.50);
+  padding: 0.85rem 1rem;
+  color: var(--ivory);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.field-dark::placeholder {
+  color: rgba(236, 227, 206, 0.32);
+}
+
+.field-dark:hover {
+  border-color: rgba(212, 190, 145, 0.32);
+}
+
+.field-dark:focus {
+  outline: none;
+  border-color: rgba(212, 190, 145, 0.55);
+  background: rgba(20, 15, 7, 0.75);
+}
+
+select.field-dark {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23d4be91' stroke-width='1.5'><path d='M3 4.5l3 3 3-3'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px 12px;
+  padding-right: 2.5rem;
+}
+
+select.field-dark option {
+  background: #140f07;
+  color: var(--ivory);
+}
+
+/* ============================================================
    CATEGORY ACCENT TINTING — light-mode utility helpers
    ============================================================ */
 
