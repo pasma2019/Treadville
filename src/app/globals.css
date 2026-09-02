@@ -517,6 +517,31 @@ textarea:focus-visible {
   --atmosphere-noon: linear-gradient(180deg, #fdfaf2 0%, #f5efe2 100%);
   --atmosphere-dusk: linear-gradient(180deg, #e9deca 0%, #d4be91 100%);
 
+  /* --- World-class hero atmospheres (light-first editorial) --- */
+  /* Hero: ivory → copper → forest, atmospheric not decorative */
+  --atmosphere-hero:
+    radial-gradient(70% 55% at 78% 28%, rgba(168, 70, 31, 0.16) 0%, rgba(168, 70, 31, 0) 60%),
+    radial-gradient(55% 45% at 22% 78%, rgba(45, 74, 53, 0.10) 0%, rgba(45, 74, 53, 0) 60%),
+    linear-gradient(180deg, #fbf8f1 0%, #f3eadb 60%, #ebe0c8 100%);
+
+  /* Category page atmospheres — light-first, atmospheric not decorative */
+  --atmosphere-coffee-page:
+    radial-gradient(70% 50% at 50% 0%, rgba(168, 70, 31, 0.14) 0%, rgba(168, 70, 31, 0) 60%),
+    radial-gradient(45% 35% at 80% 8%, rgba(201, 154, 61, 0.10) 0%, rgba(201, 154, 61, 0) 60%),
+    linear-gradient(180deg, #fbf8f1 0%, #f0e7d2 100%);
+  --atmosphere-tea-page:
+    radial-gradient(70% 50% at 50% 0%, rgba(60, 90, 50, 0.14) 0%, rgba(60, 90, 50, 0) 60%),
+    radial-gradient(45% 35% at 22% 8%, rgba(147, 161, 60, 0.10) 0%, rgba(147, 161, 60, 0) 60%),
+    linear-gradient(180deg, #fbf8f1 0%, #ecf0e3 100%);
+  --atmosphere-grains-page:
+    radial-gradient(70% 50% at 50% 0%, rgba(201, 154, 61, 0.16) 0%, rgba(201, 154, 61, 0) 60%),
+    radial-gradient(45% 35% at 30% 8%, rgba(201, 154, 61, 0.10) 0%, rgba(201, 154, 61, 0) 60%),
+    linear-gradient(180deg, #fbf8f1 0%, #f5edd8 100%);
+  --atmosphere-horticulture-page:
+    radial-gradient(70% 50% at 50% 0%, rgba(45, 90, 60, 0.12) 0%, rgba(45, 90, 60, 0) 60%),
+    radial-gradient(45% 35% at 80% 8%, rgba(116, 145, 70, 0.10) 0%, rgba(116, 145, 70, 0) 60%),
+    linear-gradient(180deg, #fbf8f1 0%, #eaf0e3 100%);
+
   /* --- Section rhythm --- */
   --section-pad-y: clamp(4rem, 8vw, 8rem);
   --section-pad-y-sm: clamp(3rem, 5vw, 5rem);

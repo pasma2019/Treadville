@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/CartContext";
+import { LanguageProvider } from "@/i18n/LanguageProvider";
 import CartDrawer from "@/components/CartDrawer";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -71,10 +72,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
         <CartProvider>
-          <SiteHeader categories={categories} />
-          {children}
-          <SiteFooter />
-          <CartDrawer />
+          <LanguageProvider>
+            <SiteHeader categories={categories} />
+            {children}
+            <SiteFooter />
+            <CartDrawer />
+          </LanguageProvider>
         </CartProvider>
       </body>
     </html>

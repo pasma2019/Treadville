@@ -12,55 +12,47 @@ export default function ProductDetailClient({
   accent?: string;
 }) {
   const { addToCart } = useCart();
-  const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
-  function handleAdd() {
-    addToCart(product, qty);
+  function handleAddToEnquiry() {
+    addToCart(product, 1);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
   }
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div className="flex items-center border border-[var(--line-on-light-strong)] bg-[var(--warm-white)]">
-        <button
-          onClick={() => setQty((q) => Math.max(1, q - 1))}
-          className="px-3 py-2.5 font-mono text-sm text-[var(--ink)] transition-colors hover:text-[var(--ink-muted)]"
-          aria-label="Decrease quantity"
-        >
-          −
-        </button>
-        <span
-          aria-live="polite"
-          className="w-10 text-center font-mono text-sm tabular-nums text-[var(--ink)]"
-        >
-          {qty}
-        </span>
-        <button
-          onClick={() => setQty((q) => q + 1)}
-          className="px-3 py-2.5 font-mono text-sm text-[var(--ink)] transition-colors hover:text-[var(--ink-muted)]"
-          aria-label="Increase quantity"
-        >
-          +
-        </button>
-      </div>
-
       <button
         type="button"
-        onClick={handleAdd}
+        onClick={handleAddToEnquiry}
         style={{ ["--accent" as string]: accent }}
-        className="group relative flex-1 min-w-[200px] overflow-hidden border border-[var(--ink)] bg-[var(--ink)] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--warm-white)] hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+        className="group relative flex-1 min-w-[180px] overflow-hidden border border-[var(--ink)] bg-[var(--ink)] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--warm-white)] hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
       >
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 origin-left scale-x-0 transition-transform duration-[var(--dur)] ease-[var(--ease-out)] group-hover:scale-x-100"
-          style={{ background: accent, opacity: 0.12 }}
+          style={{ background: accent, opacity: 0.10 }}
         />
         <span className="relative">
           {added ? "Added to enquiry" : "Add to enquiry"}
         </span>
       </button>
+
+      <a
+        href="/contact?type=quote"
+        style={{ ["--accent" as string]: accent }}
+        className="group relative flex-1 min-w-[160px] overflow-hidden border border-[var(--ink)] px-6 py-3 text-center font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ink)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--ink)] hover:text-[var(--warm-white)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+      >
+        <span className="relative">Request a quote</span>
+      </a>
+
+      <a
+        href="/contact?type=sample"
+        style={{ ["--accent" as string]: accent }}
+        className="group border-b border-[var(--ink)] pb-0.5 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--ink-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+      >
+        Request a sample
+      </a>
     </div>
   );
 }

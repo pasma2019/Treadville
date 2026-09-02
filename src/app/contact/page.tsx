@@ -84,16 +84,22 @@ export default function ContactPage() {
                       Received
                     </p>
                     <h2 className="mt-4 font-display text-2xl italic leading-tight text-[var(--ivory)]">
-                      Thank you for reaching out.
+                      Thank you — this is a demo.
                     </h2>
                     <p className="mt-4 text-sm leading-relaxed text-[rgba(236,227,206,0.68)]">
-                      We&apos;ll be in touch within two business days. If your
-                      enquiry is urgent, reach us directly at{" "}
+                      This form does not transmit enquiries. To reach Treadville directly:{" "}
                       <a
                         href="tel:+254722479985"
                         className="underline decoration-[rgba(212,190,145,0.40)] underline-offset-2 transition-colors hover:text-[var(--ivory)]"
                       >
                         +254 722 479985
+                      </a>{" "}
+                      or{" "}
+                      <a
+                        href="mailto:info@treadville.co.ke"
+                        className="underline decoration-[rgba(212,190,145,0.40)] underline-offset-2 transition-colors hover:text-[var(--ivory)]"
+                      >
+                        info@treadville.co.ke
                       </a>
                       .
                     </p>
@@ -107,6 +113,23 @@ export default function ContactPage() {
                     className="space-y-6"
                     noValidate
                   >
+                    <p className="border border-[rgba(212,190,145,0.20)] bg-[rgba(20,15,7,0.30)] px-5 py-4 font-mono text-[10px] leading-relaxed text-[rgba(236,227,206,0.55)]">
+                      Prototype enquiry form. For direct enquiries, contact us directly at{" "}
+                      <a
+                        href="tel:+254722479985"
+                        className="underline decoration-[rgba(212,190,145,0.40)] underline-offset-2 transition-colors hover:text-[var(--ivory)]"
+                      >
+                        +254 722 479985
+                      </a>{" "}
+                      or{" "}
+                      <a
+                        href="mailto:info@treadville.co.ke"
+                        className="underline decoration-[rgba(212,190,145,0.40)] underline-offset-2 transition-colors hover:text-[var(--ivory)]"
+                      >
+                        info@treadville.co.ke
+                      </a>
+                      .
+                    </p>
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       <Field label="Name" required>
                         <input

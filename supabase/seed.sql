@@ -4,9 +4,9 @@
 
 insert into categories (name, slug, description, image_url, sort_order) values
   ('Coffee', 'coffee', 'Specialty Arabica from the volcanic highlands of Mt. Kenya.', '/images/category-coffee.jpg', 1),
-  ('Tea', 'tea', 'Demo category — real Treadville tea catalogue to be supplied by client.', '/images/category-tea.jpg', 2),
-  ('Horticulture', 'horticulture', 'Demo category — real Treadville horticulture catalogue to be supplied by client.', '/images/category-horticulture.jpg', 3),
-  ('Grains', 'grains', 'Demo category — real Treadville grains catalogue to be supplied by client.', '/images/category-grains.jpg', 4);
+  ('Tea', 'tea', 'Category information coming soon.', '/images/category-tea.jpg', 2),
+  ('Horticulture', 'horticulture', 'Category information coming soon.', '/images/category-horticulture.jpg', 3),
+  ('Grains', 'grains', 'Category information coming soon.', '/images/category-grains.jpg', 4);
 
 insert into products (category_id, name, slug, description, price, image_url, featured, stock, status)
 select id, 'Treadville Specialty Coffee — Moka Espresso', 'treadville-moka-espresso',

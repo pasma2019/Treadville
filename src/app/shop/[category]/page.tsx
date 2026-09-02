@@ -37,8 +37,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   if (!category) notFound();
 
   return (
-    <main className="surface-warm">
-      <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-16 pb-24 md:pt-20 md:pb-32">
+    <main className="surface-warm relative">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[420px] opacity-60 md:h-[480px]"
+        style={{ background: categoryAtmosphere(slug) }}
+      />
+      <div className="relative z-10 mx-auto max-w-[var(--content-wide)] px-6 pt-16 pb-24 md:pt-20 md:pb-32">
         <Reveal variant="light" as="div" delay={0}>
           <p className="label-on-light">Catalogue · {category.name}</p>
           <h1 className="mt-3 max-w-[16ch] font-display text-4xl leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
@@ -136,4 +141,38 @@ function CategoryProductCard({
       </div>
     </Link>
   );
+}
+
+/**
+ * Category atmospheric wash — a quiet, large radial gradient at the top of
+ * the page that hints at the category's character without over-theming the
+ * page. Mobile intensity is reduced via inline opacity to prevent visual noise.
+ */
+function categoryAtmosphere(slug: string): string {
+  switch (slug) {
+    case "coffee":
+      return (
+        "radial-gradient(70% 50% at 50% 0%, rgba(168, 70, 31, 0.18) 0%, rgba(168, 70, 31, 0) 60%)," +
+        "radial-gradient(50% 30% at 80% 10%, rgba(201, 154, 61, 0.12) 0%, rgba(201, 154, 61, 0) 60%)"
+      );
+    case "tea":
+      return (
+        "radial-gradient(70% 50% at 50% 0%, rgba(60, 90, 50, 0.20) 0%, rgba(60, 90, 50, 0) 60%)," +
+        "radial-gradient(50% 30% at 20% 10%, rgba(147, 161, 60, 0.10) 0%, rgba(147, 161, 60, 0) 60%)"
+      );
+    case "horticulture":
+      return (
+        "radial-gradient(70% 50% at 50% 0%, rgba(58, 95, 56, 0.20) 0%, rgba(58, 95, 56, 0) 60%)," +
+        "radial-gradient(50% 30% at 80% 10%, rgba(116, 145, 70, 0.10) 0%, rgba(116, 145, 70, 0) 60%)"
+      );
+    case "grains":
+      return (
+        "radial-gradient(70% 50% at 50% 0%, rgba(168, 130, 50, 0.18) 0%, rgba(168, 130, 50, 0) 60%)," +
+        "radial-gradient(50% 30% at 30% 10%, rgba(201, 154, 61, 0.12) 0%, rgba(201, 154, 61, 0) 60%)"
+      );
+    default:
+      return (
+        "radial-gradient(70% 50% at 50% 0%, rgba(168, 70, 31, 0.10) 0%, rgba(168, 70, 31, 0) 60%)"
+      );
+  }
 }

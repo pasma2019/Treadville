@@ -10,6 +10,13 @@ import ProductImage from "@/components/ProductImage";
 
 export const revalidate = 0;
 
+const COFFEE_SOURCING_STANDARD = [
+  { label: "Origin", value: "Kirinyaga, Kenya" },
+  { label: "Altitude", value: "1,600–1,850m" },
+  { label: "Process", value: "Washed / Anaerobic" },
+  { label: "Quality", value: "80+ SCA" },
+];
+
 const EYEBROW_MAP: Record<string, string> = {
   coffee: "Single origin",
   tea: "Highland tea",
@@ -87,9 +94,9 @@ export default async function ProductPage({
           </ol>
         </Reveal>
 
-        <div className="mt-10 grid grid-cols-1 gap-12 md:grid-cols-[1fr_480px] md:gap-16 lg:gap-20">
+        <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1fr_360px] md:gap-12 lg:grid-cols-[1fr_400px] lg:gap-16">
           <Reveal variant="light" as="div" delay={0} className="min-w-0">
-            <div className="stage-product relative aspect-[5/6] w-full overflow-hidden">
+            <div className="stage-product relative aspect-[4/5] w-full overflow-hidden md:aspect-[5/6]">
               {product.image_url ? (
                 <ProductImage
                   src={product.image_url}
@@ -127,44 +134,38 @@ export default async function ProductPage({
               >
                 {eyebrow}
               </p>
-              <h1 className="mt-3 max-w-[22ch] font-display text-3xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-4xl lg:text-5xl">
+              <h1 className="mt-3 max-w-[18ch] font-display text-3xl italic leading-[1.04] tracking-[-0.015em] text-[var(--ink)] md:text-4xl lg:text-[2.75rem]">
                 {product.name}
               </h1>
-              <p className="mt-5 max-w-[48ch] body-on-light md:text-base">
+              <p className="mt-5 max-w-[44ch] body-on-light md:text-base">
                 {product.description}
               </p>
 
-              <div className="mt-8 border-t border-[var(--line-on-light)] pt-8">
+              {categorySlug === "coffee" && (
+                <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-[var(--line-on-light)] pt-7">
+                  {COFFEE_SOURCING_STANDARD.map((row) => (
+                    <div key={row.label}>
+                      <dt className="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
+                        {row.label}
+                      </dt>
+                      <dd className="mt-1.5 font-display text-base italic leading-tight text-[var(--ink)]">
+                        {row.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+
+              <div className="mt-8 border-t border-[var(--line-on-light)] pt-7">
                 <p
                   className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)]"
                 >
-                  Request this product
+                  Request this lot
                 </p>
                 <ProductDetailClient product={product} accent={accent} />
               </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-4 rounded-sm border border-[var(--line-on-light)] p-4">
-                <div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
-                    Availability
-                  </p>
-                  <p className="mt-1 body-on-light">
-                    {product.stock > 0
-                      ? `${product.stock} units available`
-                      : "Made to order"}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
-                    Delivery
-                  </p>
-                  <p className="mt-1 body-on-light">
-                    Nairobi · Nationwide · Export
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-6 inline-flex flex-wrap items-center gap-3">
+              <div className="mt-7 inline-flex flex-wrap items-center gap-3">
                 <Link
                   href={`/shop/${categorySlug}`}
                   className="btn-light-link"

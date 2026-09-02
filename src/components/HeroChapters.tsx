@@ -47,11 +47,11 @@ export const CHAPTERS: Chapter[] = [
     eyebrow: "Treadville Specialty Coffee · Single Origin",
     title: "The volcanic highlands, in a single cup.",
     subtitle:
-      "Specialty Arabica from Mt. Kenya. Selected, processed, and presented under one standard of quality.",
+      "Specialty Arabica from the Kirinyaga highlands. Selected, processed, and exported under one standard of quality.",
     meta: [
       { label: "Origin", value: "Kirinyaga · Kenya" },
       { label: "Grade", value: "80+ SCA" },
-      { label: "Profile", value: "Washed · Anaerobic" },
+      { label: "Process", value: "Washed · Anaerobic" },
     ],
     ctaLabel: "Explore the collection",
     ctaHref: "/shop/coffee",

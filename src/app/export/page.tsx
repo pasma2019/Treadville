@@ -163,10 +163,10 @@ export default function ExportPage() {
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
             <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
-              Active markets
+              Capability regions
             </p>
             <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
-              Where Treadville products are finding their buyers
+              Markets where Treadville can deliver
             </h2>
           </Reveal>
 
