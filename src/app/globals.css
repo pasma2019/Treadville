@@ -30,7 +30,8 @@
   --accent-tea: #5c7440;
   --accent-horticulture: #93a13c;
   --accent-grains: #c99a3d;
-  --accent: var(--accent-coffee);
+  --accent-sage: #7a9e7a;       /* refined pastoral green for hero editorial accents */
+  --accent: var(--accent-sage); /* default: sage (pastoral, warm) */
 
   /* --- Lines / borders --- */
   --line: rgba(236, 227, 206, 0.14);        /* hairline on dark */
@@ -518,11 +519,11 @@ textarea:focus-visible {
   --atmosphere-dusk: linear-gradient(180deg, #e9deca 0%, #d4be91 100%);
 
   /* --- World-class hero atmospheres (light-first editorial) --- */
-  /* Hero: ivory → copper → forest, atmospheric not decorative */
+  /* Hero: ivory base, sage pastoral wash, muted forest accent — no copper */
   --atmosphere-hero:
-    radial-gradient(70% 55% at 78% 28%, rgba(168, 70, 31, 0.16) 0%, rgba(168, 70, 31, 0) 60%),
-    radial-gradient(55% 45% at 22% 78%, rgba(45, 74, 53, 0.10) 0%, rgba(45, 74, 53, 0) 60%),
-    linear-gradient(180deg, #fbf8f1 0%, #f3eadb 60%, #ebe0c8 100%);
+    radial-gradient(65% 50% at 82% 18%, rgba(122, 158, 122, 0.14) 0%, rgba(122, 158, 122, 0) 55%),
+    radial-gradient(50% 40% at 15% 82%, rgba(45, 74, 53, 0.07) 0%, rgba(45, 74, 53, 0) 55%),
+    linear-gradient(180deg, #fbf8f1 0%, #f3eadb 65%, #ebe4d4 100%);
 
   /* Category page atmospheres — light-first, atmospheric not decorative */
   --atmosphere-coffee-page:

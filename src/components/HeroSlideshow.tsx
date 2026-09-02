@@ -74,10 +74,10 @@ export default function HeroSlideshow() {
         <div className="grid flex-1 grid-cols-1 items-end gap-6 px-6 pb-12 pt-6 md:px-10 md:pb-16 md:pt-10 lg:grid-cols-12 lg:gap-12 lg:pb-20">
           {/* Text column */}
           <div className="lg:col-span-7">
-            <p className="inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-[var(--accent-coffee)]">
+            <p className="inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-[var(--accent-sage)]">
               <span
                 aria-hidden
-                className="inline-block h-px w-8 bg-[var(--accent-coffee)]"
+                className="inline-block h-px w-8 bg-[var(--accent-sage)]"
               />
               {chapter.eyebrow}
             </p>
@@ -121,7 +121,7 @@ export default function HeroSlideshow() {
             <div className="mt-8 flex flex-wrap items-center gap-4 md:mt-10">
               <Link
                 href={chapter.ctaHref}
-                className="group inline-flex items-center gap-3 bg-[var(--ink)] px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.26em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--accent-coffee)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-coffee)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+                className="group inline-flex items-center gap-3 bg-[var(--ink)] px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.26em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
               >
                 {chapter.ctaLabel}
                 <span
@@ -136,7 +136,7 @@ export default function HeroSlideshow() {
                 {chapter.secondaryCtaLabel}
                 <span
                   aria-hidden
-                  className="inline-block h-px w-5 bg-[var(--ink)]/45 transition-all duration-500 ease-[var(--ease-out)] group-hover:w-8 group-hover:bg-[var(--accent-coffee)]"
+                  className="inline-block h-px w-5 bg-[var(--ink)]/45 transition-all duration-500 ease-[var(--ease-out)] group-hover:w-8 group-hover:bg-[var(--accent-sage)]"
                 />
               </Link>
             </div>
@@ -192,7 +192,7 @@ export default function HeroSlideshow() {
                   aria-current={i === active ? "true" : undefined}
                   className={`h-px rounded-full transition-all duration-500 ease-[var(--ease-out)] ${
                     i === active
-                      ? "w-10 bg-[var(--accent-coffee)]"
+                      ? "w-10 bg-[var(--accent-sage)]"
                       : "w-4 bg-[var(--ink)]/25 hover:bg-[var(--ink)]/45"
                   }`}
                 />
@@ -209,14 +209,14 @@ export default function HeroSlideshow() {
                 setActive((a) => (a - 1 + CHAPTERS.length) % CHAPTERS.length)
               }
               aria-label="Previous chapter"
-              className="flex h-9 w-9 items-center justify-center border border-[var(--ink)]/25 text-[var(--ink-soft)] transition-colors duration-[var(--dur-fast)] hover:border-[var(--accent-coffee)] hover:text-[var(--accent-coffee)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-coffee)]"
+              className="flex h-9 w-9 items-center justify-center border border-[var(--ink)]/25 text-[var(--ink-soft)] transition-colors duration-[var(--dur-fast)] hover:border-[var(--accent-sage)] hover:text-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
             >
               <ArrowLeft size={14} />
             </button>
             <button
               onClick={() => setActive((a) => (a + 1) % CHAPTERS.length)}
               aria-label="Next chapter"
-              className="flex h-9 w-9 items-center justify-center border border-[var(--ink)]/25 text-[var(--ink-soft)] transition-colors duration-[var(--dur-fast)] hover:border-[var(--accent-coffee)] hover:text-[var(--accent-coffee)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-coffee)]"
+              className="flex h-9 w-9 items-center justify-center border border-[var(--ink)]/25 text-[var(--ink-soft)] transition-colors duration-[var(--dur-fast)] hover:border-[var(--accent-sage)] hover:text-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
             >
               <ArrowRight size={14} />
             </button>
