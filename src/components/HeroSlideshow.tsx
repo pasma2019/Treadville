@@ -11,18 +11,15 @@ const THESIS_LINE_2 = "to global markets.";
 
 export default function HeroSlideshow() {
   const [active, setActive] = useState(0);
-  const [controlsVisible, setControlsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
         setActive((a) => (a - 1 + CHAPTERS.length) % CHAPTERS.length);
-        setControlsVisible(true);
       }
       if (e.key === "ArrowRight") {
         setActive((a) => (a + 1) % CHAPTERS.length);
-        setControlsVisible(true);
       }
     };
     window.addEventListener("keydown", handler);
@@ -30,6 +27,7 @@ export default function HeroSlideshow() {
   }, []);
 
   const chapter = CHAPTERS[active];
+  const heroChapter = CHAPTERS[0];
 
   return (
     <section
@@ -37,8 +35,6 @@ export default function HeroSlideshow() {
       aria-label="Treadville — From Kenyan soil to global markets"
       className="relative isolate min-h-[100svh] overflow-hidden"
       style={{ background: "var(--atmosphere-hero)" }}
-      onMouseEnter={() => setControlsVisible(true)}
-      onMouseLeave={() => setControlsVisible(false)}
     >
       <div
         aria-hidden
@@ -71,9 +67,9 @@ export default function HeroSlideshow() {
         </div>
 
         {/* Main editorial split — text on the left, visual on the right */}
-        <div className="grid flex-1 grid-cols-1 items-end gap-6 px-6 pb-12 pt-6 md:px-10 md:pb-16 md:pt-10 lg:grid-cols-12 lg:gap-12 lg:pb-20">
+        <div className="grid flex-1 grid-cols-1 items-end gap-6 px-6 pb-12 pt-6 md:px-10 md:pb-16 md:pt-10 lg:grid-cols-12 lg:gap-10 lg:pb-20">
           {/* Text column */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-8">
             <p className="inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-[var(--accent-sage)]">
               <span
                 aria-hidden
@@ -84,7 +80,7 @@ export default function HeroSlideshow() {
 
             <h1
               id="hero-headline"
-              className="mt-6 font-display font-medium leading-[0.94] tracking-[-0.022em] text-[var(--ink)] text-[3rem] sm:text-[4rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8.25rem]"
+              className="mt-6 max-w-[18ch] font-display font-medium leading-[0.92] tracking-[-0.025em] text-[var(--ink)] text-[3.5rem] sm:text-[4.5rem] md:text-[6rem] lg:max-w-[none] lg:text-[7.5rem] xl:text-[9rem]"
             >
               <span className="block text-balance italic" style={{ fontStyle: "italic" }}>
                 {THESIS_LINE_1}
@@ -142,14 +138,14 @@ export default function HeroSlideshow() {
             </div>
           </div>
 
-          {/* Right visual — chapter scene, never competes with type */}
-          <div className="relative hidden h-[560px] overflow-hidden lg:col-span-5 lg:flex lg:items-end">
+          {/* Right visual — editorial composition, understated */}
+          <div className="relative hidden h-[480px] overflow-hidden lg:col-span-4 lg:flex lg:items-end">
             <div
               className="absolute inset-x-[-10%] bottom-[-8%] h-[112%] transition-opacity duration-[1400ms] ease-[var(--ease-cinema)]"
               style={{ opacity: 1 }}
             >
               <ChapterVisual
-                visual={chapter.visual}
+                visual={heroChapter.visual}
                 className="h-full w-full"
               />
             </div>
@@ -173,54 +169,21 @@ export default function HeroSlideshow() {
           </div>
         </div>
 
-        {/* Bottom chapter indicator — secondary, restrained */}
-        <div
-          className={`flex flex-wrap items-end justify-between gap-4 border-t border-[var(--line-on-light)] px-6 pb-6 pt-5 transition-opacity duration-700 ease-out md:px-10 md:pb-8 ${
-            controlsVisible ? "opacity-100" : "opacity-70"
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
-              Chapters
-            </p>
-            <div className="flex items-center gap-3">
-              {CHAPTERS.map((c, i) => (
-                <button
-                  key={c.id}
-                  onClick={() => setActive(i)}
-                  aria-label={`Chapter ${c.number}: ${c.eyebrow}`}
-                  aria-current={i === active ? "true" : undefined}
-                  className={`h-px rounded-full transition-all duration-500 ease-[var(--ease-out)] ${
-                    i === active
-                      ? "w-10 bg-[var(--accent-sage)]"
-                      : "w-4 bg-[var(--ink)]/25 hover:bg-[var(--ink)]/45"
-                  }`}
-                />
-              ))}
-            </div>
-            <p className="hidden font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)] md:block">
-              {chapter.eyebrow}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() =>
-                setActive((a) => (a - 1 + CHAPTERS.length) % CHAPTERS.length)
-              }
-              aria-label="Previous chapter"
-              className="flex h-9 w-9 items-center justify-center border border-[var(--ink)]/25 text-[var(--ink-soft)] transition-colors duration-[var(--dur-fast)] hover:border-[var(--accent-sage)] hover:text-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
-            >
-              <ArrowLeft size={14} />
-            </button>
-            <button
-              onClick={() => setActive((a) => (a + 1) % CHAPTERS.length)}
-              aria-label="Next chapter"
-              className="flex h-9 w-9 items-center justify-center border border-[var(--ink)]/25 text-[var(--ink-soft)] transition-colors duration-[var(--dur-fast)] hover:border-[var(--accent-sage)] hover:text-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
-            >
-              <ArrowRight size={14} />
-            </button>
-          </div>
+        {/* Editorial "told through" strip — replaces carousel dot-nav */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line-on-light)] px-6 pb-6 pt-5 md:px-10 md:pb-8">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
+            Treadville · Specialty agricultural products from Kenya
+          </p>
+          <a
+            href="#category-chapters"
+            className="group flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)] transition-colors duration-[var(--dur-fast)] hover:text-[var(--ink)] focus-visible:outline-none"
+          >
+            <span
+              aria-hidden
+              className="h-px w-6 bg-[var(--ink)]/30 transition-all duration-500 ease-[var(--ease-out)] group-hover:w-8 group-hover:bg-[var(--accent-sage)]"
+            />
+            <span>Explore the chapters</span>
+          </a>
         </div>
       </div>
     </section>

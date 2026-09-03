@@ -152,23 +152,23 @@ function categoryAtmosphere(slug: string): string {
   switch (slug) {
     case "coffee":
       return (
-        "radial-gradient(70% 50% at 50% 0%, rgba(168, 70, 31, 0.18) 0%, rgba(168, 70, 31, 0) 60%)," +
-        "radial-gradient(50% 30% at 80% 10%, rgba(201, 154, 61, 0.12) 0%, rgba(201, 154, 61, 0) 60%)"
+        "radial-gradient(70% 50% at 50% 0%, rgba(184, 114, 58, 0.16) 0%, rgba(184, 114, 58, 0) 60%)," +
+        "radial-gradient(50% 30% at 80% 10%, rgba(245, 232, 212, 0.55) 0%, rgba(245, 232, 212, 0) 60%)"
       );
     case "tea":
       return (
-        "radial-gradient(70% 50% at 50% 0%, rgba(60, 90, 50, 0.20) 0%, rgba(60, 90, 50, 0) 60%)," +
-        "radial-gradient(50% 30% at 20% 10%, rgba(147, 161, 60, 0.10) 0%, rgba(147, 161, 60, 0) 60%)"
+        "radial-gradient(70% 50% at 50% 0%, rgba(122, 158, 122, 0.18) 0%, rgba(122, 158, 122, 0) 60%)," +
+        "radial-gradient(50% 30% at 20% 10%, rgba(216, 232, 207, 0.50) 0%, rgba(216, 232, 207, 0) 60%)"
       );
     case "horticulture":
       return (
-        "radial-gradient(70% 50% at 50% 0%, rgba(58, 95, 56, 0.20) 0%, rgba(58, 95, 56, 0) 60%)," +
-        "radial-gradient(50% 30% at 80% 10%, rgba(116, 145, 70, 0.10) 0%, rgba(116, 145, 70, 0) 60%)"
+        "radial-gradient(70% 50% at 50% 0%, rgba(147, 161, 60, 0.16) 0%, rgba(147, 161, 60, 0) 60%)," +
+        "radial-gradient(50% 30% at 80% 10%, rgba(232, 240, 212, 0.50) 0%, rgba(232, 240, 212, 0) 60%)"
       );
     case "grains":
       return (
-        "radial-gradient(70% 50% at 50% 0%, rgba(168, 130, 50, 0.18) 0%, rgba(168, 130, 50, 0) 60%)," +
-        "radial-gradient(50% 30% at 30% 10%, rgba(201, 154, 61, 0.12) 0%, rgba(201, 154, 61, 0) 60%)"
+        "radial-gradient(70% 50% at 50% 0%, rgba(201, 154, 61, 0.18) 0%, rgba(201, 154, 61, 0) 60%)," +
+        "radial-gradient(50% 30% at 30% 10%, rgba(245, 230, 196, 0.50) 0%, rgba(245, 230, 196, 0) 60%)"
       );
     default:
       return (

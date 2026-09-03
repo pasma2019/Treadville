@@ -3,10 +3,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getCategories, getProductBySlug, getProducts } from "@/lib/queries";
 import ProductDetailClient from "./ProductDetailClient";
+import ProductGallery from "@/components/ProductGallery";
 import Reveal from "@/components/Reveal";
 import CategoryMark, { accentFor } from "@/components/CategoryMark";
-import type { Product } from "@/lib/types";
 import ProductImage from "@/components/ProductImage";
+import type { Product } from "@/lib/types";
 
 export const revalidate = 0;
 
@@ -96,34 +97,13 @@ export default async function ProductPage({
 
         <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1fr_360px] md:gap-12 lg:grid-cols-[1fr_400px] lg:gap-16">
           <Reveal variant="light" as="div" delay={0} className="min-w-0">
-            <div className="stage-product relative aspect-[4/5] w-full overflow-hidden md:aspect-[5/6]">
-              {product.image_url ? (
-                <ProductImage
-                  src={product.image_url}
-                  alt={product.name}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 opacity-20"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(circle at 1px 1px, rgba(26, 20, 16, 0.10) 1px, transparent 0)",
-                      backgroundSize: "6px 6px",
-                    }}
-                  />
-                  <CategoryMark
-                    slug={categorySlug}
-                    className="h-28 w-28 opacity-30"
-                  />
-                  <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--ink-muted)]">
-                    Image coming soon
-                  </p>
-                </div>
+            <ProductGallery
+              images={[product.image_url, ...(product.gallery ?? [])].filter(
+                (u): u is string => Boolean(u)
               )}
-            </div>
+              alt={product.name}
+              categorySlug={categorySlug}
+            />
           </Reveal>
 
           <Reveal variant="light" as="div" delay={1} className="min-w-0">

@@ -120,10 +120,21 @@ function ProductIdentity({
       ? "radial-gradient(80% 60% at 50% 20%, rgba(232, 196, 124, 0.22) 0%, rgba(14, 11, 8, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(201, 154, 61, 0.40) 0%, rgba(22, 17, 13, 0) 60%),linear-gradient(180deg, #21180a 0%, #14100a 100%)"
       : "radial-gradient(80% 60% at 50% 20%, rgba(232, 196, 124, 0.16) 0%, rgba(14, 11, 8, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(168, 70, 31, 0.30) 0%, rgba(22, 17, 13, 0) 60%),linear-gradient(180deg, #1f1610 0%, #15100a 100%)";
 
+  const lightGradient =
+    slug === "coffee"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(184, 114, 58, 0.32) 0%, rgba(184, 114, 58, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(107, 58, 28, 0.18) 0%, rgba(245, 232, 212, 0) 60%),linear-gradient(180deg, #f5e8d4 0%, #faf5ee 100%)"
+      : slug === "tea"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(122, 158, 122, 0.35) 0%, rgba(122, 158, 122, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(216, 232, 207, 0.25) 0%, rgba(234, 240, 227, 0) 60%),linear-gradient(180deg, #eaf0e3 0%, #f5f3e8 100%)"
+      : slug === "horticulture"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(147, 161, 60, 0.30) 0%, rgba(147, 161, 60, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(232, 240, 212, 0.30) 0%, rgba(232, 240, 212, 0) 60%),linear-gradient(180deg, #e8f0d4 0%, #f5f3e8 100%)"
+      : slug === "grains"
+      ? "radial-gradient(80% 60% at 50% 20%, rgba(201, 154, 61, 0.32) 0%, rgba(201, 154, 61, 0) 60%),radial-gradient(120% 80% at 20% 18%, rgba(245, 230, 196, 0.30) 0%, rgba(245, 230, 196, 0) 60%),linear-gradient(180deg, #f5e6c4 0%, #f8f1de 100%)"
+      : "radial-gradient(80% 60% at 50% 20%, rgba(122, 158, 122, 0.20) 0%, rgba(122, 158, 122, 0) 60%),linear-gradient(180deg, #f5e8d4 0%, #faf5ee 100%)";
+
   return (
     <div
       className="absolute inset-0 flex flex-col justify-between p-5 md:p-7"
-      style={{ background: isLight ? undefined : darkGradient }}
+      style={{ background: isLight ? lightGradient : darkGradient }}
     >
       {isLight && (
         <>
@@ -141,7 +152,7 @@ function ProductIdentity({
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "radial-gradient(60% 40% at 50% 30%, rgba(168, 70, 31, 0.08) 0%, transparent 70%)",
+                "radial-gradient(60% 40% at 50% 30%, rgba(122, 158, 122, 0.06) 0%, transparent 70%)",
             }}
           />
         </>

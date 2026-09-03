@@ -67,6 +67,19 @@ export default async function HomePage() {
 
       <JournalPreview />
 
+      {/* Editorial rhythm break — a single quiet line that hands the reader from
+          the dark Provenance / Journal into the light Featured collection. */}
+      <div
+        aria-hidden
+        className="relative flex items-center gap-6 border-b border-[var(--line-on-light)] bg-[#faf7f0] px-6 py-6"
+      >
+        <span className="h-px flex-1 bg-[var(--line-on-light)]" />
+        <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-[var(--ink-faint)]">
+          The collection
+        </p>
+        <span className="h-px flex-1 bg-[var(--line-on-light)]" />
+      </div>
+
       {featured.length > 0 && (() => {
         const lead = featured[0];
         const supporting = featured.slice(1);
