@@ -114,10 +114,10 @@ export default function FeaturedSection({
             className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ink)]"
           >
             View all
-            <span
-              aria-hidden
-              className="inline-block h-px w-6 bg-[var(--accent-coffee)] transition-all duration-500 group-hover:w-12"
-            />
+<span
+                 aria-hidden
+                 className="h-px w-6 bg-[var(--accent-sage)] transition-all duration-500 group-hover:w-10"
+               />
           </Link>
         </div>
       </div>

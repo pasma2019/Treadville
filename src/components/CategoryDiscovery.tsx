@@ -28,6 +28,14 @@ type CategoryAtmosphere = {
   surface: string;
   pattern: string;
   textOnAtmosphere: "light" | "dark";
+  pillBg: string;
+  pillBorder: string;
+  pillBlur: string;
+  accentClass: string;
+  hoverTransform: string;
+  hoverShadow: string;
+  ctaGradient: string;
+  ctaHoverGradient: string;
 };
 
 function atmosphereFor(slug: string): CategoryAtmosphere {
@@ -37,72 +45,112 @@ function atmosphereFor(slug: string): CategoryAtmosphere {
         eyebrow: "Origin · Cherry",
         descriptor: "High-altitude volcanic soils. Selected with the discipline the crop deserves.",
         accent: "var(--accent-coffee)",
+        accentClass: "text-[var(--accent-coffee)]",
         atmosphere:
-          "radial-gradient(90% 60% at 30% 30%, rgba(168, 70, 31, 0.55) 0%, rgba(22, 17, 13, 0) 60%)," +
-          "radial-gradient(70% 50% at 80% 80%, rgba(176, 141, 87, 0.35) 0%, rgba(22, 17, 13, 0) 60%)," +
-          "linear-gradient(180deg, #2a160c 0%, #1a0f08 100%)",
+          "radial-gradient(80% 60% at 70% 20%, rgba(107, 58, 28, 0.55) 0%, rgba(107, 58, 28, 0) 60%)," +
+          "radial-gradient(60% 50% at 20% 80%, rgba(184, 114, 58, 0.30) 0%, rgba(184, 114, 58, 0) 60%)," +
+          "linear-gradient(180deg, #f5e8d4 0%, #faf5ee 100%)",
         surface:
-          "linear-gradient(180deg, rgba(22, 17, 13, 0) 0%, rgba(22, 17, 13, 0.20) 50%, rgba(22, 17, 13, 0.85) 100%)",
+          "linear-gradient(180deg, rgba(107, 58, 28, 0.15) 0%, rgba(107, 58, 28, 0.45) 50%, rgba(107, 58, 28, 0.45) 100%)",
         pattern:
-          "radial-gradient(circle at 1px 1px, rgba(236, 227, 206, 0.10) 1px, transparent 0)",
+          "radial-gradient(circle at 1px 1px, rgba(236, 227, 206, 0.12) 1px, transparent 0)",
         textOnAtmosphere: "light",
+        pillBg: "rgba(255, 252, 248, 0.35)",
+        pillBorder: "rgba(236, 227, 206, 0.22)",
+        pillBlur: "backdrop-blur-[12px]",
+        hoverTransform: "scale(1.03) translateY(-2px)",
+        hoverShadow: "0 20px 50px rgba(107, 58, 28, 0.30)",
+        ctaGradient: "linear-gradient(135deg, #6b3a1c, #b8723a)",
+        ctaHoverGradient: "linear-gradient(135deg, #7a4a24, #c9884a)",
       };
     case "tea":
       return {
         eyebrow: "Origin · Leaf",
         descriptor: "Highland mist and slow growth.",
         accent: "var(--accent-tea)",
+        accentClass: "text-[var(--accent-tea)]",
         atmosphere:
-          "radial-gradient(90% 60% at 70% 30%, rgba(147, 161, 60, 0.40) 0%, rgba(14, 18, 12, 0) 60%)," +
-          "radial-gradient(70% 50% at 20% 80%, rgba(45, 74, 53, 0.55) 0%, rgba(14, 18, 12, 0) 60%)," +
-          "linear-gradient(180deg, #0f1810 0%, #060a06 100%)",
+          "radial-gradient(80% 60% at 70% 20%, rgba(122, 158, 122, 0.50) 0%, rgba(122, 158, 122, 0) 60%)," +
+          "radial-gradient(60% 50% at 20% 80%, rgba(216, 232, 207, 0.35) 0%, rgba(216, 232, 207, 0) 60%)," +
+          "linear-gradient(180deg, #eaf0e3 0%, #faf7f0 100%)",
         surface:
-          "linear-gradient(180deg, rgba(6, 10, 6, 0) 0%, rgba(6, 10, 6, 0.20) 50%, rgba(6, 10, 6, 0.85) 100%)",
+          "linear-gradient(180deg, rgba(122, 158, 122, 0.12) 0%, rgba(122, 158, 122, 0.40) 50%, rgba(122, 158, 122, 0.40) 100%)",
         pattern:
-          "linear-gradient(135deg, rgba(196, 220, 168, 0.06) 0%, transparent 60%)",
+          "linear-gradient(135deg, rgba(216, 232, 207, 0.08) 0%, transparent 60%)",
         textOnAtmosphere: "light",
+        pillBg: "rgba(255, 252, 248, 0.35)",
+        pillBorder: "rgba(236, 227, 206, 0.22)",
+        pillBlur: "backdrop-blur-[12px]",
+        hoverTransform: "scale(1.03) translateY(-2px)",
+        hoverShadow: "0 20px 50px rgba(122, 158, 122, 0.30)",
+        ctaGradient: "linear-gradient(135deg, #7a9e7a, #d8e8cf)",
+        ctaHoverGradient: "linear-gradient(135deg, #8ab88a, #e0f0d8)",
       };
     case "horticulture":
       return {
         eyebrow: "Origin · Bloom",
         descriptor: "Fertile lowland fields.",
         accent: "var(--accent-horticulture)",
+        accentClass: "text-[var(--accent-horticulture)]",
         atmosphere:
-          "radial-gradient(90% 60% at 30% 30%, rgba(147, 161, 60, 0.40) 0%, rgba(14, 18, 8, 0) 60%)," +
-          "radial-gradient(70% 50% at 80% 80%, rgba(176, 141, 87, 0.25) 0%, rgba(14, 18, 8, 0) 60%)," +
-          "linear-gradient(180deg, #161c0e 0%, #0a0f06 100%)",
+          "radial-gradient(80% 60% at 70% 20%, rgba(147, 161, 60, 0.45) 0%, rgba(147, 161, 60, 0) 60%)," +
+          "radial-gradient(60% 50% at 20% 80%, rgba(232, 240, 212, 0.30) 0%, rgba(232, 240, 212, 0) 60%)," +
+          "linear-gradient(180deg, #e8f0d4 0%, #faf7f0 100%)",
         surface:
-          "linear-gradient(180deg, rgba(10, 15, 6, 0) 0%, rgba(10, 15, 6, 0.20) 50%, rgba(10, 15, 6, 0.85) 100%)",
+          "linear-gradient(180deg, rgba(147, 161, 60, 0.10) 0%, rgba(147, 161, 60, 0.35) 50%, rgba(147, 161, 60, 0.35) 100%)",
         pattern:
-          "radial-gradient(circle at 1px 1px, rgba(236, 227, 206, 0.08) 1px, transparent 0)",
+          "radial-gradient(circle at 1px 1px, rgba(236, 227, 206, 0.10) 1px, transparent 0)",
         textOnAtmosphere: "light",
+        pillBg: "rgba(255, 252, 248, 0.35)",
+        pillBorder: "rgba(236, 227, 206, 0.22)",
+        pillBlur: "backdrop-blur-[12px]",
+        hoverTransform: "scale(1.03) translateY(-2px)",
+        hoverShadow: "0 20px 50px rgba(147, 161, 60, 0.30)",
+        ctaGradient: "linear-gradient(135deg, #93a13c, #e8f0d4)",
+        ctaHoverGradient: "linear-gradient(135deg, #a3b14c, #f0f8e4)",
       };
     case "grains":
       return {
         eyebrow: "Origin · Field",
         descriptor: "Sun-warmed plains and steady harvest.",
         accent: "var(--accent-grains)",
+        accentClass: "text-[var(--accent-grains)]",
         atmosphere:
-          "radial-gradient(90% 60% at 30% 30%, rgba(201, 154, 61, 0.45) 0%, rgba(22, 17, 13, 0) 60%)," +
-          "radial-gradient(70% 50% at 80% 80%, rgba(176, 141, 87, 0.30) 0%, rgba(22, 17, 13, 0) 60%)," +
-          "linear-gradient(180deg, #21180a 0%, #16100a 100%)",
+          "radial-gradient(80% 60% at 70% 20%, rgba(201, 154, 61, 0.50) 0%, rgba(201, 154, 61, 0) 60%)," +
+          "radial-gradient(60% 50% at 20% 80%, rgba(245, 230, 196, 0.35) 0%, rgba(245, 230, 196, 0) 60%)," +
+          "linear-gradient(180deg, #f5e6c4 0%, #faf7f0 100%)",
         surface:
-          "linear-gradient(180deg, rgba(22, 16, 10, 0) 0%, rgba(22, 16, 10, 0.20) 50%, rgba(22, 16, 10, 0.85) 100%)",
+          "linear-gradient(180deg, rgba(201, 154, 61, 0.12) 0%, rgba(201, 154, 61, 0.40) 50%, rgba(201, 154, 61, 0.40) 100%)",
         pattern:
-          "repeating-linear-gradient(45deg, rgba(236, 227, 206, 0.05) 0 1px, transparent 1px 6px)",
+          "repeating-linear-gradient(45deg, rgba(236, 227, 206, 0.08) 0 1px, transparent 1px 6px)",
         textOnAtmosphere: "light",
+        pillBg: "rgba(255, 252, 248, 0.35)",
+        pillBorder: "rgba(236, 227, 206, 0.22)",
+        pillBlur: "backdrop-blur-[12px]",
+        hoverTransform: "scale(1.03) translateY(-2px)",
+        hoverShadow: "0 20px 50px rgba(201, 154, 61, 0.30)",
+        ctaGradient: "linear-gradient(135deg, #c99a3d, #f5e6c4)",
+        ctaHoverGradient: "linear-gradient(135deg, #d9aa4d, #f8ecce)",
       };
     default:
       return {
         eyebrow: "Origin",
         descriptor: "",
         accent: categoryAccent(slug),
+        accentClass: categoryAccent(slug),
         atmosphere:
-          "radial-gradient(90% 60% at 30% 30%, rgba(168, 70, 31, 0.40) 0%, rgba(22, 17, 13, 0) 60%)," +
-          "linear-gradient(180deg, #1f1610 0%, #15100a 100%)",
-        surface: "linear-gradient(180deg, transparent, rgba(22,17,13,0.85))",
+          "radial-gradient(80% 60% at 70% 20%, rgba(168, 70, 31, 0.40) 0%, rgba(168, 70, 31, 0) 60%)," +
+          "linear-gradient(180deg, #f5e8d4 0%, #faf5ee 100%)",
+        surface: "linear-gradient(180deg, transparent 0%, rgba(168, 70, 31, 0.15) 50%, rgba(168, 70, 31, 0.45) 100%)",
         pattern: "",
         textOnAtmosphere: "light",
+        pillBg: "rgba(255, 252, 248, 0.35)",
+        pillBorder: "rgba(236, 227, 206, 0.22)",
+        pillBlur: "backdrop-blur-[12px]",
+        hoverTransform: "scale(1.03) translateY(-2px)",
+        hoverShadow: "0 20px 50px rgba(168, 70, 31, 0.20)",
+        ctaGradient: "linear-gradient(135deg, #6b3a1c, #b8723a)",
+        ctaHoverGradient: "linear-gradient(135deg, #7a4a24, #c9884a)",
       };
   }
 }
@@ -143,8 +191,8 @@ function ChapterMark({ slug, size = 96 }: { slug: string; size?: number }) {
       <svg viewBox="0 0 200 200" width={size} height={size} aria-hidden className="opacity-40">
         <defs>
           <linearGradient id="disc-coffee" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#a8461f" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#a8461f" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="#6b3a1c" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#6b3a1c" stopOpacity="0.1" />
           </linearGradient>
         </defs>
         <circle cx="100" cy="100" r="80" fill="none" stroke="url(#disc-coffee)" strokeWidth="1" />
@@ -159,8 +207,8 @@ function ChapterMark({ slug, size = 96 }: { slug: string; size?: number }) {
       <svg viewBox="0 0 200 200" width={size} height={size} aria-hidden className="opacity-40">
         <defs>
           <linearGradient id="disc-tea" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#5c7440" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#5c7440" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="#7a9e7a" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#7a9e7a" stopOpacity="0.1" />
           </linearGradient>
         </defs>
         <circle cx="100" cy="100" r="80" fill="none" stroke="url(#disc-tea)" strokeWidth="1" />
@@ -217,7 +265,7 @@ function LeadChapter({ cat }: { cat: Category }) {
       <Link
         href={`/shop/${cat.slug}`}
         style={{ ["--accent" as string]: accent }}
-        className="group relative block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)]"
+        className="group relative block overflow-hidden rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)] transition-transform duration-[600ms] ease-[var(--ease-out)] hover:scale-[1.03] hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0"
         aria-label={`Enter the ${cat.name} chapter`}
       >
         <div className="relative aspect-[4/5] w-full overflow-hidden md:aspect-[5/6]">
@@ -226,34 +274,50 @@ function LeadChapter({ cat }: { cat: Category }) {
           <div className="absolute inset-0 flex items-center justify-center">
             <ChapterMark slug={cat.slug} size={140} />
           </div>
-          <div className="absolute inset-0 pointer-events-none transition-opacity duration-700 ease-out opacity-0 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${a.accent}33 0%, transparent 70%)` }} />
+          <div className="absolute inset-0 pointer-events-none transition-opacity duration-700 ease-out opacity-0 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${a.accent}22 0%, transparent 70%)` }} />
         </div>
         <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-6 md:p-10">
           <div className="flex items-start justify-between">
             <span
-              className="font-mono text-[10px] uppercase tracking-[0.32em]"
-              style={{ color: a.accent }}
+              className="rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.32em] backdrop-blur-md"
+              style={{
+                color: a.accent,
+                background: a.pillBg,
+                border: `1px solid ${a.pillBorder}`,
+              }}
             >
               {a.eyebrow}
             </span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.32em] text-[var(--parchment)]/40">
+            <span className="rounded-full px-3 py-1 font-mono text-[9px] uppercase tracking-[0.32em] text-[var(--ink-muted)]/70 backdrop-blur-md"
+              style={{
+                background: a.pillBg,
+                border: `1px solid ${a.pillBorder}`,
+              }}
+            >
               Chapter 01 · Lead
             </span>
           </div>
           <div>
-            <h3 className="font-display text-4xl italic leading-[1.0] tracking-[-0.02em] text-[var(--parchment)] md:text-6xl">
+            <h3 className="font-display text-4xl italic leading-[1.0] tracking-[-0.02em] text-[var(--ink)] md:text-6xl">
               {cat.name}
             </h3>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--parchment)]/75 md:text-base">
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--ink-soft)] md:text-base">
               {cat.description || a.descriptor}
             </p>
-            <div className="mt-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--parchment)]/85">
+            <div className="mt-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--ink-soft)]">
               <span
                 aria-hidden
-                className="h-px w-8 transition-all duration-500 ease-out group-hover:w-12"
-                style={{ background: a.accent }}
+                className="inline-block h-px w-0 transition-all duration-500 ease-out group-hover:w-12 motion-reduce:transition-none"
+                style={{ background: a.ctaGradient }}
               />
-              <span>Enter the chapter</span>
+              <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100">Enter the chapter</span>
+              <span
+                aria-hidden
+                className="inline-block translate-x-0 opacity-0 transition-all duration-500 ease-out group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none"
+                style={{ color: a.accent }}
+              >
+                →
+              </span>
             </div>
           </div>
         </div>
@@ -270,7 +334,7 @@ function CompanionChapter({ cat, index }: { cat: Category; index: number }) {
       <Link
         href={`/shop/${cat.slug}`}
         style={{ ["--accent" as string]: accent }}
-        className="group relative block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)]"
+        className="group relative block overflow-hidden rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)] transition-transform duration-[600ms] ease-[var(--ease-out)] hover:scale-[1.03] hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:hover:translate-y-0"
         aria-label={`Enter the ${cat.name} chapter`}
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -279,27 +343,41 @@ function CompanionChapter({ cat, index }: { cat: Category; index: number }) {
           <div className="absolute right-5 top-5">
             <ChapterMark slug={cat.slug} size={64} />
           </div>
+          <div className="absolute inset-0 pointer-events-none transition-opacity duration-700 ease-out opacity-0 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${a.accent}22 0%, transparent 70%)` }} />
         </div>
         <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-5 md:p-6">
-          <span
-            className="font-mono text-[9px] uppercase tracking-[0.32em]"
-            style={{ color: a.accent }}
-          >
-            {a.eyebrow}
-          </span>
-          <h3 className="mt-2 font-display text-2xl italic leading-[1.0] tracking-[-0.015em] text-[var(--parchment)] md:text-3xl">
+          <div className="mb-3 flex items-center justify-between">
+            <span
+              className="rounded-full px-3 py-1 font-mono text-[9px] uppercase tracking-[0.32em] backdrop-blur-md"
+              style={{
+                color: a.accent,
+                background: a.pillBg,
+                border: `1px solid ${a.pillBorder}`,
+              }}
+            >
+              {a.eyebrow}
+            </span>
+          </div>
+          <h3 className="font-display text-2xl italic leading-[1.0] tracking-[-0.015em] text-[var(--ink)] md:text-3xl">
             {cat.name}
           </h3>
-          <p className="mt-2 text-xs leading-relaxed text-[var(--parchment)]/70 md:text-sm">
+          <p className="mt-2 text-xs leading-relaxed text-[var(--ink-soft)] md:text-sm">
             {cat.description || a.descriptor}
           </p>
-          <div className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--parchment)]/75">
+          <div className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-soft)]">
             <span
               aria-hidden
-              className="h-px w-6 transition-all duration-500 ease-out group-hover:w-10"
-              style={{ background: a.accent }}
+              className="inline-block h-px w-0 transition-all duration-500 ease-out group-hover:w-10 motion-reduce:transition-none"
+              style={{ background: a.ctaGradient }}
             />
-            <span>Enter</span>
+            <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100">Enter</span>
+            <span
+              aria-hidden
+              className="inline-block translate-x-0 opacity-0 transition-all duration-500 ease-out group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none"
+              style={{ color: a.accent }}
+            >
+              →
+            </span>
           </div>
         </div>
       </Link>
@@ -334,8 +412,8 @@ export default function CategoryDiscovery({ categories }: { categories: Category
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(60% 50% at 80% 0%, rgba(168, 70, 31, 0.05) 0%, rgba(244, 239, 228, 0) 50%)," +
-            "radial-gradient(50% 40% at 0% 100%, rgba(45, 74, 53, 0.05) 0%, rgba(244, 239, 228, 0) 60%)",
+            "radial-gradient(60% 50% at 80% 0%, rgba(122, 158, 122, 0.08) 0%, rgba(244, 239, 228, 0) 50%)," +
+            "radial-gradient(50% 40% at 0% 100%, rgba(122, 158, 122, 0.06) 0%, rgba(244, 239, 228, 0) 60%)",
         }}
       />
 

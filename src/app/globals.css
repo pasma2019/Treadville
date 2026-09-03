@@ -33,6 +33,20 @@
   --accent-sage: #7a9e7a;       /* refined pastoral green for hero editorial accents */
   --accent: var(--accent-sage); /* default: sage (pastoral, warm) */
 
+  /* --- Light category gradient tokens (Phase 2D.5) ---
+     Warm ivory base, sophisticated botanical greens, coffee brown as accent,
+     champagne gold. Used by chapter cards and CTAs. */
+  --cat-coffee-base: #6b3a1c;       /* warm roasted coffee brown */
+  --cat-coffee-edge: #b8723a;       /* deep amber / copper at the edges */
+  --cat-coffee-glow: #f0c680;       /* soft warm light source */
+  --cat-tea-base: #7a9e7a;          /* fresh new-leaf green */
+  --cat-tea-edge: #d8e8cf;          /* pale sage-mint */
+  --cat-hort-base: #93a13c;         /* avocado green */
+  --cat-hort-edge: #e8f0d4;         /* soft cream */
+  --cat-grains-base: #c99a3d;       /* warm gold / wheat */
+  --cat-grains-edge: #f5e6c4;       /* pale champagne */
+  --cat-gold: #c99a3d;              /* shared champagne gold */
+
   /* --- Lines / borders --- */
   --line: rgba(236, 227, 206, 0.14);        /* hairline on dark */
   --line-strong: rgba(236, 227, 206, 0.28);
@@ -45,13 +59,18 @@
   --shadow-float: 0 16px 40px rgba(14, 11, 8, 0.32);
   --shadow-cinema: 0 24px 80px rgba(0, 0, 0, 0.55);   /* for hero foreground depth */
 
-  /* --- Glass material --- */
+  /* Glass material --- */
   --glass-bg: rgba(20, 15, 11, 0.55);
   --glass-bg-light: rgba(244, 239, 228, 0.12);
   --glass-border: rgba(236, 227, 206, 0.18);
   --glass-border-light: rgba(22, 17, 13, 0.14);
   --glass-blur: 16px;
   --glass-blur-strong: 24px;
+
+  /* --- Metadata pill glass (light category cards) --- */
+  --glass-pill-bg: rgba(255, 252, 248, 0.35);
+  --glass-pill-border: rgba(236, 227, 206, 0.22);
+  --glass-pill-blur: 12px;
 
   /* Cinematic glass — for hero foreground overlays. Slightly lighter
      than glass-strong so the background composition remains visible.
