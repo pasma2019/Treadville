@@ -179,7 +179,7 @@ function CategoryImageLayerFor({ cat }: { cat: Category }) {
   return (
     <CategoryImageLayer
       src={cat.image_url}
-      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[var(--ease-smooth)] group-hover:scale-[1.05]"
+      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[var(--ease-smooth)] group-hover:scale-[1.05] group-hover:translate-y-[-2px] motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-hover:translate-y-0"
     />
   );
 }
@@ -307,10 +307,10 @@ function LeadChapter({ cat }: { cat: Category }) {
             <div className="mt-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--ink-soft)]">
               <span
                 aria-hidden
-                className="inline-block h-px w-0 transition-all duration-500 ease-out group-hover:w-12 motion-reduce:transition-none"
+                className="inline-block h-px w-0 transition-all duration-500 ease-out group-hover:w-12 motion-reduce:transition-none motion-reduce:group-hover:w-0"
                 style={{ background: a.ctaGradient }}
               />
-              <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100">Enter the chapter</span>
+              <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none">Enter the chapter</span>
               <span
                 aria-hidden
                 className="inline-block translate-x-0 opacity-0 transition-all duration-500 ease-out group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none"
@@ -367,10 +367,10 @@ function CompanionChapter({ cat, index }: { cat: Category; index: number }) {
           <div className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-soft)]">
             <span
               aria-hidden
-              className="inline-block h-px w-0 transition-all duration-500 ease-out group-hover:w-10 motion-reduce:transition-none"
+              className="inline-block h-px w-0 transition-all duration-500 ease-out group-hover:w-10 motion-reduce:transition-none motion-reduce:group-hover:w-0"
               style={{ background: a.ctaGradient }}
             />
-            <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100">Enter</span>
+            <span className="opacity-90 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none">Enter</span>
             <span
               aria-hidden
               className="inline-block translate-x-0 opacity-0 transition-all duration-500 ease-out group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none"

@@ -80,7 +80,7 @@ export default function HeroSlideshow() {
 
             <h1
               id="hero-headline"
-              className="mt-6 max-w-[18ch] font-display font-medium leading-[0.92] tracking-[-0.025em] text-[var(--ink)] text-[3.5rem] sm:text-[4.5rem] md:text-[6rem] lg:max-w-[none] lg:text-[7.5rem] xl:text-[9rem]"
+              className="mt-6 max-w-[22ch] font-display font-medium leading-[0.91] tracking-[-0.025em] text-[var(--ink)] text-[2.75rem] sm:text-[3.5rem] md:text-[5rem] lg:max-w-[none] lg:text-[7rem] xl:text-[8.5rem]"
             >
               <span className="block text-balance italic" style={{ fontStyle: "italic" }}>
                 {THESIS_LINE_1}

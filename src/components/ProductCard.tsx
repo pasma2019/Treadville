@@ -52,7 +52,7 @@ export default function ProductCard({
           <ProductImage
             src={product.image_url}
             alt={product.name}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.06]"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-[var(--ease-out)] group-hover:scale-[1.03] group-hover:translate-y-[-3px] motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-hover:translate-y-0"
           />
         ) : (
           <ProductIdentity

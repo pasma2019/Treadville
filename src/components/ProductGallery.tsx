@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import CategoryMark from "@/components/CategoryMark";
@@ -16,6 +16,7 @@ export default function ProductGallery({ images, alt, categorySlug }: Props) {
   const hasImages = safe.length > 0;
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const dragStartX = useRef<number | null>(null);
 
   if (!hasImages) {
     return (
@@ -37,19 +38,53 @@ export default function ProductGallery({ images, alt, categorySlug }: Props) {
     );
   }
 
-  const current = safe[Math.min(active, safe.length - 1)];
   const isMulti = safe.length > 1;
-  const go = (delta: 1 | -1) => {
-    setDirection(delta);
-    setActive((a) => (a + delta + safe.length) % safe.length);
+  const go = useCallback(
+    (delta: 1 | -1) => {
+      setDirection(delta);
+      setActive((a) => (a + delta + safe.length) % safe.length);
+    },
+    [safe.length]
+  );
+  const goFirst = useCallback(() => {
+    setDirection(-1);
+    setActive(0);
+  }, []);
+  const goLast = useCallback(() => {
+    setDirection(1);
+    setActive(safe.length - 1);
+  }, [safe.length]);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    dragStartX.current = e.clientX;
+    (e.target as HTMLElement).closest('[role="tabpanel"]')?.setAttribute("data-drag", "true");
+  };
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragStartX.current === null) return;
+    const delta = e.clientX - dragStartX.current;
+    dragStartX.current = null;
+    (e.target as HTMLElement).closest('[role="tabpanel"]')?.removeAttribute("data-drag");
+    if (Math.abs(delta) > 48) {
+      go(delta < 0 ? 1 : -1);
+    }
+  };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); go(-1); }
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); go(1); }
+    if (e.key === "Home") { e.preventDefault(); goFirst(); }
+    if (e.key === "End") { e.preventDefault(); goLast(); }
   };
 
   return (
     <div className="flex flex-col gap-3">
       <div
         className="stage-product relative aspect-[4/5] w-full overflow-hidden md:aspect-[5/6]"
-        aria-roledescription="carousel"
+        role="tabpanel"
         aria-label={alt}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
       >
         {safe.map((src, i) => (
           <div
@@ -75,7 +110,7 @@ export default function ProductGallery({ images, alt, categorySlug }: Props) {
               type="button"
               onClick={() => go(-1)}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-[var(--parchment)]/30 bg-[rgba(20,15,11,0.45)] text-[var(--parchment)] backdrop-blur-md transition-colors duration-[var(--dur-fast)] hover:bg-[rgba(20,15,11,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)] motion-reduce:transition-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-[var(--parchment)]/30 bg-[rgba(20,15,11,0.45)] text-[var(--parchment)] backdrop-blur-md transition-all duration-[var(--dur-fast)] hover:bg-[rgba(20,15,11,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)] motion-reduce:transition-none"
             >
               <ChevronLeft size={16} />
             </button>
@@ -83,7 +118,7 @@ export default function ProductGallery({ images, alt, categorySlug }: Props) {
               type="button"
               onClick={() => go(1)}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-[var(--parchment)]/30 bg-[rgba(20,15,11,0.45)] text-[var(--parchment)] backdrop-blur-md transition-colors duration-[var(--dur-fast)] hover:bg-[rgba(20,15,11,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)] motion-reduce:transition-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-[var(--parchment)]/30 bg-[rgba(20,15,11,0.45)] text-[var(--parchment)] backdrop-blur-md transition-all duration-[var(--dur-fast)] hover:bg-[rgba(20,15,11,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)] motion-reduce:transition-none"
             >
               <ChevronRight size={16} />
             </button>
@@ -98,7 +133,7 @@ export default function ProductGallery({ images, alt, categorySlug }: Props) {
 
       {isMulti && (
         <div
-          className="flex gap-2 overflow-x-auto"
+          className="flex gap-2 overflow-x-auto pb-0.5"
           role="tablist"
           aria-label="Product images"
         >
@@ -108,11 +143,12 @@ export default function ProductGallery({ images, alt, categorySlug }: Props) {
               type="button"
               role="tab"
               aria-selected={i === active}
+              aria-label={`View image ${i + 1}`}
               onClick={() => {
                 setDirection(i > active ? 1 : -1);
                 setActive(i);
               }}
-              className="group relative h-16 w-16 shrink-0 overflow-hidden border transition-colors duration-[var(--dur-fast)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] motion-reduce:transition-none"
+              className="group relative h-14 w-14 shrink-0 overflow-hidden border transition-all duration-[var(--dur-fast)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 motion-reduce:transition-none"
               style={{
                 borderColor: i === active ? "var(--ink)" : "var(--line-on-light)",
               }}
@@ -120,8 +156,15 @@ export default function ProductGallery({ images, alt, categorySlug }: Props) {
               <ProductImage
                 src={src}
                 alt=""
-                className="absolute inset-0 h-full w-full object-cover opacity-90 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none"
+                className="absolute inset-0 h-full w-full object-cover opacity-90 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
               />
+              {i === active && (
+                <span
+                  aria-hidden
+                  className="absolute inset-0 border-2"
+                  style={{ borderColor: "var(--ink)" }}
+                />
+              )}
             </button>
           ))}
         </div>
