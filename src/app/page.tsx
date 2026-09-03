@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCategories, getFeaturedProducts, getSiteContent } from "@/lib/queries";
 import ProductCard from "@/components/ProductCard";
 import HeroSlideshow from "@/components/HeroSlideshow";
+import CategoryQuickNav from "@/components/CategoryQuickNav";
 import CategoryDiscovery from "@/components/CategoryDiscovery";
 import Provenance from "@/components/Provenance";
 import Reveal from "@/components/Reveal";
@@ -26,6 +27,8 @@ export default async function HomePage() {
   return (
     <main>
       <HeroSlideshow />
+
+      <CategoryQuickNav />
 
       <CategoryDiscovery categories={categories} />
 
