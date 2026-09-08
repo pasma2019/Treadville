@@ -44,6 +44,17 @@ function metaFor(slug: string): CategoryAtmosphere {
   );
 }
 
+const ACCENT_CLASS: Record<string, string> = {
+  coffee: "text-[var(--accent-coffee)]",
+  tea: "text-[var(--accent-tea)]",
+  horticulture: "text-[var(--accent-horticulture)]",
+  grains: "text-[var(--accent-grains)]",
+};
+
+function accentClass(slug: string) {
+  return ACCENT_CLASS[slug] ?? "text-[var(--accent)]";
+}
+
 function CategoryImageLayerFor({ cat }: { cat: Category }) {
   if (!cat.image_url) return null;
   return (
@@ -60,7 +71,7 @@ function LeadChapter({ cat }: { cat: Category }) {
     <Reveal as="div" delay={0} className="md:col-span-7">
       <Link
         href={`/shop/${cat.slug}`}
-        className="group relative block overflow-hidden bg-[var(--warm-white)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)]"
+        className="group relative block overflow-hidden border border-[var(--glass-border)] bg-[var(--warm-white)] transition-[border-color,box-shadow] duration-500 hover:border-[rgba(184,134,11,0.4)] hover:shadow-[var(--shadow-elite)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)]"
         aria-label={`Enter the ${cat.name} chapter`}
       >
         <div className="relative aspect-[4/5] w-full overflow-hidden md:aspect-[5/6]">
@@ -68,8 +79,7 @@ function LeadChapter({ cat }: { cat: Category }) {
         </div>
         <div className="p-6 md:p-8">
           <p
-            className="font-mono text-[13px] uppercase tracking-[0.12em]"
-            style={{ color: m.accent }}
+            className={`font-mono text-[13px] uppercase tracking-[0.12em] transition-colors duration-300 group-hover:text-[var(--gold-deep)] ${accentClass(cat.slug)}`}
           >
             {m.eyebrow}
           </p>
@@ -91,7 +101,7 @@ function CompanionChapter({ cat, index }: { cat: Category; index: number }) {
     <Reveal as="div" delay={(index as 0 | 1 | 2 | 3)}>
       <Link
         href={`/shop/${cat.slug}`}
-        className="group relative block overflow-hidden bg-[var(--warm-white)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)]"
+        className="group relative block overflow-hidden border border-[var(--glass-border)] bg-[var(--warm-white)] transition-[border-color,box-shadow] duration-500 hover:border-[rgba(184,134,11,0.4)] hover:shadow-[var(--shadow-elite)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bone)]"
         aria-label={`Enter the ${cat.name} chapter`}
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -99,8 +109,7 @@ function CompanionChapter({ cat, index }: { cat: Category; index: number }) {
         </div>
         <div className="p-5 md:p-6">
           <p
-            className="font-mono text-[13px] uppercase tracking-[0.12em]"
-            style={{ color: m.accent }}
+            className={`font-mono text-[13px] uppercase tracking-[0.12em] transition-colors duration-300 group-hover:text-[var(--gold-deep)] ${accentClass(cat.slug)}`}
           >
             {m.eyebrow}
           </p>

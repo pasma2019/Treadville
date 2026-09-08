@@ -31,7 +31,7 @@ export default function FeaturedSection({
       className="relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(180deg, #f3eadb 0%, #f8f4ec 40%, #faf7f0 100%)",
+          "linear-gradient(180deg, var(--bg-warm) 0%, #f8f4ec 40%, var(--bg-base) 100%)",
       }}
     >
       <div
@@ -39,7 +39,7 @@ export default function FeaturedSection({
         className="pointer-events-none absolute inset-0 opacity-35"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(26, 20, 16, 0.03) 1px, transparent 0)",
+            "radial-gradient(circle at 1px 1px, rgba(33, 29, 23, 0.03) 1px, transparent 0)",
           backgroundSize: "7px 7px",
         }}
       />
@@ -174,12 +174,11 @@ function FeaturedLead({
             style={
               {
                 ["--accent" as string]: accent,
-                background: "rgba(251, 248, 241, 0.90)",
-                backdropFilter: "blur(20px) saturate(140%)",
-                WebkitBackdropFilter: "blur(20px) saturate(140%)",
-                border: "1px solid rgba(26, 20, 16, 0.08)",
-                boxShadow:
-                  "0 20px 56px -20px rgba(60, 45, 30, 0.32), 0 4px 12px -4px rgba(60, 45, 30, 0.12)",
+                background: "rgba(255, 255, 255, 0.60)",
+                backdropFilter: "blur(20px) saturate(150%)",
+                WebkitBackdropFilter: "blur(20px) saturate(150%)",
+                border: "1px solid var(--glass-border)",
+                boxShadow: "var(--shadow-soft)",
                 padding: "clamp(1.25rem, 2vw, 1.75rem)",
               } as React.CSSProperties
             }

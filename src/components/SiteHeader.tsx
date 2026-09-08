@@ -30,7 +30,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -73,32 +73,21 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
   const isShopActive = () => pathname.startsWith("/shop");
 
   return (
-    <header
-      className={`sticky top-0 z-40 transition-colors duration-300 ${
-        scrolled
-          ? "site-nav backdrop-blur-[var(--glass-cinema-blur)]"
-          : "border-b border-transparent bg-transparent"
-      }`}
-    >
-      <div
-        className={`mx-auto flex h-[60px] items-center justify-between gap-6 px-6 md:h-[68px] md:px-10`}
-        style={{ maxWidth: "min(1280px, calc(100% - 32px))" }}
-      >
+    <header className="nav-shell">
+      <div className={`nav-pill ${scrolled ? "is-scrolled" : ""}`}>
         {/* Logo */}
         <Link
           href="/"
-          className="group flex shrink-0 items-center gap-3"
+          className="flex shrink-0 items-center"
           onClick={handleMenuClose}
         >
-          <span className="font-display text-[1.35rem] font-semibold tracking-[0.12em] text-[var(--ink)] transition-colors group-hover:text-[var(--accent)]">
-            TREADVILLE
-          </span>
+          <span className="nav-logo text-[1.25rem]">TREADVILLE</span>
         </Link>
 
         {/* Desktop nav */}
         <nav
           aria-label="Main navigation"
-          className="hidden items-center gap-6 lg:flex"
+          className="nav-links hidden lg:flex"
         >
           {/* Shop dropdown */}
           <div ref={shopRef} className="relative">
@@ -107,10 +96,8 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
               aria-expanded={shopOpen}
               aria-haspopup="true"
               aria-label="Shop categories"
-              className={`flex items-center gap-1.5 rounded-sm text-[1rem] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${
-                isShopActive()
-                  ? "text-[var(--ink)]"
-                  : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+              className={`nav-link flex items-center gap-1.5 ${
+                isShopActive() ? "is-active" : ""
               }`}
             >
               Shop
@@ -121,14 +108,14 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             </button>
             {shopOpen && (
               <div
-                className="absolute left-0 top-full z-50 mt-2 min-w-[160px] border border-[var(--line-on-light)] bg-[var(--warm-white)] shadow-[var(--shadow-float-light)]"
+                className="absolute left-0 top-full z-50 mt-3 min-w-[180px] overflow-hidden rounded-xl border border-[var(--glass-border)] bg-[var(--bg-elevated)]/90 shadow-[var(--shadow-elite)] backdrop-blur-xl"
                 role="menu"
               >
                 <Link
                   href="/shop"
                   onClick={() => setShopOpen(false)}
                   role="menuitem"
-                  className="block rounded-sm border-b border-[var(--line-on-light)] px-5 py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:bg-[var(--line-on-light)] hover:text-[var(--ink)] focus-visible:bg-[var(--line-on-light)] focus-visible:text-[var(--ink)] focus-visible:outline-none"
+                  className="block px-5 py-3 text-[0.95rem] text-[var(--ink-soft)] transition-colors hover:bg-[rgba(184,134,11,0.08)] hover:text-[var(--gold-deep)] focus-visible:bg-[rgba(184,134,11,0.08)] focus-visible:text-[var(--gold-deep)] focus-visible:outline-none"
                 >
                   View all products
                 </Link>
@@ -140,7 +127,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
                       href={`/shop/${cat.slug}`}
                       onClick={() => setShopOpen(false)}
                       role="menuitem"
-                      className="block rounded-sm px-5 py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:bg-[var(--line-on-light)] hover:text-[var(--ink)] focus-visible:bg-[var(--line-on-light)] focus-visible:text-[var(--ink)] focus-visible:outline-none"
+                      className="block px-5 py-3 text-[0.95rem] text-[var(--ink-soft)] transition-colors hover:bg-[rgba(184,134,11,0.08)] hover:text-[var(--gold-deep)] focus-visible:bg-[rgba(184,134,11,0.08)] focus-visible:text-[var(--gold-deep)] focus-visible:outline-none"
                     >
                       {label}
                     </Link>
@@ -158,11 +145,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
               <Link
                 key={href}
                 href={href}
-                className={`rounded-sm text-[1rem] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${
-                  active
-                    ? "text-[var(--ink)]"
-                    : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
-                }`}
+                className={`nav-link ${active ? "is-active" : ""}`}
               >
                 {label}
               </Link>
@@ -171,15 +154,15 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
         </nav>
 
         {/* Right side */}
-        <div className="flex shrink-0 items-center gap-3 lg:gap-5">
+        <div className="flex shrink-0 items-center gap-1.5 lg:gap-2">
           <button
             onClick={openCart}
             aria-label={`Open enquiry cart (${count} items)`}
-            className="flex items-center gap-2 rounded-sm text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+            className="nav-icon-btn relative"
           >
-            <ShoppingBag size={16} />
+            <ShoppingBag size={17} />
             {count > 0 && (
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[var(--accent)] text-[9px] font-medium leading-none text-[var(--warm-white)]">
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--gold)] px-1 text-[9px] font-bold leading-none text-white">
                 {count}
               </span>
             )}
@@ -190,7 +173,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="site-mobile-menu"
-            className="flex items-center gap-2 rounded-sm text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent lg:hidden"
+            className="nav-icon-btn lg:hidden"
           >
             {menuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -202,11 +185,10 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
         ref={menuRef}
         id="site-mobile-menu"
         aria-hidden={!menuOpen}
-        className={`fixed inset-0 top-[60px] z-30 flex flex-col overflow-y-auto bg-[var(--warm-white)]/[0.97] backdrop-blur-xl transition-opacity duration-300 lg:hidden ${
-          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
+        inert={!menuOpen}
+        className={`nav-mobile-panel lg:hidden ${menuOpen ? "is-open" : ""}`}
       >
-        <nav aria-label="Mobile navigation" className="flex flex-col gap-0 px-8 py-8">
+        <nav aria-label="Mobile navigation" className="flex flex-col gap-0 px-8 py-24">
           {/* Shop section */}
           <div className="mb-2 mt-2">
             <Link
@@ -214,7 +196,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
               href="/shop"
               onClick={handleMenuClose}
               aria-current={isActive("/shop") ? "page" : undefined}
-              className="mb-3 block rounded-sm text-[1.0625rem] font-medium text-[var(--ink)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+              className="mb-3 block rounded-sm text-[1.0625rem] font-medium text-[var(--gold-deep)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               Shop
             </Link>
@@ -226,7 +208,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
                   href={`/shop/${cat.slug}`}
                   onClick={handleMenuClose}
                   aria-current={isActive(`/shop/${cat.slug}`) ? "page" : undefined}
-                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                 >
                   {label}
                 </Link>
@@ -236,7 +218,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
 
           {/* IA section */}
           <div className="mb-2 mt-8">
-            <p className="mb-3 text-[1.0625rem] font-medium text-[var(--ink)]">
+            <p className="mb-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-[var(--gold-deep)]">
               Company
             </p>
             {IA_LINKS.map(({ key, href }) => {
@@ -247,7 +229,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
                   href={href}
                   onClick={handleMenuClose}
                   aria-current={isActive(href) ? "page" : undefined}
-                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                 >
                   {label}
                 </Link>

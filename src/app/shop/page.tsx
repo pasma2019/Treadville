@@ -30,9 +30,9 @@ export default async function ShopPage() {
     <main className="surface-warm">
       {/* Page header */}
       <div className="border-b border-[var(--line-on-light)] bg-[var(--warm-white)]">
-        <div className="mx-auto max-w-[var(--content-wide)] px-6 py-10 md:px-10 md:py-14">
+        <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-28 pb-10 md:px-10 md:pt-32 md:pb-14">
           <Reveal variant="light" as="div" delay={0}>
-            <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--ink-muted)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.20em] eyebrow-gold">
               Treadville
             </p>
             <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
@@ -79,7 +79,7 @@ export default async function ShopPage() {
 function ShopEmptyState() {
   return (
     <div className="mx-auto max-w-lg py-16 text-center">
-      <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--ink-muted)]">
+      <p className="font-mono text-[12px] uppercase tracking-[0.20em] eyebrow-gold">
         Full catalogue
       </p>
       <h2 className="mt-4 font-display text-2xl italic leading-tight tracking-[-0.01em] text-[var(--ink)] md:text-3xl">
@@ -91,16 +91,10 @@ function ShopEmptyState() {
         identify the right opportunity.
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <Link
-          href="/contact?type=sample"
-          className="inline-flex items-center gap-3 border border-[var(--ink)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ink)] transition-colors hover:bg-[var(--ink)] hover:text-[var(--warm-white)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
-        >
+        <Link href="/contact?type=sample" className="btn-cta">
           Request a sample
         </Link>
-        <Link
-          href="/contact"
-          className="inline-flex items-center gap-2 font-mono text-[15px] text-[var(--ink-soft)] underline decoration-[var(--ink)]/30 underline-offset-4 transition-colors hover:text-[var(--ink)]"
-        >
+        <Link href="/contact" className="btn-cta-ghost">
           Make an enquiry
         </Link>
       </div>

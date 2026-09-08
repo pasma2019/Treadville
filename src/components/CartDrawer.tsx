@@ -48,20 +48,20 @@ export default function CartDrawer() {
       />
       <aside
         ref={panelRef}
-        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col border-l border-[var(--glass-light-border)] bg-[var(--warm-white)]/95 backdrop-blur transition-transform duration-300 ease-out ${
+        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col border-l border-[var(--glass-border)] bg-[var(--warm-white)]/92 backdrop-blur-xl transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         aria-label="Shopping cart"
         aria-hidden={!isOpen}
         onKeyDown={(e) => e.key === "Escape" && closeCart()}
       >
-        <div className="flex items-center justify-between border-b border-[var(--line-on-light)] px-6 py-6">
+        <div className="flex items-center justify-between border-b border-[var(--glass-border)] px-6 py-6">
           <h2 className="font-display text-xl text-[var(--ink)]">Your order</h2>
           <button
             ref={closeButtonRef}
             onClick={closeCart}
             aria-label="Close cart"
-            className="text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
+            className="text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
           >
             <X size={20} />
           </button>
@@ -84,14 +84,14 @@ export default function CartDrawer() {
               >
                 <div className="min-w-0">
                   <p className="font-display text-base leading-tight text-[var(--ink)]">{line.product.name}</p>
-                  <p className="mt-1 font-mono text-xs text-[var(--ink-muted)]">
+                  <p className="mt-1 font-mono text-xs text-[var(--gold-deep)]">
                     Quantity · {line.qty}
                   </p>
                 </div>
                 <button
                   onClick={() => removeFromCart(line.product.id)}
                   aria-label={`Remove ${line.product.name}`}
-                  className="shrink-0 font-mono text-xs uppercase tracking-wide text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
+                  className="shrink-0 font-mono text-xs uppercase tracking-wide text-[var(--ink-faint)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
                 >
                   Remove
                 </button>
@@ -100,9 +100,9 @@ export default function CartDrawer() {
           </ul>
         )}
 
-        <div className="border-t border-[var(--line-on-light)] bg-[var(--warm-white)]/60 px-6 py-5">
+        <div className="border-t border-[var(--glass-border)] bg-[var(--warm-white)]/70 px-6 py-5">
           <div className="flex items-baseline justify-between">
-            <span className="font-mono text-xs uppercase tracking-[0.28em] text-[var(--ink-muted)]">
+            <span className="font-mono text-xs uppercase tracking-[0.28em] text-[var(--gold-deep)]">
               Items
             </span>
             <span className="font-display text-base text-[var(--ink)]">
@@ -112,7 +112,7 @@ export default function CartDrawer() {
           <Link
             href="/checkout"
             onClick={closeCart}
-            className="mt-4 block w-full bg-[var(--ink)] px-4 py-3 text-center font-mono text-xs uppercase tracking-widest text-[var(--warm-white)] transition-colors hover:bg-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)]"
+            className="btn-cta mt-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
           >
             Proceed to checkout
           </Link>

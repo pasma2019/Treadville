@@ -41,29 +41,22 @@ export default async function QualityPage() {
   const content = await getSiteContent();
   const heroImage = content.quality_hero || "";
   return (
-    <main className="surface-footer">
+    <main className="surface-base">
       {/* Hero */}
       <section className="relative flex min-h-[85vh] flex-col justify-end px-6 pb-20 pt-40 md:pb-28 md:pt-56 lg:pb-36">
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(175deg, #0f0b08 0%, #1a1209 40%, #261c12 70%, #1e1508 100%)",
-          }}
-        />
+        <div aria-hidden className="page-hero-light absolute inset-0" />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(212, 190, 145, 0.06) 1px, transparent 0)",
+              "radial-gradient(circle at 1px 1px, rgba(184, 134, 11, 0.05) 1px, transparent 0)",
             backgroundSize: "7px 7px",
           }}
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,190,145,0.25)] to-transparent"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(184,134,11,0.20)] to-transparent"
         />
         {heroImage ? (
           <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -71,32 +64,35 @@ export default async function QualityPage() {
             <img
               src={heroImage}
               alt=""
-              className="h-full w-full object-cover opacity-25"
+              className="h-full w-full object-cover opacity-[0.16]"
               loading="lazy"
             />
             <div
               className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg, rgba(14,11,8,0.50) 0%, rgba(14,11,8,0.20) 50%, rgba(14,11,8,0.70) 100%)" }}
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(250,247,240,0.88) 0%, rgba(250,247,240,0.55) 45%, rgba(250,247,240,0.90) 100%)",
+              }}
             />
           </div>
         ) : null}
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.45)]">
+            <p className="font-mono text-[12px] uppercase eyebrow-gold">
               Treadville · Standards
             </p>
           </Reveal>
           <Reveal as="div" delay={1} className="mt-6">
-            <h1 className="max-w-[14ch] font-display text-5xl italic leading-[1.0] tracking-[-0.02em] text-[var(--ivory)] md:text-7xl lg:text-8xl">
+            <h1 className="max-w-[14ch] font-display text-5xl italic leading-[1.0] tracking-[-0.02em] text-[var(--ink)] md:text-7xl lg:text-8xl">
               Quality,{" "}
-              <span className="text-[rgba(236,227,206,0.55)]">
+              <span className="text-[var(--ink-soft)]">
                 held to standard.
               </span>
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-8 max-w-[48ch]">
-            <p className="text-[1.0625rem] leading-relaxed text-[rgba(236,227,206,0.70)] md:text-[1.125rem]">
+            <p className="text-[1.0625rem] leading-relaxed text-[var(--ink-soft)] md:text-[1.125rem]">
               The expectation of buyers is rising. Treadville&apos;s standard is to
               meet it — through independent evaluation, traceability, and
               certifications that mean something.
@@ -112,18 +108,18 @@ export default async function QualityPage() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, #1e1508 0%, #140f07 100%)",
+              "linear-gradient(180deg, var(--bg-warm) 0%, var(--bg-base) 100%)",
           }}
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase eyebrow-gold">
               Standards & references
             </p>
-            <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
+            <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ink)] md:text-4xl">
               A short, considered list
             </h2>
-            <p className="mt-4 text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)] md:text-[1.0625rem]">
+            <p className="mt-4 text-[0.9375rem] leading-relaxed text-[var(--ink-soft)] md:text-[1.0625rem]">
               We work with the standards recognised by the markets that matter.
             </p>
           </Reveal>
@@ -131,14 +127,14 @@ export default async function QualityPage() {
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
             {STANDARDS.map((s, i) => (
               <Reveal key={s.name} as="div" delay={(i % 5) as 0 | 1 | 2 | 3 | 4}>
-                <div className="h-full border border-[rgba(212,190,145,0.18)] bg-[rgba(20,15,7,0.50)] p-7 backdrop-blur-sm">
-                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
+                <div className="glass-card h-full">
+                  <p className="font-mono text-[12px] uppercase eyebrow-gold">
                     {s.name}
                   </p>
-                  <p className="mt-5 font-display text-2xl italic leading-tight text-[var(--ivory)]">
+                  <p className="mt-5 font-display text-2xl italic leading-tight text-[var(--ink)]">
                     {s.value}
                   </p>
-                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)]">
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
                     {s.note}
                   </p>
                 </div>
@@ -155,19 +151,19 @@ export default async function QualityPage() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, #140f07 0%, #1a1209 50%, #140f07 100%)",
+              "linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 50%, var(--bg-base) 100%)",
           }}
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,190,145,0.18)] to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(184,134,11,0.15)] to-transparent"
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase eyebrow-gold">
               Process
             </p>
-            <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
+            <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ink)] md:text-4xl">
               From source to shipment
             </h2>
           </Reveal>
@@ -179,14 +175,14 @@ export default async function QualityPage() {
               { n: "03", t: "Processing", d: "Milling, grading, and preparation for export and local delivery." },
               { n: "04", t: "Traceability", d: "Every lot linked to its source, recorded from intake to delivery." },
             ].map((step) => (
-              <li key={step.n} className="relative border-t border-[rgba(212,190,145,0.20)] pt-6">
-                <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
+              <li key={step.n} className="relative border-t border-[rgba(184,134,11,0.20)] pt-6">
+                <p className="font-mono text-[12px] uppercase eyebrow-gold">
                   {step.n}
                 </p>
-                <p className="mt-3 font-display text-xl italic text-[var(--ivory)]">
+                <p className="mt-3 font-display text-xl italic text-[var(--ink)]">
                   {step.t}
                 </p>
-                <p className="mt-2 text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)]">
+                <p className="mt-2 text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
                   {step.d}
                 </p>
               </li>
@@ -200,28 +196,25 @@ export default async function QualityPage() {
         <div
           aria-hidden
           className="absolute inset-0"
-          style={{ background: "#140f07" }}
+          style={{
+            background:
+              "linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 100%)",
+          }}
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)] text-center">
           <Reveal as="div" delay={0}>
-            <h2 className="font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-5xl">
+            <h2 className="font-display text-3xl italic leading-tight text-[var(--ink)] md:text-5xl">
               Talk to us about a specific grade
             </h2>
-            <p className="mt-4 max-w-[48ch] mx-auto text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
+            <p className="mt-4 max-w-[48ch] mx-auto text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
               Sample requests, technical specifications, and export documentation
               on request.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07]"
-              >
+              <Link href="/contact" className="btn-cta">
                 Request specification
               </Link>
-              <Link
-                href="/shop"
-                className="inline-flex items-center gap-3 font-mono text-[15px] uppercase tracking-[0.16em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
-              >
+              <Link href="/shop" className="btn-cta-ghost">
                 See the catalogue
               </Link>
             </div>

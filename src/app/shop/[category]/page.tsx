@@ -72,21 +72,21 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             className="pointer-events-none absolute inset-y-0 left-0 w-2/3 md:w-1/2"
             style={{
               background:
-                "linear-gradient(90deg, rgba(14,11,8,0.72) 0%, rgba(14,11,8,0.45) 50%, rgba(14,11,8,0.10) 100%)",
+                "linear-gradient(90deg, rgba(250,247,240,0.90) 0%, rgba(250,247,240,0.55) 50%, rgba(250,247,240,0.05) 100%)",
             }}
           />
           {/* Text content over the image */}
           <div className="absolute inset-0 flex items-end">
             <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)] px-6 pb-10 md:px-10 md:pb-14">
-              <Reveal variant="dark" as="div" delay={0}>
-                <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--ivory)]/70">
+              <Reveal variant="light" as="div" delay={0}>
+                <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--gold-deep)]">
                   Catalogue · {category.name}
                 </p>
-                <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ivory)] md:text-5xl lg:text-6xl">
+                <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
                   {category.name}
                 </h1>
                 {category.description && (
-                  <p className="mt-3 max-w-[44ch] text-[15px] leading-relaxed text-[var(--ivory)]/80 md:text-[16px]">
+                  <p className="mt-3 max-w-[44ch] text-[15px] leading-relaxed text-[var(--ink-soft)] md:text-[16px]">
                     {category.description}
                   </p>
                 )}
@@ -111,20 +111,20 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             className="pointer-events-none absolute inset-y-0 left-0 w-2/3 md:w-1/2"
             style={{
               background:
-                "linear-gradient(90deg, rgba(14,11,8,0.72) 0%, rgba(14,11,8,0.45) 50%, rgba(14,11,8,0.10) 100%)",
+                "linear-gradient(90deg, rgba(250,247,240,0.90) 0%, rgba(250,247,240,0.55) 50%, rgba(250,247,240,0.05) 100%)",
             }}
           />
           <div className="absolute inset-0 flex items-end">
             <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)] px-6 pb-10 md:px-10 md:pb-14">
-              <Reveal variant="dark" as="div" delay={0}>
-                <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--ivory)]/70">
+              <Reveal variant="light" as="div" delay={0}>
+                <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--gold-deep)]">
                   Catalogue · {category.name}
                 </p>
-                <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ivory)] md:text-5xl lg:text-6xl">
+                <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
                   {category.name}
                 </h1>
                 {category.description && (
-                  <p className="mt-3 max-w-[44ch] text-[15px] leading-relaxed text-[var(--ivory)]/80 md:text-[16px]">
+                  <p className="mt-3 max-w-[44ch] text-[15px] leading-relaxed text-[var(--ink-soft)] md:text-[16px]">
                     {category.description}
                   </p>
                 )}
@@ -135,9 +135,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
       ) : (
         /* No hero image — clean editorial header */
         <div className="border-b border-[var(--line-on-light)]">
-          <div className="mx-auto max-w-[var(--content-wide)] px-6 py-10 md:px-10 md:py-14">
+          <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-28 pb-10 md:px-10 md:pt-32 md:pb-14">
             <Reveal variant="light" as="div" delay={0}>
-              <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--ink-muted)]">
+              <p className="font-mono text-[12px] uppercase tracking-[0.20em] eyebrow-gold">
                 Catalogue · {category.name}
               </p>
               <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
@@ -296,13 +296,13 @@ function CategoryEmptyState({
       <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
         <Link
           href="/contact?type=sample"
-          className="inline-flex items-center gap-3 border border-[var(--ink)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ink)] transition-colors hover:bg-[var(--ink)] hover:text-[var(--warm-white)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+          className="btn-cta"
         >
           Request a sample
         </Link>
         <Link
           href="/contact"
-          className="inline-flex items-center gap-2 font-mono text-[15px] text-[var(--ink-soft)] underline decoration-[var(--ink)]/30 underline-offset-4 transition-colors hover:text-[var(--ink)]"
+          className="btn-cta-ghost"
         >
           Make an enquiry
         </Link>

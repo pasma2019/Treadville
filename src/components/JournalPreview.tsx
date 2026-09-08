@@ -54,7 +54,7 @@ export default function JournalPreview({
       <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
         <Reveal as="div" delay={0} className="grid grid-cols-1 items-end gap-8 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7">
-            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[var(--ink-muted)]">
+            <p className="font-mono text-[12px] uppercase eyebrow-gold">
               {eyebrow}
             </p>
             <h2
@@ -87,7 +87,7 @@ export default function JournalPreview({
               key={e.no}
               as="article"
               delay={((i + 1) as 0 | 1 | 2 | 3 | 4 | 5)}
-              className="group relative overflow-hidden border border-[var(--line-on-light)] bg-[var(--warm-white)] transition-colors duration-500 hover:border-[var(--line-on-light-strong)]"
+              className="journal-card group relative overflow-hidden border border-[var(--line-on-light)] bg-[var(--warm-white)]"
             >
               {e.image ? (
                 <div className="aspect-[4/3] w-full overflow-hidden">
@@ -97,7 +97,7 @@ export default function JournalPreview({
                     alt=""
                     aria-hidden
                     loading="lazy"
-                    className="h-full w-full object-cover opacity-90 transition-opacity duration-700 group-hover:opacity-100 motion-reduce:transition-none"
+                    className="h-full w-full object-cover opacity-90 transition-[opacity,transform] duration-[600ms] ease-[var(--ease-smooth)] group-hover:opacity-100 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     style={{ objectPosition: "center 50%" }}
                   />
                 </div>
@@ -119,8 +119,7 @@ export default function JournalPreview({
                 </p>
                 <div
                   aria-hidden
-                  className="mt-6 h-px w-8 transition-all duration-500 group-hover:w-16"
-                  style={{ background: "var(--accent-sage)" }}
+                  className="journal-line mt-6 h-px w-8 transition-all duration-500 group-hover:w-16"
                 />
               </div>
             </Reveal>

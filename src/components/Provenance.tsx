@@ -46,7 +46,7 @@ export default function Provenance({ eyebrow, headline, intro, stages, closing, 
       <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
         <Reveal as="div" delay={0} className="grid grid-cols-1 items-end gap-8 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7">
-            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[var(--ink-muted)]">
+            <p className="font-mono text-[12px] uppercase eyebrow-gold">
               {eyebrow}
             </p>
             <h2
@@ -143,7 +143,7 @@ function StageBlock({
         aria-hidden
         className="absolute left-0 top-1 h-[calc(100%-0.5rem)] w-px bg-[var(--line-on-light)] transition-colors duration-700 group-hover:bg-[var(--accent-sage)] group-focus-within:bg-[var(--accent-sage)]"
       />
-        <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[var(--ink-muted)]">
+        <p className="font-mono text-[12px] uppercase eyebrow-gold">
         {number}
       </p>
       <h3

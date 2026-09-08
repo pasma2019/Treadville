@@ -113,7 +113,7 @@ export default async function ProductPage({
           { name: product.name, url: `${SITE_URL}/product/${product.slug}` },
         ]}
       />
-      <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-10 pb-20 md:pt-14">
+      <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-24 pb-20 md:pt-28">
         <Reveal variant="light" as="nav" delay={0} aria-label="Breadcrumb">
           <ol className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)]">
             <li>
@@ -191,7 +191,7 @@ export default async function ProductPage({
                 >
                   Request this lot
                 </p>
-                <ProductDetailClient product={product} accent={accent} />
+                <ProductDetailClient product={product} />
               </div>
 
               <div className="mt-7 inline-flex flex-wrap items-center gap-3">

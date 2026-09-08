@@ -51,46 +51,39 @@ export default function ContactPage() {
   }, [state.success, productContext, initialType]);
 
   return (
-    <main className="surface-footer">
+    <main className="surface-base">
       <section className="relative flex min-h-[50vh] flex-col justify-end px-6 pb-14 pt-40 md:pb-20 md:pt-52">
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(175deg, #0f0b08 0%, #1a1209 40%, #261c12 70%, #1e1508 100%)",
-          }}
-        />
+        <div aria-hidden className="page-hero-light absolute inset-0" />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(212, 190, 145, 0.06) 1px, transparent 0)",
+              "radial-gradient(circle at 1px 1px, rgba(184, 134, 11, 0.05) 1px, transparent 0)",
             backgroundSize: "7px 7px",
           }}
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,190,145,0.25)] to-transparent"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(184,134,11,0.20)] to-transparent"
         />
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="text-[0.9375rem] text-[rgba(236,227,206,0.55)]">
+            <p className="text-[0.9375rem] eyebrow-gold">
               Treadville · Contact
             </p>
           </Reveal>
           <Reveal as="div" delay={1} className="mt-4">
-            <h1 className="max-w-[14ch] font-display text-4xl italic leading-[1.0] tracking-[-0.02em] text-[var(--ivory)] md:text-6xl lg:text-7xl">
+            <h1 className="max-w-[14ch] font-display text-4xl italic leading-[1.0] tracking-[-0.02em] text-[var(--ink)] md:text-6xl lg:text-7xl">
               A conversation,{" "}
-              <span className="text-[rgba(236,227,206,0.55)]">
+              <span className="text-[var(--ink-soft)]">
                 not a form.
               </span>
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-5 max-w-[48ch]">
-            <p className="text-[1.0625rem] leading-relaxed text-[rgba(236,227,206,0.70)] md:text-[1.125rem]">
+            <p className="text-[1.0625rem] leading-relaxed text-[var(--ink-soft)] md:text-[1.125rem]">
               Tell us what you&apos;re looking for. We&apos;ll respond within two
               business days.
             </p>
@@ -104,7 +97,7 @@ export default function ContactPage() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, #1e1508 0%, #140f07 100%)",
+              "linear-gradient(180deg, var(--bg-warm) 0%, var(--bg-base) 100%)",
           }}
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
@@ -112,27 +105,27 @@ export default function ContactPage() {
             <div className="md:col-span-7">
               <Reveal as="div" delay={0}>
                 {state.success ? (
-                  <div className="border border-[rgba(212,190,145,0.30)] bg-[rgba(20,15,7,0.60)] p-10 backdrop-blur-sm">
-                    <p className="text-[0.9375rem] text-[rgba(236,227,206,0.55)]">
+                  <div className="glass-card p-10">
+                    <p className="text-[0.9375rem] eyebrow-gold">
                       Received
                     </p>
-                    <h2 className="mt-4 font-display text-2xl italic leading-tight text-[var(--ivory)]">
+                    <h2 className="mt-4 font-display text-2xl italic leading-tight text-[var(--ink)]">
                       Thank you.
                     </h2>
-                    <p className="mt-4 text-[1rem] leading-relaxed text-[var(--ivory)]/75">
+                    <p className="mt-4 text-[1rem] leading-relaxed text-[var(--ink-soft)]">
                       Your message has been sent. Treadville will be in touch within
                       two business days. For urgent enquiries, you can also reach
                       us directly at{" "}
                       <a
                         href="tel:+254722479985"
-                        className="underline decoration-[rgba(212,190,145,0.40)] underline-offset-2 transition-colors hover:text-[var(--ivory)]"
+                        className="underline decoration-[rgba(184,134,11,0.40)] underline-offset-2 transition-colors hover:text-[var(--gold-deep)]"
                       >
                         +254 722 479985
                       </a>{" "}
                       or{" "}
                       <a
                         href="mailto:info@treadville.co.ke"
-                        className="underline decoration-[rgba(212,190,145,0.40)] underline-offset-2 transition-colors hover:text-[var(--ivory)]"
+                        className="underline decoration-[rgba(184,134,11,0.40)] underline-offset-2 transition-colors hover:text-[var(--gold-deep)]"
                       >
                         info@treadville.co.ke
                       </a>
@@ -142,17 +135,17 @@ export default function ContactPage() {
                 ) : (
                   <form action={formAction} className="space-y-7">
                     {productContext && (
-                      <div className="rounded border border-[rgba(212,190,145,0.25)] bg-[rgba(20,15,7,0.40)] px-4 py-3 font-mono text-[11px] text-[rgba(212,190,145,0.70)]">
-                        Enquiry regarding: <span className="text-[rgba(212,190,145,0.95)]">{productContext}</span>
+                      <div className="rounded border border-[rgba(184,134,11,0.25)] bg-[var(--glass-bg)] px-4 py-3 font-mono text-[11px] text-[var(--gold-deep)]">
+                        Enquiry regarding: <span className="text-[var(--ink)]">{productContext}</span>
                       </div>
                     )}
-                    <p className="text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
+                    <p className="text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
                       Fields marked with <span className="text-[var(--accent-sage)]">*</span> are required.
                     </p>
                     {state.error && (
                       <div
                         role="alert"
-                        className="border border-red-800/40 bg-red-950/40 px-4 py-3 font-mono text-xs text-red-300"
+                        className="border border-red-300 bg-red-50 px-4 py-3 font-mono text-xs text-red-700"
                       >
                         {state.error}
                       </div>
@@ -165,7 +158,7 @@ export default function ContactPage() {
                           name="name"
                           required
                           placeholder="Your full name"
-                          className="field-dark"
+                          className="field-light"
                           autoComplete="name"
                         />
                       </Field>
@@ -176,7 +169,7 @@ export default function ContactPage() {
                           name="email"
                           required
                           placeholder="you@company.com"
-                          className="field-dark"
+                          className="field-light"
                           autoComplete="email"
                         />
                       </Field>
@@ -188,7 +181,7 @@ export default function ContactPage() {
                           type="text"
                           name="organisation"
                           placeholder="Company or organisation"
-                          className="field-dark"
+                          className="field-light"
                           autoComplete="organization"
                         />
                       </Field>
@@ -198,7 +191,7 @@ export default function ContactPage() {
                           type="tel"
                           name="phone"
                           placeholder="+254 ..."
-                          className="field-dark"
+                          className="field-light"
                           autoComplete="tel"
                         />
                       </Field>
@@ -208,7 +201,7 @@ export default function ContactPage() {
                         id="type"
                         name="type"
                         required
-                        className="field-dark cursor-pointer"
+                        className="field-light cursor-pointer"
                         defaultValue={searchParams.get("type") ?? ""}
                       >
                         <option value="" disabled>
@@ -231,13 +224,13 @@ export default function ContactPage() {
                         required
                         rows={6}
                         placeholder="Tell us what you are looking for — product type, volume, destination, timeline..."
-                        className="field-dark resize-none"
+                        className="field-light resize-none"
                       />
                     </Field>
                     <button
                       type="submit"
                       disabled={pending}
-                      className="w-full border border-[var(--ivory)] bg-[var(--ivory)] px-8 py-4 text-[1rem] text-[var(--soil)] transition-colors hover:bg-transparent hover:text-[var(--ivory)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07] disabled:opacity-50"
+                      className="btn-cta w-full disabled:opacity-50"
                     >
                       {pending ? "Sending…" : "Send enquiry"}
                     </button>
@@ -249,14 +242,14 @@ export default function ContactPage() {
             <div className="md:col-span-4 md:col-start-9">
               <Reveal as="div" delay={1} className="space-y-10">
                 <div>
-                  <p className="text-[0.9375rem] text-[rgba(236,227,206,0.55)]">
+                  <p className="text-[0.9375rem] eyebrow-gold">
                     Direct contact
                   </p>
                   <ul className="mt-3 space-y-2.5">
                     <li>
                       <a
                         href="mailto:info@treadville.co.ke"
-                        className="block text-[1rem] text-[var(--ivory)] transition-colors hover:text-white"
+                        className="block text-[1rem] text-[var(--ink)] transition-colors hover:text-[var(--gold-deep)]"
                       >
                         info@treadville.co.ke
                       </a>
@@ -264,7 +257,7 @@ export default function ContactPage() {
                     <li>
                       <a
                         href="tel:+254722479985"
-                        className="block text-[1rem] text-[var(--ivory)] transition-colors hover:text-white"
+                        className="block text-[1rem] text-[var(--ink)] transition-colors hover:text-[var(--gold-deep)]"
                       >
                         +254 722 479985
                       </a>
@@ -273,25 +266,25 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <p className="text-[0.9375rem] text-[rgba(236,227,206,0.55)]">
+                  <p className="text-[0.9375rem] eyebrow-gold">
                     Location
                   </p>
-                  <p className="mt-3 text-[1rem] text-[var(--ivory)]">
+                  <p className="mt-3 text-[1rem] text-[var(--ink)]">
                     Nairobi, Kenya
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-[0.9375rem] text-[rgba(236,227,206,0.55)]">
+                  <p className="text-[0.9375rem] eyebrow-gold">
                     Response time
                   </p>
-                  <p className="mt-3 text-[1rem] leading-relaxed text-[var(--ivory)]">
+                  <p className="mt-3 text-[1rem] leading-relaxed text-[var(--ink)]">
                     Within two business days.
                   </p>
                 </div>
 
-                <div className="border-t border-[rgba(212,190,145,0.18)] pt-8">
-                  <p className="text-[0.9375rem] text-[rgba(236,227,206,0.55)]">
+                <div className="border-t border-[rgba(184,134,11,0.18)] pt-8">
+                  <p className="text-[0.9375rem] eyebrow-gold">
                     Other ways to engage
                   </p>
                   <ul className="mt-3 space-y-2.5">
@@ -303,9 +296,9 @@ export default function ContactPage() {
                       <li key={link.label}>
                         <a
                           href={link.href}
-                          className="inline-flex items-center gap-2 text-[1rem] text-[var(--ivory)]/75 transition-colors hover:text-[var(--ivory)]"
+                          className="inline-flex items-center gap-2 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)]"
                         >
-                          <span aria-hidden className="h-px w-4 bg-[rgba(212,190,145,0.40)]" />
+                          <span aria-hidden className="h-px w-4 bg-[rgba(184,134,11,0.40)]" />
                           {link.label}
                         </a>
                       </li>
@@ -337,10 +330,10 @@ function Field({
   return (
     <div>
       <label htmlFor={htmlFor} className="mb-2.5 block">
-        <span className="text-[1rem] text-[rgba(236,227,206,0.85)]">
+        <span className="text-[1rem] text-[var(--ink)]">
           {label}
           {optional && (
-            <span className="ml-1.5 text-[0.875rem] text-[rgba(236,227,206,0.50)]">
+            <span className="ml-1.5 text-[0.875rem] text-[var(--ink-faint)]">
               (optional)
             </span>
           )}

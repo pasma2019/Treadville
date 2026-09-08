@@ -144,12 +144,11 @@ export default async function HomePage() {
                   "Over 30 years of expertise in Kenyan agriculture — now expanding from specialty coffee into tea, horticulture, and grains, with the same standard of quality and traceability."}
               </p>
 
-              {/* Trust-badge stats strip — icon + number + label */}
-              <div className="mt-12 grid grid-cols-1 gap-6 border-t border-[var(--line-on-light)] pt-10 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-[var(--line-on-light)]">
-                <div className="flex items-start gap-4 px-0 sm:px-5 first:sm:pl-0 last:sm:pr-0">
-                  <Clock size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--accent-sage)]" aria-hidden />
+              <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
+                <div className="glass-card flex items-start gap-4">
+                  <Clock size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--gold)]" aria-hidden />
                   <div>
-                    <p className="font-display text-3xl leading-none tracking-[-0.02em] text-[var(--ink)] md:text-4xl">
+                    <p className="stat-number">
                       30<span className="text-[var(--ink-faint)]">+</span>
                     </p>
                     <p className="mt-2 max-w-[18ch] text-[0.8125rem] leading-relaxed text-[var(--ink-muted)]">
@@ -157,21 +156,19 @@ export default async function HomePage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4 px-0 sm:px-5 first:sm:pl-0 last:sm:pr-0">
-                  <LayoutGrid size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--accent-sage)]" aria-hidden />
+                <div className="glass-card flex items-start gap-4">
+                  <LayoutGrid size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--gold)]" aria-hidden />
                   <div>
-                    <p className="font-display text-3xl leading-none tracking-[-0.02em] text-[var(--ink)] md:text-4xl">
-                      04
-                    </p>
+                    <p className="stat-number">04</p>
                     <p className="mt-2 max-w-[18ch] text-[0.8125rem] leading-relaxed text-[var(--ink-muted)]">
                       Categories under one standard
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4 px-0 sm:px-5 first:sm:pl-0 last:sm:pr-0">
-                  <Award size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--accent-sage)]" aria-hidden />
+                <div className="glass-card flex items-start gap-4">
+                  <Award size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--gold)]" aria-hidden />
                   <div>
-                    <p className="font-display text-3xl leading-none tracking-[-0.02em] text-[var(--ink)] md:text-4xl">
+                    <p className="stat-number">
                       80<span className="text-[var(--ink-faint)]">+</span>
                     </p>
                     <p className="mt-2 max-w-[18ch] text-[0.8125rem] leading-relaxed text-[var(--ink-muted)]">

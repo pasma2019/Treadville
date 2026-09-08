@@ -1,16 +1,16 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 /* ============================================================
-   TREADVILLE — DESIGN TOKENS
+   TREADVILLE â€” DESIGN TOKENS
    Primary source of the visual system. Future pages consume
    these tokens; do not scatter arbitrary values across components.
    ============================================================ */
 
 :root {
   /* --- Volcanic / espresso dark surfaces --- */
-  --soil: #16110d;            /* volcanic soil — base dark */
+  --soil: #16110d;            /* volcanic soil â€” base dark */
   --soil-raised: #201812;     /* raised dark surface (espresso) */
-  --soil-muted: #0e0b08;      /* deepest dark — for light-page overlays */
+  --soil-muted: #0e0b08;      /* deepest dark â€” for light-page overlays */
   --espresso: #241a12;        /* espresso field surface */
   --obsidian: #0a0805;        /* near-black cinematic backdrop */
   --charcoal: #1a1410;        /* elevated charcoal panel */
@@ -18,7 +18,7 @@
 
   /* --- Restrained metallics --- */
   --bronze: #b08d57;          /* muted bronze for subtle metallic moments */
-  --gold: #c9a24a;            /* metallic campaign gold — hero accents */
+  --gold: #c9a24a;            /* metallic campaign gold â€” hero accents */
   --gold-soft: #d9c39a;       /* champagne highlight */
   --copper: #a8461f;          /* roasted-copper primary accent (== accent-coffee) */
   --amber: #c99a3d;           /* warm amber for grains/highlight */
@@ -72,7 +72,7 @@
   --glass-pill-border: rgba(236, 227, 206, 0.22);
   --glass-pill-blur: 12px;
 
-  /* Cinematic glass — for hero foreground overlays. Slightly lighter
+  /* Cinematic glass â€” for hero foreground overlays. Slightly lighter
      than glass-strong so the background composition remains visible.
      Tuned thin: low opacity, moderate blur, luminous top edge. */
   --glass-cinema-bg: rgba(14, 11, 8, 0.30);
@@ -99,7 +99,7 @@
 
   /* --- Content widths --- */
   --content-narrow: 42rem;
-  --content: 64rem;          /* 1024px — previous max-w-6xl equivalent */
+  --content: 64rem;          /* 1024px â€” previous max-w-6xl equivalent */
   --content-wide: 76rem;
   --content-cinema: 92rem;   /* hero composition runway */
   --content-rail: 7rem;      /* standard horizontal padding */
@@ -117,6 +117,33 @@
   --display-3: clamp(2rem, 3.5vw + 0.5rem, 3.75rem);
 }
 
+/* Phase 3 gold luxury light system â€” declared last so it wins. */
+:root {
+  --bg-base: #faf7f0;
+  --bg-elevated: #ffffff;
+  --bg-warm: #f3ecdd;
+  --ink: #211d17;
+  --ink-soft: #4a4438;
+  --ink-muted: rgba(33, 29, 23, 0.62);
+  --ink-faint: rgba(33, 29, 23, 0.42);
+  --ink-whisper: rgba(33, 29, 23, 0.22);
+  --warm-white: #faf7f0;
+  --line-on-light: rgba(33, 29, 23, 0.10);
+  --line-on-light-strong: rgba(33, 29, 23, 0.20);
+  --line-glow-light: rgba(33, 29, 23, 0.04);
+  --gold: #b8860b;
+  --gold-light: #e8c766;
+  --gold-deep: #8b6914;
+  --gold-gradient: linear-gradient(135deg, #b8860b 0%, #e8c766 45%, #c9a227 100%);
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(184, 134, 11, 0.18);
+  --shadow-soft: 0 8px 30px rgba(33, 29, 23, 0.06);
+  --shadow-elite: 0 25px 70px -15px rgba(184, 134, 11, 0.22),
+    0 10px 30px -10px rgba(33, 29, 23, 0.12);
+  --shadow-glow-gold: 0 0 40px rgba(184, 134, 11, 0.15);
+  --accent-sage: #b8860b;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -127,7 +154,7 @@ html {
 
 html,
 body {
-  background: var(--warm-white);
+  background: var(--bg-base);
   color: var(--ink);
   font-family: var(--font-body), sans-serif;
   overflow-x: clip;
@@ -165,7 +192,7 @@ h3,
 }
 
 /* ============================================================
-   SURFACE HELPERS — dark/light moments can alternate.
+   SURFACE HELPERS â€” dark/light moments can alternate.
    A page/component opts into a light surface when it needs
    contrast against the dark base.
    ============================================================ */
@@ -181,7 +208,7 @@ h3,
 }
 
 /* ============================================================
-   GLASS MATERIAL — for floating nav, cart drawer, hero
+   GLASS MATERIAL â€” for floating nav, cart drawer, hero
    overlays, product metadata, contextual controls.
    Use with restraint: a material, not a design system.
    ============================================================ */
@@ -189,43 +216,43 @@ h3,
 .glass {
   background: var(--glass-light-bg);
   border: 1px solid var(--glass-light-border);
-  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
   -webkit-backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
+  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
 }
 
 .glass-light {
   background: var(--glass-light-bg);
   border: 1px solid var(--glass-light-border);
-  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
   -webkit-backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
+  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
 }
 
 .glass-strong {
   background: var(--glass-light-bg-soft);
   border: 1px solid var(--glass-light-border);
-  backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
   -webkit-backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
+  backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
 }
 
-/* Dark glass variant — for explicit dark sections only */
+/* Dark glass variant â€” for explicit dark sections only */
 .glass-dark {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
 }
 
 /* ============================================================
-   MOTION FOUNDATION — reveal/stagger primitives.
+   MOTION FOUNDATION â€” reveal/stagger primitives.
    transform + opacity only, premium ease, reduced-motion aware.
    ============================================================ */
 
 [data-reveal] {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(20px);
   transition:
-    opacity var(--dur-slow) var(--ease-smooth),
-    transform var(--dur-slow) var(--ease-smooth);
+    opacity 600ms var(--ease-smooth),
+    transform 600ms var(--ease-smooth);
 }
 
 [data-reveal][data-reveal-visible="true"] {
@@ -254,7 +281,7 @@ h3,
 }
 
 /* ============================================================
-   BUTTON FOUNDATION — consumed by the <Button> primitive.
+   BUTTON FOUNDATION â€” consumed by the <Button> primitive.
    Premium type, subtle lift, smooth background, honored hover,
    accessible focus, touch-friendly.
    ============================================================ */
@@ -287,7 +314,7 @@ h3,
   outline-offset: 2px;
 }
 
-/* Primary — roasted copper field, soil type */
+/* Primary â€” roasted copper field, soil type */
 .btn-primary {
   background: var(--accent);
   color: var(--soil);
@@ -299,7 +326,7 @@ h3,
   box-shadow: var(--shadow-lift);
 }
 
-/* Ghost — hairline, dark-friendly */
+/* Ghost â€” hairline, dark-friendly */
 .btn-ghost {
   background: transparent;
   color: var(--parchment);
@@ -312,7 +339,7 @@ h3,
   transform: translateY(-1px);
 }
 
-/* Light — for use on light surfaces */
+/* Light â€” for use on light surfaces */
 .btn-light {
   background: var(--bone);
   color: var(--soil);
@@ -325,7 +352,7 @@ h3,
 }
 
 /* ============================================================
-   FOCUS VISIBILITY — global, accessible, not animation-only.
+   FOCUS VISIBILITY â€” global, accessible, not animation-only.
    ============================================================ */
 
 a:focus-visible,
@@ -347,7 +374,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   PHASE 2D — CINEMATIC SYSTEM
+   PHASE 2D â€” CINEMATIC SYSTEM
    Glass material tuned for the hero foreground, gradient
    backdrops that read as light rather than CSS, and editorial
    scale utilities for the homepage.
@@ -367,7 +394,7 @@ textarea:focus-visible {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 24px 50px rgba(60, 45, 30, 0.12);
 }
 
-/* Floating navigation — transparent at the top of the page, resolving
+/* Floating navigation â€” transparent at the top of the page, resolving
     into a quiet light strip once the reader starts scrolling so it never
     reads as a boxed developer bar. */
 .site-nav {
@@ -378,7 +405,7 @@ textarea:focus-visible {
     0 12px 30px rgba(60, 45, 30, 0.16);
 }
 
-/* Scrolled — quiet glass strip */
+/* Scrolled â€” quiet glass strip */
 .site-nav.scrolled {
   background: var(--glass-light-bg);
   border-bottom: 1px solid var(--glass-light-border);
@@ -387,7 +414,7 @@ textarea:focus-visible {
     0 8px 24px -12px rgba(60, 45, 30, 0.18);
 }
 
-/* Editorial display scale — driven by CSS variables for fluid type. */
+/* Editorial display scale â€” driven by CSS variables for fluid type. */
 .display-1 {
   font-family: var(--font-display), serif;
   font-weight: 600;
@@ -509,7 +536,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   PHASE 2 — LIGHT PREMIUM SURFACE SYSTEM
+   PHASE 2 â€” LIGHT PREMIUM SURFACE SYSTEM
    Light-dominant foundation: warm ivory / bone / parchment / cream.
    Dark sections remain available for cinematic contrast.
    ============================================================ */
@@ -560,13 +587,13 @@ textarea:focus-visible {
   --atmosphere-dusk: linear-gradient(180deg, #e9deca 0%, #d4be91 100%);
 
   /* --- World-class hero atmospheres (light-first editorial) --- */
-  /* Hero: ivory base, sage pastoral wash, muted forest accent — no copper */
+  /* Hero: ivory base, sage pastoral wash, muted forest accent â€” no copper */
   --atmosphere-hero:
     radial-gradient(65% 50% at 82% 18%, rgba(122, 158, 122, 0.14) 0%, rgba(122, 158, 122, 0) 55%),
     radial-gradient(50% 40% at 15% 82%, rgba(45, 74, 53, 0.07) 0%, rgba(45, 74, 53, 0) 55%),
     linear-gradient(180deg, #fbf8f1 0%, #f3eadb 65%, #ebe4d4 100%);
 
-  /* Category page atmospheres — light-first, atmospheric not decorative */
+  /* Category page atmospheres â€” light-first, atmospheric not decorative */
   --atmosphere-coffee-page:
     radial-gradient(70% 50% at 50% 0%, rgba(168, 70, 31, 0.14) 0%, rgba(168, 70, 31, 0) 60%),
     radial-gradient(45% 35% at 80% 8%, rgba(201, 154, 61, 0.10) 0%, rgba(201, 154, 61, 0) 60%),
@@ -591,7 +618,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   LIGHT SURFACE — the new default for editorial sections
+   LIGHT SURFACE â€” the new default for editorial sections
    ============================================================ */
 
 .surface-warm {
@@ -614,7 +641,7 @@ textarea:focus-visible {
   color: var(--ink);
 }
 
-/* Atmospheric editorial bands — used between sections for breathing */
+/* Atmospheric editorial bands â€” used between sections for breathing */
 .surface-noon {
   background: var(--atmosphere-noon);
   color: var(--ink);
@@ -631,7 +658,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   TYPOGRAPHY — editorial hierarchy for light surfaces
+   TYPOGRAPHY â€” editorial hierarchy for light surfaces
    ============================================================ */
 
 .display-hero {
@@ -655,10 +682,10 @@ textarea:focus-visible {
 .label-on-light {
   font-family: var(--font-mono), sans-serif;
   font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.20em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: var(--gold-deep);
 }
 
 .body-on-light {
@@ -678,32 +705,32 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   LIGHT GLASS — for floating panels over light surfaces
+   LIGHT GLASS â€” for floating panels over light surfaces
    ============================================================ */
 
 .glass-light {
   background: var(--glass-light-bg);
   border: 1px solid var(--glass-light-border);
-  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
   -webkit-backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
+  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
 }
 
 .glass-light-soft {
   background: var(--glass-light-bg-soft);
   border: 1px solid var(--glass-light-border);
-  backdrop-filter: blur(var(--glass-light-blur)) saturate(130%);
   -webkit-backdrop-filter: blur(var(--glass-light-blur)) saturate(130%);
+  backdrop-filter: blur(var(--glass-light-blur)) saturate(130%);
 }
 
 .glass-light-strong {
   background: rgba(251, 248, 241, 0.88);
   border: 1px solid var(--glass-light-border);
-  backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
   -webkit-backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
+  backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
   box-shadow: var(--shadow-card-light);
 }
 
-/* Site navigation glass on light surfaces — quiet ivory bar */
+/* Site navigation glass on light surfaces â€” quiet ivory bar */
 .site-nav-light {
   background: var(--glass-light-bg);
   border-bottom: 1px solid var(--glass-light-border);
@@ -715,12 +742,12 @@ textarea:focus-visible {
   background: var(--glass-light-bg);
   border-bottom: 1px solid var(--glass-light-border);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 8px 24px -12px rgba(60, 45, 30, 0.18);
-  backdrop-filter: blur(var(--glass-light-blur));
   -webkit-backdrop-filter: blur(var(--glass-light-blur));
+  backdrop-filter: blur(var(--glass-light-blur));
 }
 
 /* ============================================================
-   LIGHT CARD SYSTEM — premium editorial product card
+   LIGHT CARD SYSTEM â€” premium editorial product card
    ============================================================ */
 
 .card-light {
@@ -746,7 +773,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   SECTION DIVIDERS — editorial hairlines, not generic
+   SECTION DIVIDERS â€” editorial hairlines, not generic
    ============================================================ */
 
 .hairline-light {
@@ -795,7 +822,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   LIGHT SCENE BACKDROPS — for hero / product photography
+   LIGHT SCENE BACKDROPS â€” for hero / product photography
    ============================================================ */
 
 .scene-ivory-floor {
@@ -829,7 +856,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   PRODUCT PHOTOGRAPHY STAGE — clean bright background
+   PRODUCT PHOTOGRAPHY STAGE â€” clean bright background
    ============================================================ */
 
 .stage-product {
@@ -863,7 +890,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   LIGHT BUTTONS — premium CTA system for light surfaces
+   LIGHT BUTTONS â€” premium CTA system for light surfaces
    ============================================================ */
 
 .btn-light-primary {
@@ -959,7 +986,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   DARK FORM FIELDS — contact form inputs
+   DARK FORM FIELDS â€” contact form inputs
    ============================================================ */
 
 .field-dark {
@@ -1007,7 +1034,7 @@ select.field-dark option {
 }
 
 /* ============================================================
-   LIGHT FORM FIELDS — admin surfaces
+   LIGHT FORM FIELDS â€” admin surfaces
    ============================================================ */
 
 .field-light {
@@ -1054,7 +1081,7 @@ textarea.field-light {
 }
 
 /* ============================================================
-   CATEGORY ACCENT TINTING — light-mode utility helpers
+   CATEGORY ACCENT TINTING â€” light-mode utility helpers
    ============================================================ */
 
 .accent-bar-coffee {
@@ -1074,7 +1101,7 @@ textarea.field-light {
 }
 
 /* ============================================================
-   FOOTER — premium editorial treatment
+   FOOTER â€” premium editorial treatment
    ============================================================ */
 
 .surface-footer {
@@ -1088,15 +1115,15 @@ textarea.field-light {
 }
 
 /* ============================================================
-   REVEAL — light-mode transform-only motion
+   REVEAL â€” light-mode transform-only motion
    ============================================================ */
 
 [data-reveal-light] {
   opacity: 0;
   transform: translateY(20px);
   transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [data-reveal-light][data-reveal-visible="true"] {
@@ -1123,7 +1150,7 @@ textarea.field-light {
 [data-reveal-light][data-reveal-delay="5"] { transition-delay: 600ms; }
 
 /* ============================================================
-   NAV INK — high-contrast text on light glass nav
+   NAV INK â€” high-contrast text on light glass nav
    ============================================================ */
 
 .nav-ink {
@@ -1144,7 +1171,7 @@ textarea.field-light {
 }
 
 /* ============================================================
-   SHOWCASE — large editorial typography blocks
+   SHOWCASE â€” large editorial typography blocks
    ============================================================ */
 
 .editorial-stat {
@@ -1165,7 +1192,7 @@ textarea.field-light {
 }
 
 /* ============================================================
-   PREFERS-REDUCED-MOTION — graceful global overrides
+   PREFERS-REDUCED-MOTION â€” graceful global overrides
    ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1184,5 +1211,442 @@ textarea.field-light {
   .btn-light-link::after {
     transform: none !important;
     transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out) !important;
+  }
+}
+
+/* ============================================================
+   PHASE 3 â€” GOLD LUXURY LIGHT SYSTEM
+   ============================================================ */
+
+.surface-base {
+  background: var(--bg-base);
+  color: var(--ink);
+}
+
+.page-hero-light {
+  background:
+    radial-gradient(85% 65% at 82% 10%, rgba(184, 134, 11, 0.08) 0%, transparent 55%),
+    radial-gradient(55% 45% at 10% 90%, rgba(184, 134, 11, 0.06) 0%, transparent 60%),
+    linear-gradient(175deg, var(--bg-warm) 0%, var(--bg-base) 55%, var(--bg-warm) 100%);
+}
+
+.page-band-warm {
+  background: linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 100%);
+}
+
+.glass-card {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2rem;
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .glass-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(184, 134, 11, 0.4);
+    box-shadow: var(--shadow-elite), var(--shadow-glow-gold);
+  }
+}
+
+@media (max-width: 639px) {
+  .glass-card {
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+
+  .glass-card:active {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(184, 134, 11, 0.4);
+    box-shadow: var(--shadow-elite);
+  }
+}
+
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2.25rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: var(--gold-gradient);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  color: #faf7f0;
+  font-family: var(--font-mono), sans-serif;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-elite);
+  transition:
+    background-position 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .btn-cta:hover {
+    background-position: 100% 0;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-elite), var(--shadow-glow-gold);
+  }
+}
+
+.btn-cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2.25rem;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gold-deep);
+  border: 1.5px solid var(--gold);
+  font-family: var(--font-mono), sans-serif;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .btn-cta-ghost:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold-deep);
+    box-shadow: var(--shadow-glow-gold);
+  }
+}
+
+.nav-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 16px 16px 0;
+  pointer-events: none;
+}
+
+.nav-pill {
+  position: relative;
+  z-index: 11;
+  pointer-events: auto;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 62px;
+  padding: 0 1.5rem;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--shadow-soft);
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.nav-pill.is-scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(184, 134, 11, 0.22);
+  box-shadow: var(--shadow-elite);
+}
+
+@media (max-width: 767px) {
+  .nav-shell {
+    padding: 12px 12px 0;
+  }
+
+  .nav-pill {
+    min-height: 56px;
+    padding: 0 1rem;
+    border-radius: 14px;
+  }
+}
+
+.nav-logo {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  transition: color 0.3s ease;
+}
+
+@media (hover: hover) {
+  .nav-logo:hover {
+    color: var(--gold);
+  }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  position: relative;
+  color: var(--ink-soft);
+  padding: 0.25rem 0;
+  transition: color 0.35s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+@media (hover: hover) {
+  .nav-link:hover,
+  .nav-link.is-active {
+    color: var(--gold-deep);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+}
+
+.nav-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  color: var(--ink-soft);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (hover: hover) {
+  .nav-icon-btn:hover {
+    background: rgba(184, 134, 11, 0.10);
+    color: var(--gold-deep);
+  }
+}
+
+.nav-mobile-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: rgba(250, 247, 240, 0.92);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-elite);
+  transform: translateX(100%);
+  transition: transform 0.3s var(--ease-smooth);
+}
+
+.nav-mobile-panel.is-open {
+  transform: translateX(0);
+}
+
+.hero-atmosphere {
+  background:
+    radial-gradient(85% 65% at 80% 15%, rgba(184, 134, 11, 0.09) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 100%);
+}
+
+.hero-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(250, 247, 240, 0.92) 0%,
+    rgba(250, 247, 240, 0.55) 40%,
+    rgba(250, 247, 240, 0.05) 100%
+  );
+}
+
+@media (max-width: 767px) {
+  .hero-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(250, 247, 240, 0.06) 0%,
+      rgba(250, 247, 240, 0.55) 48%,
+      rgba(250, 247, 240, 0.92) 100%
+    );
+  }
+}
+
+.hero-glow {
+  background: radial-gradient(circle, rgba(184, 134, 11, 0.12) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 8px 18px;
+  border-radius: 100px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--gold-deep);
+  font-family: var(--font-mono), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.hero-gold-rule {
+  width: 60px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold-gradient);
+}
+
+.hero-headline {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.hero-accent-line {
+  display: block;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.scroll-cue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  animation: cue-bounce 2s ease-in-out infinite;
+}
+
+@keyframes cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: translateY(6px);
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue {
+    animation: none;
+  }
+}
+
+.stat-number {
+  font-family: var(--font-display), serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow-gold {
+  color: var(--gold-deep);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.journal-card {
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .journal-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(184, 134, 11, 0.4);
+    box-shadow: var(--shadow-elite);
+  }
+}
+
+.journal-line {
+  background: var(--gold-gradient);
+}
+
+.surface-footer a {
+  position: relative;
+  text-decoration: none;
+}
+
+.surface-footer a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--gold-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+@media (hover: hover) {
+  .surface-footer a:hover {
+    color: var(--gold-light);
+  }
+
+  .surface-footer a:hover::after {
+    transform: scaleX(1);
   }
 }

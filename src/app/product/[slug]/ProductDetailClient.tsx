@@ -4,13 +4,7 @@ import { useState } from "react";
 import { useCart } from "@/components/CartContext";
 import type { Product } from "@/lib/types";
 
-export default function ProductDetailClient({
-  product,
-  accent = "var(--accent)",
-}: {
-  product: Product;
-  accent?: string;
-}) {
+export default function ProductDetailClient({ product }: { product: Product }) {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
@@ -25,31 +19,21 @@ export default function ProductDetailClient({
       <button
         type="button"
         onClick={handleAddToEnquiry}
-        style={{ ["--accent" as string]: accent }}
-        className="group relative flex-1 min-w-[180px] overflow-hidden border border-[var(--ink)] bg-[var(--ink)] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--warm-white)] hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+        className="btn-cta flex-1 min-w-[180px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
       >
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 origin-left scale-x-0 transition-transform duration-[var(--dur)] ease-[var(--ease-out)] group-hover:scale-x-100"
-          style={{ background: accent, opacity: 0.10 }}
-        />
-        <span className="relative">
-          {added ? "Added to enquiry" : "Add to enquiry"}
-        </span>
+        {added ? "Added to enquiry" : "Add to enquiry"}
       </button>
 
       <a
         href="/contact?type=quote"
-        style={{ ["--accent" as string]: accent }}
-        className="group relative flex-1 min-w-[160px] overflow-hidden border border-[var(--ink)] px-6 py-3 text-center font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ink)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--ink)] hover:text-[var(--warm-white)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+        className="btn-cta-ghost flex-1 min-w-[160px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
       >
-        <span className="relative">Request a quote</span>
+        Request a quote
       </a>
 
       <a
         href="/contact?type=sample"
-        style={{ ["--accent" as string]: accent }}
-        className="group border-b border-[var(--ink)] pb-0.5 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--ink-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        className="group border-b border-[var(--gold-deep)]/40 pb-0.5 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--gold-deep)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
       >
         Request a sample
       </a>

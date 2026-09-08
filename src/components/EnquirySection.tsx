@@ -66,11 +66,7 @@ export default function EnquirySection() {
                 <li key={card.value}>
                   <Link
                     href={`/contact?type=${encodeURIComponent(card.value === "General enquiry" ? "" : card.value)}`}
-                    className="group flex items-start gap-5 border p-5 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
-                    style={{
-                      borderColor: "var(--line-on-light)",
-                      background: "var(--warm-white)",
-                    }}
+                    className="glass-card group flex items-start gap-5"
                   >
                     <div
                       className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center border font-mono text-[15px] transition-all duration-[var(--dur)] group-hover:w-10"
@@ -106,11 +102,11 @@ export default function EnquirySection() {
             <div
               className="p-6 md:p-8 lg:p-10"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(251,248,241,0.70) 0%, rgba(245,239,226,0.50) 40%, rgba(239,231,212,0.35) 100%)",
-                border: "1px solid var(--line-on-light)",
-                boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.5), 0 12px 28px -8px rgba(60,45,30,0.08)",
+                background: "var(--glass-bg)",
+                border: "1px solid var(--glass-border)",
+                backdropFilter: "blur(16px) saturate(150%)",
+                WebkitBackdropFilter: "blur(16px) saturate(150%)",
+                boxShadow: "var(--shadow-soft)",
               }}
             >
               {state.success ? (
@@ -213,7 +209,7 @@ export default function EnquirySection() {
                   <button
                     type="submit"
                     disabled={pending}
-                    className="w-full bg-[var(--ink)] px-8 py-4 font-mono text-[13px] uppercase tracking-[0.22em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] hover:bg-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)] disabled:opacity-50"
+                    className="btn-cta w-full disabled:opacity-50"
                   >
                     {pending ? "Sending\u2026" : "Send enquiry"}
                   </button>
