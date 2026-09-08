@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { getSiteContent } from "@/lib/queries";
+
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Origins",
   description:
-    "The story of Treadville's Kenyan terroir — volcanic soils, glacial water, and the slopes of Mt. Kenya that give our products their character.",
+    "Kenyan agricultural origins — Kirinyaga, Mt. Kenya, and the highland terroir that shapes the raw material before it is ever processed.",
+  alternates: {
+    canonical: "/origins",
+  },
 };
 
-export default function OriginsPage() {
+export default async function OriginsPage() {
+  const content = await getSiteContent();
+  const kirinyagaImg = content.origins_body_kirinyaga || "";
+  const terroirImg = content.origins_body_terroir || "";
   return (
     <main className="surface-footer">
       {/* Cinematic hero */}
@@ -37,7 +46,7 @@ export default function OriginsPage() {
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(236,227,206,0.45)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.45)]">
               Treadville · Kenya
             </p>
           </Reveal>
@@ -50,7 +59,7 @@ export default function OriginsPage() {
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-8 max-w-[48ch]">
-            <p className="text-base leading-relaxed text-[rgba(236,227,206,0.70)] md:text-lg">
+            <p className="text-[1.0625rem] leading-relaxed text-[rgba(236,227,206,0.70)] md:text-[1.125rem]">
               Every Treadville product begins with soil, altitude, and the
               particular quality of Kenyan light. This is the story of the land
               that makes it possible.
@@ -72,19 +81,19 @@ export default function OriginsPage() {
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-10">
             <div className="md:col-span-7">
-              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+              <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
                 I · Kirinyaga
               </p>
               <h2 className="mt-5 max-w-[16ch] font-display text-3xl italic leading-[1.04] tracking-[-0.015em] text-[var(--ivory)] md:text-5xl">
                 Where coffee finds its voice
               </h2>
-              <p className="mt-6 max-w-[52ch] text-sm leading-relaxed text-[rgba(236,227,206,0.68)] md:text-base">
+              <p className="mt-6 max-w-[52ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)] md:text-[1.0625rem]">
                 The slopes of Mt. Kenya — Kirinyaga — rise to over 1,800 metres
                 above sea level. Volcanic basalt soils, fed by glacial streams and
                 filtered through centuries of organic matter, create a growing
                 medium unlike anywhere else in East Africa.
               </p>
-              <p className="mt-4 max-w-[52ch] text-sm leading-relaxed text-[rgba(236,227,206,0.68)] md:text-base">
+              <p className="mt-4 max-w-[52ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)] md:text-[1.0625rem]">
                 Cool nights and bright days slow the cherry&apos;s development.
                 Sugars concentrate. Acids find their balance. The result is a
                 coffee that carries the signature of its place — a flavour that
@@ -93,14 +102,21 @@ export default function OriginsPage() {
             </div>
             <div className="md:col-span-5 md:flex md:items-center">
               <div className="aspect-[4/3] w-full overflow-hidden bg-[rgba(212,190,145,0.06)]">
-                <div
-                  aria-hidden
-                  className="flex h-full w-full items-center justify-center"
-                >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[rgba(212,190,145,0.30)]">
-                    Kirinyaga · Photography pending
-                  </p>
-                </div>
+                {kirinyagaImg ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={kirinyagaImg}
+                    alt="The Kirinyaga highland landscape above the slopes of Mt. Kenya"
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div aria-hidden className="flex h-full w-full items-center justify-center">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[rgba(212,190,145,0.30)]">
+                      Kirinyaga · Photography pending
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </Reveal>
@@ -120,30 +136,37 @@ export default function OriginsPage() {
           <Reveal as="div" delay={0} className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-10">
             <div className="order-2 md:order-1 md:col-span-5 md:flex md:items-center">
               <div className="aspect-[4/3] w-full overflow-hidden bg-[rgba(212,190,145,0.06)]">
-                <div
-                  aria-hidden
-                  className="flex h-full w-full items-center justify-center"
-                >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[rgba(212,190,145,0.30)]">
-                    Terroir · Photography pending
-                  </p>
-                </div>
+                {terroirImg ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={terroirImg}
+                    alt="A close detail of volcanic Kenyan soil and the raw material it produces"
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div aria-hidden className="flex h-full w-full items-center justify-center">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[rgba(212,190,145,0.30)]">
+                      Terroir · Photography pending
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             <div className="order-1 md:order-2 md:col-span-7">
-              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+              <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
                 II · Terroir
               </p>
               <h2 className="mt-5 max-w-[16ch] font-display text-3xl italic leading-[1.04] tracking-[-0.015em] text-[var(--ivory)] md:text-5xl">
                 Provenance is not a claim
               </h2>
-              <p className="mt-6 max-w-[52ch] text-sm leading-relaxed text-[rgba(236,227,206,0.68)] md:text-base">
+              <p className="mt-6 max-w-[52ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)] md:text-[1.0625rem]">
                 Provenance means knowing — farm by farm, plot by plot — where a
                 product originates. Treadville maintains direct relationships with
                 growers across Kenya&apos;s agricultural zones. Every lot can be
                 traced to its source.
               </p>
-              <p className="mt-4 max-w-[52ch] text-sm leading-relaxed text-[rgba(236,227,206,0.68)] md:text-base">
+              <p className="mt-4 max-w-[52ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)] md:text-[1.0625rem]">
                 This is not marketing language. It is the operational foundation
                 of the business — the reason buyers who care about quality return.
               </p>
@@ -181,7 +204,7 @@ export default function OriginsPage() {
                 <p className="font-display text-4xl italic text-[var(--ivory)] md:text-5xl">
                   {value}
                 </p>
-                <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.45)]">
+                <p className="mt-2 font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(236,227,206,0.45)]">
                   {label}
                 </p>
               </div>
@@ -211,19 +234,19 @@ export default function OriginsPage() {
             <h2 className="font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-5xl">
               Ready to explore the catalogue?
             </h2>
-            <p className="mt-4 max-w-[48ch] mx-auto text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
+            <p className="mt-4 max-w-[48ch] mx-auto text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
               Each Treadville product carries its origin in its flavour.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-8 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)]"
+                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07]"
               >
                 Explore products
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
+                className="inline-flex items-center gap-3 font-mono text-[15px] uppercase tracking-[0.16em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
               >
                 Speak to us
               </Link>

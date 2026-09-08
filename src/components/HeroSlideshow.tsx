@@ -1,189 +1,111 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { CHAPTERS } from "./HeroChapters";
-import { ChapterVisual } from "./HeroChapters";
 
 const THESIS_LINE_1 = "From Kenyan soil";
 const THESIS_LINE_2 = "to global markets.";
 
-export default function HeroSlideshow() {
-  const [active, setActive] = useState(0);
-  const sectionRef = useRef<HTMLElement | null>(null);
+export default function HeroSlideshow({ heroImage }: { heroImage?: string }) {
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") {
-        setActive((a) => (a - 1 + CHAPTERS.length) % CHAPTERS.length);
-      }
-      if (e.key === "ArrowRight") {
-        setActive((a) => (a + 1) % CHAPTERS.length);
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const chapter = CHAPTERS[active];
-  const heroChapter = CHAPTERS[0];
 
   return (
     <section
-      ref={sectionRef}
       aria-label="Treadville — From Kenyan soil to global markets"
-      className="relative isolate min-h-[100svh] overflow-hidden"
-      style={{ background: "var(--atmosphere-hero)" }}
+      className="relative isolate overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(65% 50% at 82% 18%, rgba(111, 155, 99, 0.10) 0%, transparent 55%), linear-gradient(180deg, #fbf8f1 0%, #f0e7d2 100%)",
+      }}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 opacity-40"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(26, 20, 16, 0.035) 1px, transparent 0)",
-          backgroundSize: "7px 7px",
-        }}
-      />
+      {heroImage ? (
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={heroImage}
+            alt=""
+            aria-hidden
+            className="h-full w-full object-cover"
+            style={{ objectPosition: "center 42%" }}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+          {/* Photographic scrim — text-readability zone on left,
+              full photograph clarity across the rest. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(251,248,241,0.72) 0%, rgba(251,248,241,0.45) 45%, rgba(251,248,241,0.04) 70%, transparent 100%)",
+            }}
+          />
+        </div>
+      ) : null}
 
-      {/* Hero composition — left text / right visual, single dominant frame */}
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[var(--content-cinema)] flex-col">
-        {/* Top provenance bar */}
-        <div className="flex items-center justify-between px-6 pt-8 md:px-10 md:pt-12">
-          <div className="flex items-center gap-3">
+      {/* Desktop provenance bar — visually subordinate, hidden on mobile.
+          overflow-hidden prevents the wide letter-spacing from escaping right-0. */}
+      <div className="absolute top-6 left-0 right-0 z-20 hidden overflow-hidden px-6 md:block md:px-12">
+        <div className="flex items-center justify-between">
+          <div className="flex shrink-0 items-center gap-3">
             <span
               aria-hidden
-              className="hidden h-px w-8 bg-[var(--ink)]/20 md:block"
+              className="h-px w-6 bg-[var(--accent-sage)]"
             />
-            <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-[var(--ink-soft)]">
-              <span className="text-[var(--ink)]">Treadville</span>
-              <span className="mx-2 text-[var(--ink-faint)]">/</span>
-              <span>Volcanic Highlands · Kenya</span>
-            </span>
+            <p className="font-mono text-[13px] font-semibold uppercase tracking-[0.30em] text-[var(--ink)]">
+              Treadville — Kirinyaga, Kenya
+            </p>
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-[var(--ink-faint)] tabular-nums">
-            {String(active + 1).padStart(2, "0")} / {String(CHAPTERS.length).padStart(2, "0")}
-          </span>
+          <p className="shrink-0 font-mono text-[13px] font-semibold uppercase tracking-[0.30em] text-[var(--ink)]">
+            Specialty agricultural products
+          </p>
         </div>
+      </div>
 
-        {/* Main editorial split — text on the left, visual on the right */}
-        <div className="grid flex-1 grid-cols-1 items-end gap-6 px-6 pb-12 pt-6 md:px-10 md:pb-16 md:pt-10 lg:grid-cols-12 lg:gap-10 lg:pb-20">
-          {/* Text column */}
-          <div className="lg:col-span-8">
-            <p className="inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-[var(--accent-sage)]">
-              <span
-                aria-hidden
-                className="inline-block h-px w-8 bg-[var(--accent-sage)]"
-              />
-              {chapter.eyebrow}
+      {/* Hero content — CTA is now in document flow, not absolute,
+          so it cannot overlap the paragraph text. */}
+      <div className="relative z-10 mx-auto flex min-h-[88svh] w-full max-w-[var(--content-cinema)] flex-col">
+        <div className="mt-auto pb-12 pt-[4.5rem] md:pb-16 md:pt-[5rem] lg:pt-[5.5rem]">
+          <div className="px-6 md:max-w-[42rem] md:px-12">
+            <p className="hidden text-[var(--jade)] font-mono text-[13px] font-semibold uppercase tracking-[0.32em] md:mb-6 md:inline-block">
+              <span aria-hidden className="mr-3 inline-block h-px w-8 align-middle bg-[var(--jade)]" />
+              Specialty agricultural products
             </p>
 
             <h1
               id="hero-headline"
-              className="mt-6 max-w-[22ch] font-display font-medium leading-[0.91] tracking-[-0.025em] text-[var(--ink)] text-[2.75rem] sm:text-[3.5rem] md:text-[5rem] lg:max-w-[none] lg:text-[7rem] xl:text-[8.5rem]"
+              className="display-hero text-balance"
             >
-              <span className="block text-balance italic" style={{ fontStyle: "italic" }}>
-                {THESIS_LINE_1}
-              </span>
-              <span
-                className="block text-balance"
-                style={{
-                  fontStyle: "italic",
-                  color: "var(--ink-soft)",
-                }}
-              >
-                {THESIS_LINE_2}
-              </span>
+              <span className="block italic">{THESIS_LINE_1}{" "}</span>
+              <span className="block text-[var(--ink-soft)]">{THESIS_LINE_2}</span>
             </h1>
 
-            <p className="mt-6 max-w-[40ch] text-base leading-relaxed text-[var(--ink-soft)] sm:mt-8 md:max-w-[44ch] md:text-lg">
-              {chapter.subtitle}
+            <p className="mt-8 max-w-[42ch] text-[1.0625rem] leading-[1.7] text-[var(--ink-soft)]">
+              Premium Kenyan agricultural products — specialty coffee, tea,
+              horticulture, and grains — sourced with traceability and
+              delivered to global markets.
             </p>
 
-            {/* Verified metadata — provenance, quality, scale */}
-            <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-[var(--line-on-light)] pt-5 md:mt-9">
-              {chapter.meta.map((m) => (
-                <div key={m.label} className="flex flex-col gap-0.5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
-                    {m.label}
-                  </span>
-                  <span className="font-display text-base italic text-[var(--ink)] md:text-lg">
-                    {m.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4 md:mt-10">
+            <div className="mt-10">
               <Link
-                href={chapter.ctaHref}
-                className="group inline-flex items-center gap-3 bg-[var(--ink)] px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.26em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] ease-[var(--ease-out)] hover:bg-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+                href="/shop"
+                className="group inline-flex items-center gap-3 bg-[var(--ink)] px-7 py-4 font-mono text-[14px] uppercase tracking-[0.18em] text-[var(--warm-white)] transition-colors duration-[var(--dur)] hover:bg-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
               >
-                {chapter.ctaLabel}
+                Shop the collection
                 <span
                   aria-hidden
-                  className="inline-block h-px w-4 bg-current transition-all duration-500 ease-[var(--ease-out)] group-hover:w-7"
-                />
-              </Link>
-              <Link
-                href={chapter.secondaryCtaHref}
-                className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.26em] text-[var(--ink-soft)] transition-colors duration-[var(--dur-fast)] hover:text-[var(--ink)] focus-visible:outline-none focus-visible:text-[var(--ink)]"
-              >
-                {chapter.secondaryCtaLabel}
-                <span
-                  aria-hidden
-                  className="inline-block h-px w-5 bg-[var(--ink)]/45 transition-all duration-500 ease-[var(--ease-out)] group-hover:w-8 group-hover:bg-[var(--accent-sage)]"
+                  className="inline-block h-px w-4 bg-current transition-all duration-500 group-hover:w-7"
                 />
               </Link>
             </div>
           </div>
-
-          {/* Right visual — editorial composition, understated */}
-          <div className="relative hidden h-[480px] overflow-hidden lg:col-span-4 lg:flex lg:items-end">
-            <div
-              className="absolute inset-x-[-10%] bottom-[-8%] h-[112%] transition-opacity duration-[1400ms] ease-[var(--ease-cinema)]"
-              style={{ opacity: 1 }}
-            >
-              <ChapterVisual
-                visual={heroChapter.visual}
-                className="h-full w-full"
-              />
-            </div>
-            {/* Faint edge fade so the visual lands softly on the page */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--warm-white) 0%, rgba(251,248,241,0) 16%, rgba(251,248,241,0) 84%, rgba(251,248,241,0) 100%)",
-              }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(251,248,241,0) 0%, rgba(251,248,241,0.85) 100%)",
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Editorial "told through" strip — replaces carousel dot-nav */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line-on-light)] px-6 pb-6 pt-5 md:px-10 md:pb-8">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
-            Treadville · Specialty agricultural products from Kenya
-          </p>
-          <a
-            href="#category-chapters"
-            className="group flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)] transition-colors duration-[var(--dur-fast)] hover:text-[var(--ink)] focus-visible:outline-none"
-          >
-            <span
-              aria-hidden
-              className="h-px w-6 bg-[var(--ink)]/30 transition-all duration-500 ease-[var(--ease-out)] group-hover:w-8 group-hover:bg-[var(--accent-sage)]"
-            />
-            <span>Explore the chapters</span>
-          </a>
         </div>
       </div>
     </section>

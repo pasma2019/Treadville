@@ -121,11 +121,16 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: clip;
+}
+
 html,
 body {
-  background: var(--soil);
-  color: var(--parchment);
+  background: var(--warm-white);
+  color: var(--ink);
   font-family: var(--font-body), sans-serif;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -182,24 +187,32 @@ h3,
    ============================================================ */
 
 .glass {
+  background: var(--glass-light-bg);
+  border: 1px solid var(--glass-light-border);
+  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
+}
+
+.glass-light {
+  background: var(--glass-light-bg);
+  border: 1px solid var(--glass-light-border);
+  backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-light-blur)) saturate(140%);
+}
+
+.glass-strong {
+  background: var(--glass-light-bg-soft);
+  border: 1px solid var(--glass-light-border);
+  backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-light-blur-strong)) saturate(150%);
+}
+
+/* Dark glass variant — for explicit dark sections only */
+.glass-dark {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
-}
-
-.glass-light {
-  background: var(--glass-bg-light);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-}
-
-.glass-strong {
-  background: rgba(20, 15, 11, 0.60);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(var(--glass-blur-strong));
-  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
 }
 
 /* ============================================================
@@ -349,20 +362,29 @@ textarea:focus-visible {
 }
 
 .glass-light-cinema {
-  background: rgba(244, 239, 228, 0.07);
-  border: 1px solid rgba(244, 239, 228, 0.16);
-  box-shadow: inset 0 1px 0 rgba(244, 239, 228, 0.08);
+  background: rgba(251, 248, 241, 0.72);
+  border: 1px solid rgba(26, 20, 16, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 24px 50px rgba(60, 45, 30, 0.12);
 }
 
 /* Floating navigation — transparent at the top of the page, resolving
-   into a quiet glass strip once the reader starts scrolling so it never
-   reads as a boxed developer bar. */
+    into a quiet light strip once the reader starts scrolling so it never
+    reads as a boxed developer bar. */
 .site-nav {
-  background: rgba(14, 11, 8, 0.66);
-  border-bottom: 1px solid rgba(236, 227, 206, 0.10);
+  background: rgba(251, 248, 241, 0.66);
+  border-bottom: 1px solid rgba(26, 20, 16, 0.10);
   box-shadow:
     inset 0 1px 0 rgba(236, 227, 206, 0.06),
-    0 12px 30px rgba(0, 0, 0, 0.22);
+    0 12px 30px rgba(60, 45, 30, 0.16);
+}
+
+/* Scrolled — quiet glass strip */
+.site-nav.scrolled {
+  background: var(--glass-light-bg);
+  border-bottom: 1px solid var(--glass-light-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 8px 24px -12px rgba(60, 45, 30, 0.18);
 }
 
 /* Editorial display scale — driven by CSS variables for fluid type. */
@@ -476,13 +498,13 @@ textarea:focus-visible {
 }
 
 /* Soft scrim under the fixed navigation so links stay legible over
-   brighter chapter frames while the header itself stays transparent. */
+    brighter chapter frames while the header itself stays transparent. */
 .hero-scrim {
   background: linear-gradient(
     180deg,
-    rgba(10, 6, 3, 0.55) 0%,
-    rgba(10, 6, 3, 0.22) 45%,
-    rgba(10, 6, 3, 0) 100%
+    rgba(251, 248, 241, 0.60) 0%,
+    rgba(251, 248, 241, 0.25) 45%,
+    rgba(251, 248, 241, 0) 100%
   );
 }
 
@@ -623,26 +645,26 @@ textarea:focus-visible {
 
 .display-eyebrow {
   font-family: var(--font-mono), sans-serif;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.36em;
+  letter-spacing: 0.20em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
 
 .label-on-light {
   font-family: var(--font-mono), sans-serif;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.20em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
 
 .body-on-light {
   font-family: var(--font-body), sans-serif;
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 1.0625rem;
+  line-height: 1.7;
   color: var(--ink-soft);
 }
 
@@ -683,9 +705,18 @@ textarea:focus-visible {
 
 /* Site navigation glass on light surfaces — quiet ivory bar */
 .site-nav-light {
-  background: rgba(251, 248, 241, 0.82);
-  border-bottom: 1px solid rgba(26, 20, 16, 0.08);
+  background: var(--glass-light-bg);
+  border-bottom: 1px solid var(--glass-light-border);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 8px 24px -12px rgba(60, 45, 30, 0.18);
+}
+
+/* Scrolled state with light glass */
+.site-nav.scrolled {
+  background: var(--glass-light-bg);
+  border-bottom: 1px solid var(--glass-light-border);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 8px 24px -12px rgba(60, 45, 30, 0.18);
+  backdrop-filter: blur(var(--glass-light-blur));
+  -webkit-backdrop-filter: blur(var(--glass-light-blur));
 }
 
 /* ============================================================
@@ -832,7 +863,7 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   LIGHT BUTTONS — premium CTA system
+   LIGHT BUTTONS — premium CTA system for light surfaces
    ============================================================ */
 
 .btn-light-primary {
@@ -935,10 +966,10 @@ textarea:focus-visible {
   width: 100%;
   border: 1px solid rgba(212, 190, 145, 0.20);
   background: rgba(20, 15, 7, 0.50);
-  padding: 0.85rem 1rem;
+  padding: 1rem;
   color: var(--ivory);
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
   transition: border-color var(--dur-fast) var(--ease-out),
     background-color var(--dur-fast) var(--ease-out);
@@ -959,6 +990,7 @@ textarea:focus-visible {
   outline: none;
   border-color: rgba(212, 190, 145, 0.55);
   background: rgba(20, 15, 7, 0.75);
+  box-shadow: 0 0 0 3px rgba(212, 190, 145, 0.18);
 }
 
 select.field-dark {

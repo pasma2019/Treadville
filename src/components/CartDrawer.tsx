@@ -39,7 +39,7 @@ export default function CartDrawer() {
   return (
     <>
       <div
-        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-300 ease-out ${
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ease-out ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={closeCart}
@@ -48,20 +48,20 @@ export default function CartDrawer() {
       />
       <aside
         ref={panelRef}
-        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col border-l border-[var(--glass-border)] bg-[var(--soil-raised)]/95 backdrop-blur transition-transform duration-300 ease-out ${
+        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col border-l border-[var(--glass-light-border)] bg-[var(--warm-white)]/95 backdrop-blur transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         aria-label="Shopping cart"
         aria-hidden={!isOpen}
         onKeyDown={(e) => e.key === "Escape" && closeCart()}
       >
-        <div className="flex items-center justify-between border-b border-[var(--glass-border)] px-6 py-6">
-          <h2 className="font-display text-xl">Your order</h2>
+        <div className="flex items-center justify-between border-b border-[var(--line-on-light)] px-6 py-6">
+          <h2 className="font-display text-xl text-[var(--ink)]">Your order</h2>
           <button
             ref={closeButtonRef}
             onClick={closeCart}
             aria-label="Close cart"
-            className="text-[var(--parchment)]/70 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
           >
             <X size={20} />
           </button>
@@ -69,7 +69,7 @@ export default function CartDrawer() {
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-6">
-            <p className="max-w-[20rem] text-center text-sm leading-relaxed text-[var(--parchment)]/60">
+            <p className="max-w-[20rem] text-center text-sm leading-relaxed text-[var(--ink-muted)]">
               Nothing here yet — add a product to get started.
             </p>
           </div>
@@ -79,19 +79,19 @@ export default function CartDrawer() {
               <li
                 key={line.product.id}
                 className={`flex items-start justify-between gap-3 py-4 ${
-                  idx < lines.length - 1 ? "border-b border-[var(--glass-border)]" : ""
+                  idx < lines.length - 1 ? "border-b border-[var(--line-on-light)]" : ""
                 }`}
               >
                 <div className="min-w-0">
-                  <p className="font-display text-base leading-tight">{line.product.name}</p>
-                  <p className="mt-1 font-mono text-xs text-[var(--parchment)]/60">
+                  <p className="font-display text-base leading-tight text-[var(--ink)]">{line.product.name}</p>
+                  <p className="mt-1 font-mono text-xs text-[var(--ink-muted)]">
                     Quantity · {line.qty}
                   </p>
                 </div>
                 <button
                   onClick={() => removeFromCart(line.product.id)}
                   aria-label={`Remove ${line.product.name}`}
-                  className="shrink-0 font-mono text-xs uppercase tracking-wide text-[var(--parchment)]/50 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  className="shrink-0 font-mono text-xs uppercase tracking-wide text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)]"
                 >
                   Remove
                 </button>
@@ -100,23 +100,23 @@ export default function CartDrawer() {
           </ul>
         )}
 
-        <div className="border-t border-[var(--glass-border)] bg-[var(--soil-raised)]/60 px-6 py-5">
+        <div className="border-t border-[var(--line-on-light)] bg-[var(--warm-white)]/60 px-6 py-5">
           <div className="flex items-baseline justify-between">
-            <span className="font-mono text-xs uppercase tracking-[0.28em] text-[var(--parchment)]/70">
+            <span className="font-mono text-xs uppercase tracking-[0.28em] text-[var(--ink-muted)]">
               Items
             </span>
-            <span className="font-display text-base text-[var(--parchment)]">
+            <span className="font-display text-base text-[var(--ink)]">
               {count} {count === 1 ? "product" : "products"}
             </span>
           </div>
           <Link
             href="/checkout"
             onClick={closeCart}
-            className="mt-4 block w-full bg-[var(--accent)] px-4 py-3 text-center font-mono text-xs uppercase tracking-widest text-[var(--soil)] transition-colors hover:bg-[var(--copper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)]"
+            className="mt-4 block w-full bg-[var(--ink)] px-4 py-3 text-center font-mono text-xs uppercase tracking-widest text-[var(--warm-white)] transition-colors hover:bg-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--parchment)]"
           >
             Proceed to checkout
           </Link>
-          <p className="mt-3 text-center text-[10px] uppercase tracking-widest text-[var(--parchment)]/40">
+          <p className="mt-3 text-center text-[10px] uppercase tracking-widest text-[var(--ink-faint)]">
             Prototype checkout — no payment is processed.
           </p>
         </div>

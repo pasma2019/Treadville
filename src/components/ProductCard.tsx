@@ -190,7 +190,7 @@ function ProductIdentity({
         {isLight ? (
           <p className="label-on-light">{eyebrow}</p>
         ) : (
-          <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[var(--parchment)]/55">
+          <p className="font-mono text-[13px] uppercase tracking-[0.2em] text-[var(--parchment)]/55">
             {eyebrow}
           </p>
         )}
@@ -223,7 +223,7 @@ function ProductIdentity({
             <span>Treadville · {slug === "default" ? "Lot" : slug}</span>
           </div>
         ) : (
-          <div className="mt-3 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.32em] text-[var(--parchment)]/45">
+          <div className="mt-3 flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.2em] text-[var(--parchment)]/45">
             <span aria-hidden className="h-px w-6 bg-[var(--parchment)]/30" />
             <span>Treadville · {slug === "default" ? "Lot" : slug}</span>
           </div>

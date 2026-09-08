@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { CartProvider } from "@/components/CartContext";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
@@ -7,6 +8,7 @@ import CartDrawer from "@/components/CartDrawer";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { getCategories } from "@/lib/queries";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/lib/structured-data";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -44,6 +46,9 @@ export const metadata: Metadata = {
   creator: "Treadville Company Limited",
   publisher: "Treadville Company Limited",
   metadataBase: new URL("https://treadville.co.ke"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_KE",
@@ -52,16 +57,38 @@ export const metadata: Metadata = {
     title: "Treadville — Premium Kenyan Agricultural Products",
     description:
       "Specialty coffee, tea, horticulture, and grains sourced across Kenya's volcanic highlands.",
+    images: [
+      {
+        url: "/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "Treadville — From Kenyan soil to global markets",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Treadville — Premium Kenyan Agricultural Products",
     description:
       "Specialty coffee, tea, horticulture, and grains sourced across Kenya's volcanic highlands.",
+    images: ["/og-default.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
 };
 
@@ -71,6 +98,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
         <CartProvider>
           <LanguageProvider>
             <SiteHeader categories={categories} />
@@ -79,6 +108,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <CartDrawer />
           </LanguageProvider>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );

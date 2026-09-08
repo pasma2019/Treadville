@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import { useCart } from "./CartContext";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import LanguageSelector from "./LanguageSelector";
@@ -12,19 +12,20 @@ import type { Category } from "@/lib/types";
 const IA_LINKS = [
   { key: "origins", href: "/origins" },
   { key: "quality", href: "/quality" },
-  { key: "export", href: "/export" },
   { key: "about", href: "/about" },
   { key: "journal", href: "/journal" },
-  { key: "contact", href: "/contact" },
+  { key: "enquire", href: "/contact" },
 ] as const;
 
 export default function SiteHeader({ categories }: { categories: Category[] }) {
   const { openCart, count } = useCart();
   const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const shopRef = useRef<HTMLDivElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const pathname = usePathname();
 
@@ -37,31 +38,28 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && menuOpen) {
-        e.preventDefault();
-        setMenuOpen(false);
+      if (e.key === "Escape") {
+        if (shopOpen) { setShopOpen(false); return; }
+        if (menuOpen) { setMenuOpen(false); }
       }
     };
-    if (menuOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-      const timer = setTimeout(() => firstLinkRef.current?.focus(), 60);
-      return () => {
-        clearTimeout(timer);
-        document.removeEventListener("keydown", handleKeyDown);
-        document.body.style.overflow = "";
-      };
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen, shopOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (shopRef.current && !shopRef.current.contains(e.target as Node)) {
+        setShopOpen(false);
+      }
     };
-  }, [menuOpen]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     setMenuOpen(false);
+    setShopOpen(false);
   }, [pathname]);
 
   const handleMenuClose = () => {
@@ -72,95 +70,116 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && pathname.startsWith(href));
 
-  const navLink = (href: string, label: string) => {
-    const active = isActive(href);
-    return (
-      <Link
-        key={href}
-        href={href}
-        aria-current={active ? "page" : undefined}
-        className={`group relative text-[11px] font-medium uppercase tracking-[0.20em] transition-colors duration-[var(--dur-fast)] focus-visible:outline-none ${
-          active
-            ? "text-[var(--parchment)]"
-            : "text-[var(--parchment)]/72 hover:text-[var(--parchment)] focus-visible:text-[var(--parchment)]"
-        }`}
-      >
-        {label}
-        <span
-          aria-hidden
-          className={`absolute inset-x-0 -bottom-1.5 h-px origin-left bg-[var(--accent)] transition-transform duration-[var(--dur)] ease-[var(--ease-out)] ${
-            active
-              ? "scale-x-100"
-              : "scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100"
-          }`}
-        />
-      </Link>
-    );
-  };
+  const isShopActive = () => pathname.startsWith("/shop");
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-[background-color,border-color,box-shadow] duration-300 ease-[var(--ease-out)] ${
+      className={`sticky top-0 z-40 transition-colors duration-300 ${
         scrolled
           ? "site-nav backdrop-blur-[var(--glass-cinema-blur)]"
           : "border-b border-transparent bg-transparent"
       }`}
     >
       <div
-        className={`mx-auto flex items-center justify-between gap-6 px-6 transition-[height] duration-300 ease-[var(--ease-out)] ${
-          scrolled ? "h-[56px]" : "h-[68px]"
-        }`}
+        className={`mx-auto flex h-[60px] items-center justify-between gap-6 px-6 md:h-[68px] md:px-10`}
         style={{ maxWidth: "min(1280px, calc(100% - 32px))" }}
       >
+        {/* Logo */}
         <Link
           href="/"
           className="group flex shrink-0 items-center gap-3"
           onClick={handleMenuClose}
         >
-          <span className="font-display text-[1.4rem] font-semibold uppercase leading-none tracking-[0.16em] text-[var(--parchment)] transition-colors duration-[var(--dur-fast)] group-hover:text-white">
-            Treadville
-          </span>
-          <span
-            aria-hidden
-            className="hidden h-4 w-px bg-[var(--parchment)]/20 md:block"
-          />
-          <span className="hidden font-mono text-[9px] uppercase tracking-[0.4em] text-[var(--parchment)]/50 md:block">
-            Kenya
+          <span className="font-display text-[1.35rem] font-semibold tracking-[0.12em] text-[var(--ink)] transition-colors group-hover:text-[var(--accent)]">
+            TREADVILLE
           </span>
         </Link>
 
+        {/* Desktop nav */}
         <nav
           aria-label="Main navigation"
-          className="hidden items-center justify-center gap-7 lg:flex lg:gap-8"
+          className="hidden items-center gap-6 lg:flex"
         >
-          {navLink("/shop", t.nav.shop)}
-          {categories.map((cat) => {
-            const label = (t.nav as Record<string, string>)[cat.slug] ?? cat.name;
-            return navLink(`/shop/${cat.slug}`, label);
+          {/* Shop dropdown */}
+          <div ref={shopRef} className="relative">
+            <button
+              onClick={() => setShopOpen((v) => !v)}
+              aria-expanded={shopOpen}
+              aria-haspopup="true"
+              aria-label="Shop categories"
+              className={`flex items-center gap-1.5 rounded-sm text-[1rem] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${
+                isShopActive()
+                  ? "text-[var(--ink)]"
+                  : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+              }`}
+            >
+              Shop
+              <ChevronDown
+                size={13}
+                className={`transition-transform duration-200 ${shopOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {shopOpen && (
+              <div
+                className="absolute left-0 top-full z-50 mt-2 min-w-[160px] border border-[var(--line-on-light)] bg-[var(--warm-white)] shadow-[var(--shadow-float-light)]"
+                role="menu"
+              >
+                <Link
+                  href="/shop"
+                  onClick={() => setShopOpen(false)}
+                  role="menuitem"
+                  className="block rounded-sm border-b border-[var(--line-on-light)] px-5 py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:bg-[var(--line-on-light)] hover:text-[var(--ink)] focus-visible:bg-[var(--line-on-light)] focus-visible:text-[var(--ink)] focus-visible:outline-none"
+                >
+                  View all products
+                </Link>
+                {categories.map((cat) => {
+                  const label = (t.nav as Record<string, string>)[cat.slug] ?? cat.name;
+                  return (
+                    <Link
+                      key={cat.id}
+                      href={`/shop/${cat.slug}`}
+                      onClick={() => setShopOpen(false)}
+                      role="menuitem"
+                      className="block rounded-sm px-5 py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:bg-[var(--line-on-light)] hover:text-[var(--ink)] focus-visible:bg-[var(--line-on-light)] focus-visible:text-[var(--ink)] focus-visible:outline-none"
+                    >
+                      {label}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* IA links */}
+          {IA_LINKS.map(({ key, href }) => {
+            const active = isActive(href);
+            const label = (t.nav as Record<string, string>)[key] ?? key;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`rounded-sm text-[1rem] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${
+                  active
+                    ? "text-[var(--ink)]"
+                    : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+                }`}
+              >
+                {label}
+              </Link>
+            );
           })}
-          <span
-            aria-hidden
-            className="h-3 w-px bg-[var(--parchment)]/15"
-          />
-          {IA_LINKS.map(({ key, href }) =>
-            navLink(href, (t.nav as Record<string, string>)[key] ?? key)
-          )}
         </nav>
 
+        {/* Right side */}
         <div className="flex shrink-0 items-center gap-3 lg:gap-5">
-          <LanguageSelector className="hidden md:flex" />
-          <span aria-hidden className="hidden h-3 w-px bg-[var(--parchment)]/15 md:block" />
           <button
             onClick={openCart}
             aria-label={`Open enquiry cart (${count} items)`}
-            className="group flex items-center gap-2 px-1 text-[var(--parchment)]/72 transition-colors duration-[var(--dur-fast)] hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
+            className="flex items-center gap-2 rounded-sm text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           >
             <ShoppingBag size={16} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.20em] hidden lg:inline">
-              {t.nav.shop === "Boutique" || t.nav.shop === "Sortiment" ? "Enquiry" : "Enquire"}
-            </span>
             {count > 0 && (
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[var(--accent)] text-[9px] leading-none text-[var(--soil)]">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[var(--accent)] text-[9px] font-medium leading-none text-[var(--warm-white)]">
                 {count}
               </span>
             )}
@@ -171,92 +190,75 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="site-mobile-menu"
-            className="flex items-center gap-2 px-1 text-[var(--parchment)]/72 transition-colors duration-[var(--dur-fast)] hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)] lg:hidden"
+            className="flex items-center gap-2 rounded-sm text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent lg:hidden"
           >
             {menuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
 
+      {/* Mobile menu */}
       <div
         ref={menuRef}
         id="site-mobile-menu"
         aria-hidden={!menuOpen}
-        className={`fixed inset-0 top-[var(--site-header-h)] z-30 flex flex-col overflow-y-auto bg-[var(--soil-muted)]/[0.97] backdrop-blur-xl transition-opacity duration-300 ease-out lg:hidden ${
+        className={`fixed inset-0 top-[60px] z-30 flex flex-col overflow-y-auto bg-[var(--warm-white)]/[0.97] backdrop-blur-xl transition-opacity duration-300 lg:hidden ${
           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <nav
-          aria-label="Mobile navigation"
-          className="flex flex-col gap-0 px-8 py-8"
-        >
-          <p className="mb-4 mt-2 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--parchment)]/40">
-            {t.footer.catalogue}
-          </p>
-          <Link
-            ref={firstLinkRef}
-            href="/shop"
-            onClick={handleMenuClose}
-            aria-current={isActive("/shop") ? "page" : undefined}
-            className="group flex items-center justify-between border-b border-[rgba(212,190,145,0.12)] py-4 font-display text-2xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
-          >
-            {t.nav.shopAll}
-            <span
-              aria-hidden
-              className="h-px w-6 bg-[var(--parchment)]/30 transition-all duration-300 group-hover:w-10 group-hover:bg-[var(--accent)]"
-            />
-          </Link>
-          {categories.map((cat) => {
-            const label = (t.nav as Record<string, string>)[cat.slug] ?? cat.name;
-            return (
-              <Link
-                key={cat.id}
-                href={`/shop/${cat.slug}`}
-                onClick={handleMenuClose}
-                aria-current={isActive(`/shop/${cat.slug}`) ? "page" : undefined}
-                className="group flex items-center justify-between border-b border-[rgba(212,190,145,0.12)] py-4 font-display text-2xl italic tracking-[-0.01em] text-[var(--parchment)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:text-[var(--accent)]"
-              >
-                {label}
-                <span
-                  aria-hidden
-                  className="h-px w-4 bg-[var(--parchment)]/30 transition-all duration-300 group-hover:w-8 group-hover:bg-[var(--accent)]"
-                />
-              </Link>
-            );
-          })}
+        <nav aria-label="Mobile navigation" className="flex flex-col gap-0 px-8 py-8">
+          {/* Shop section */}
+          <div className="mb-2 mt-2">
+            <Link
+              ref={firstLinkRef}
+              href="/shop"
+              onClick={handleMenuClose}
+              aria-current={isActive("/shop") ? "page" : undefined}
+              className="mb-3 block rounded-sm text-[1.0625rem] font-medium text-[var(--ink)] transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+            >
+              Shop
+            </Link>
+            {categories.map((cat) => {
+              const label = (t.nav as Record<string, string>)[cat.slug] ?? cat.name;
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/shop/${cat.slug}`}
+                  onClick={handleMenuClose}
+                  aria-current={isActive(`/shop/${cat.slug}`) ? "page" : undefined}
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
 
-          <p className="mb-4 mt-8 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--parchment)]/40">
-            {t.footer.company}
-          </p>
-          {IA_LINKS.map(({ key, href }) => {
-            const label = (t.nav as Record<string, string>)[key] ?? key;
-            return (
-              <Link
-                key={href}
-                href={href}
-                onClick={handleMenuClose}
-                aria-current={isActive(href) ? "page" : undefined}
-                className="group flex items-center justify-between border-b border-[rgba(212,190,145,0.12)] py-4 font-mono text-sm uppercase tracking-[0.24em] text-[var(--parchment)]/75 transition-colors hover:text-[var(--parchment)] focus-visible:outline-none focus-visible:text-[var(--parchment)]"
-              >
-                {label}
-                <span
-                  aria-hidden
-                  className="h-px w-4 bg-[var(--parchment)]/30 transition-all duration-300 group-hover:w-8 group-hover:bg-[var(--accent)]"
-                />
-              </Link>
-            );
-          })}
+          {/* IA section */}
+          <div className="mb-2 mt-8">
+            <p className="mb-3 text-[1.0625rem] font-medium text-[var(--ink)]">
+              Company
+            </p>
+            {IA_LINKS.map(({ key, href }) => {
+              const label = (t.nav as Record<string, string>)[key] ?? key;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={handleMenuClose}
+                  aria-current={isActive(href) ? "page" : undefined}
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
 
-          <div className="mt-8 flex items-center gap-4">
+          <div className="mt-6">
             <LanguageSelector />
           </div>
         </nav>
-
-        <div className="mt-auto border-t border-[var(--parchment)]/10 px-8 py-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--parchment)]/40">
-            Volcanic Highlands · Kenya
-          </p>
-        </div>
       </div>
     </header>
   );

@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { getSiteContent } from "@/lib/queries";
+
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "About",
   description:
     "Treadville is a Kenyan agricultural platform working to transform agricultural resources into real wealth through market development, processing, and global networking.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 const PILLARS = [
@@ -27,7 +33,9 @@ const PILLARS = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const content = await getSiteContent();
+  const heroImage = content.about_hero || "";
   return (
     <main className="surface-footer">
       {/* Hero */}
@@ -53,10 +61,25 @@ export default function AboutPage() {
           aria-hidden
           className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,190,145,0.25)] to-transparent"
         />
+        {heroImage ? (
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroImage}
+              alt=""
+              className="h-full w-full object-cover opacity-25"
+              loading="lazy"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg, rgba(14,11,8,0.50) 0%, rgba(14,11,8,0.20) 50%, rgba(14,11,8,0.70) 100%)" }}
+            />
+          </div>
+        ) : null}
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(236,227,206,0.45)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.45)]">
               Treadville · About
             </p>
           </Reveal>
@@ -69,7 +92,7 @@ export default function AboutPage() {
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-8 max-w-[52ch]">
-            <p className="text-base leading-relaxed text-[rgba(236,227,206,0.70)] md:text-lg">
+            <p className="text-[1.0625rem] leading-relaxed text-[rgba(236,227,206,0.70)] md:text-[1.125rem]">
               Treadville works to transform agricultural resources into real
               wealth — through market development, processing, value addition,
               and sustainable global networking.
@@ -91,19 +114,19 @@ export default function AboutPage() {
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
             <Reveal as="div" delay={0} className="md:col-span-7">
-              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+              <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
                 The work
               </p>
               <h2 className="mt-5 font-display text-3xl italic leading-[1.05] tracking-[-0.015em] text-[var(--ivory)] md:text-4xl">
                 Built on three decades of expertise
               </h2>
-              <p className="mt-6 max-w-[56ch] text-sm leading-relaxed text-[rgba(236,227,206,0.68)] md:text-base">
+              <p className="mt-6 max-w-[56ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)] md:text-[1.0625rem]">
                 Treadville brings together over thirty years of combined
                 experience across the Kenyan agricultural value chain. The team
                 has worked in coffee from the very beginning — in sourcing,
                 in processing, in export, in specialty markets.
               </p>
-              <p className="mt-4 max-w-[56ch] text-sm leading-relaxed text-[rgba(236,227,206,0.68)] md:text-base">
+              <p className="mt-4 max-w-[56ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)] md:text-[1.0625rem]">
                 The platform extends that expertise to tea, horticulture, and
                 grains — building a single coherent commerce system for
                 Kenya&apos;s agricultural products, locally and abroad.
@@ -111,7 +134,7 @@ export default function AboutPage() {
             </Reveal>
             <Reveal as="div" delay={1} className="md:col-span-5 md:flex md:items-center">
               <div className="w-full border-l border-[rgba(212,190,145,0.20)] pl-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+                <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
                   Mission
                 </p>
                 <p className="mt-4 font-display text-2xl italic leading-snug text-[var(--ivory)]">
@@ -144,7 +167,7 @@ export default function AboutPage() {
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
               What we do
             </p>
             <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
@@ -156,7 +179,7 @@ export default function AboutPage() {
             {PILLARS.map((p, i) => (
               <Reveal key={p.t} as="div" delay={(i % 5) as 0 | 1 | 2 | 3 | 4}>
                 <div className="h-full border border-[rgba(212,190,145,0.18)] bg-[rgba(20,15,7,0.40)] p-7">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
                     {String(i + 1).padStart(2, "0")} · {p.t}
                   </p>
                   <p className="mt-4 font-display text-2xl italic leading-tight text-[var(--ivory)]">
@@ -181,20 +204,20 @@ export default function AboutPage() {
             <h2 className="font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-5xl">
               Looking for a long-term partner?
             </h2>
-            <p className="mt-4 max-w-[48ch] mx-auto text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
+            <p className="mt-4 max-w-[48ch] mx-auto text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
               Whether you&apos;re a local buyer, an importer, or a distributor —
               we&apos;d like to talk.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-8 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)]"
+                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07]"
               >
                 Start a conversation
               </Link>
               <Link
                 href="/export"
-                className="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
+                className="inline-flex items-center gap-3 font-mono text-[15px] uppercase tracking-[0.16em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
               >
                 Export enquiry
               </Link>

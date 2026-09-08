@@ -1,22 +1,18 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCategories, getProductBySlug, getProducts } from "@/lib/queries";
+import { getCategories, getProductBySlug, getProducts, getProductMetadata } from "@/lib/queries";
 import ProductDetailClient from "./ProductDetailClient";
 import ProductGallery from "@/components/ProductGallery";
 import Reveal from "@/components/Reveal";
 import CategoryMark, { accentFor } from "@/components/CategoryMark";
 import ProductImage from "@/components/ProductImage";
 import type { Product } from "@/lib/types";
+import { ProductJsonLd, BreadcrumbJsonLd } from "@/lib/structured-data";
 
 export const revalidate = 0;
 
-const COFFEE_SOURCING_STANDARD = [
-  { label: "Origin", value: "Kirinyaga, Kenya" },
-  { label: "Altitude", value: "1,600–1,850m" },
-  { label: "Process", value: "Washed / Anaerobic" },
-  { label: "Quality", value: "80+ SCA" },
-];
+const SITE_URL = "https://treadville.co.ke";
 
 const EYEBROW_MAP: Record<string, string> = {
   coffee: "Single origin",
@@ -25,6 +21,28 @@ const EYEBROW_MAP: Record<string, string> = {
   grains: "Grain & nut",
 };
 
+const METADATA_DISPLAY_LABELS: Record<string, string> = {
+  sca_score: "SCA Score",
+  tasting_notes: "Tasting notes",
+  pack_sizes: "Pack sizes",
+  leaf_style: "Leaf style",
+  harvest: "Harvest",
+  moisture: "Moisture content",
+  altitude: "Altitude",
+  elevation: "Elevation",
+  processing: "Processing",
+  grade: "Grade",
+  variety: "Variety",
+  origin: "Origin",
+  region: "Region",
+  seasonality: "Seasonality",
+  packaging: "Packaging",
+};
+
+function displayLabel(key: string): string {
+  return METADATA_DISPLAY_LABELS[key] ?? key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -32,10 +50,18 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return {};
+  if (!product || product.status !== "published") {
+    return {
+      title: "Product not found",
+      robots: { index: false, follow: false },
+    };
+  }
   return {
     title: product.name,
     description: product.description || `${product.name} — available from Treadville.`,
+    alternates: {
+      canonical: `/product/${slug}`,
+    },
   };
 }
 
@@ -54,7 +80,12 @@ export default async function ProductPage({
   const categorySlug = category?.slug ?? "";
   const accent = accentFor(categorySlug);
 
-  const related = (await getProducts({ publishedOnly: true }))
+  const [related, metadata] = await Promise.all([
+    getProducts({ publishedOnly: true }),
+    getProductMetadata(product.id),
+  ]);
+
+  const relatedProducts = related
     .filter((p) => p.category_id === product.category_id && p.id !== product.id)
     .slice(0, 3);
 
@@ -62,8 +93,26 @@ export default async function ProductPage({
     EYEBROW_MAP[categorySlug] ??
     (category ? "Treadville product" : "Product");
 
+  // Build dynamic metadata rows from database
+  const metadataRows = metadata
+    .filter((m) => m.value && m.value.trim() !== "")
+    .map((m) => ({ label: displayLabel(m.key), value: m.value! }));
+
   return (
     <main className="surface-warm">
+      <ProductJsonLd
+        product={product}
+        category={category}
+        url={`${SITE_URL}/product/${product.slug}`}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: `${SITE_URL}/` },
+          { name: "Shop", url: `${SITE_URL}/shop` },
+          { name: category?.name ?? "Category", url: `${SITE_URL}/shop/${categorySlug}` },
+          { name: product.name, url: `${SITE_URL}/product/${product.slug}` },
+        ]}
+      />
       <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-10 pb-20 md:pt-14">
         <Reveal variant="light" as="nav" delay={0} aria-label="Breadcrumb">
           <ol className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-muted)]">
@@ -121,9 +170,9 @@ export default async function ProductPage({
                 {product.description}
               </p>
 
-              {categorySlug === "coffee" && (
+              {metadataRows.length > 0 && (
                 <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-[var(--line-on-light)] pt-7">
-                  {COFFEE_SOURCING_STANDARD.map((row) => (
+                  {metadataRows.map((row) => (
                     <div key={row.label}>
                       <dt className="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
                         {row.label}

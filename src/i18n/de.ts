@@ -10,6 +10,7 @@ export default {
     export: "Export",
     about: "Über uns",
     journal: "Journal",
+    enquire: "Anfrage",
     contact: "Kontakt",
     shopAll: "Alles ansehen",
     coffee: "Kaffee",

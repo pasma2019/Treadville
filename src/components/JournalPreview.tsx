@@ -6,6 +6,7 @@ type Essay = {
   title: string;
   excerpt: string;
   meta: string;
+  image?: string;
 };
 
 const DEFAULT_ESSAYS: Essay[] = [
@@ -14,14 +15,14 @@ const DEFAULT_ESSAYS: Essay[] = [
     title: "A note on Kirinyaga",
     excerpt:
       "Volcanic soil, glacial water, and a particular quality of light — what the highland terroir means for the coffee grown there.",
-    meta: "Coming soon",
+    meta: "Field notes",
   },
   {
     no: "02",
     title: "Cupping at origin",
     excerpt:
       "The discipline of evaluating a lot before it leaves Nairobi — and why SCA protocol matters at the source, not only in the destination market.",
-    meta: "Coming soon",
+    meta: "Field notes",
   },
 ];
 
@@ -43,82 +44,85 @@ export default function JournalPreview({
   return (
     <section
       aria-labelledby="journal-preview-heading"
-      className="relative px-6 py-20 md:py-24"
+      className="relative px-6 py-20 md:py-28"
       style={{
-        background: "linear-gradient(180deg, #1a1209 0%, #0e0b08 100%)",
+        background:
+          "linear-gradient(180deg, var(--warm-white) 0%, var(--bone) 100%)",
+        color: "var(--ink)",
       }}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-25"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(212, 190, 145, 0.06) 1px, transparent 0)",
-          backgroundSize: "6px 6px",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,190,145,0.18)] to-transparent"
-      />
-
       <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
         <Reveal as="div" delay={0} className="grid grid-cols-1 items-end gap-8 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7">
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[var(--ink-muted)]">
               {eyebrow}
             </p>
             <h2
               id="journal-preview-heading"
-              className="mt-5 max-w-[18ch] font-display text-3xl italic leading-[1.04] tracking-[-0.015em] text-[var(--ivory)] md:text-5xl"
+              className="mt-5 max-w-[18ch] font-display text-3xl italic leading-[1.04] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-[4.5rem]"
             >
               {headline}
             </h2>
           </div>
           <div className="md:col-span-5">
-            <p className="max-w-md text-sm leading-relaxed text-[rgba(236,227,206,0.65)] md:text-base">
+            <p className="max-w-md text-[1.0625rem] leading-relaxed text-[var(--ink-soft)] md:text-[1.125rem]">
               {intro}
             </p>
             <Link
               href="/journal"
-              className="mt-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ivory)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--accent)]"
+              className="mt-6 inline-flex items-center gap-3 rounded-sm font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ink)] transition-colors hover:text-[var(--accent-sage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               {ctaLabel}
               <span
                 aria-hidden
-                className="h-px w-6 bg-[rgba(212,190,145,0.40)] transition-all duration-500 group-hover:w-10"
+                className="h-px w-6 bg-[var(--ink)]/30 transition-all duration-500 group-hover:w-10"
               />
             </Link>
           </div>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+        <div className="mt-12 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-3 md:gap-8">
           {essays.map((e, i) => (
             <Reveal
               key={e.no}
               as="article"
               delay={((i + 1) as 0 | 1 | 2 | 3 | 4 | 5)}
-              className="group relative border border-[rgba(212,190,145,0.18)] bg-[rgba(20,15,7,0.50)] p-7 backdrop-blur-sm transition-colors duration-500 hover:border-[rgba(212,190,145,0.30)]"
+              className="group relative overflow-hidden border border-[var(--line-on-light)] bg-[var(--warm-white)] transition-colors duration-500 hover:border-[var(--line-on-light-strong)]"
             >
-              <div className="flex items-center justify-between">
-                <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
-                  Essay {e.no}
+              {e.image ? (
+                <div className="aspect-[4/3] w-full overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={e.image}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    className="h-full w-full object-cover opacity-90 transition-opacity duration-700 group-hover:opacity-100 motion-reduce:transition-none"
+                    style={{ objectPosition: "center 50%" }}
+                  />
+                </div>
+              ) : null}
+              <div className="p-6 md:p-7">
+                <div className="flex items-center justify-between">
+                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[var(--ink-muted)]">
+                    {e.meta}
+                  </p>
+                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[var(--ink-faint)]">
+                    No. {e.no}
+                  </p>
+                </div>
+                <h3 className="mt-5 font-display text-2xl italic leading-tight text-[var(--ink)] md:text-[1.75rem]">
+                  {e.title}
+                </h3>
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
+                  {e.excerpt}
                 </p>
-                <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.40)]">
-                  {e.meta}
-                </p>
+                <div
+                  aria-hidden
+                  className="mt-6 h-px w-8 transition-all duration-500 group-hover:w-16"
+                  style={{ background: "var(--accent-sage)" }}
+                />
               </div>
-              <h3 className="mt-6 font-display text-2xl italic leading-tight text-[var(--ivory)] md:text-3xl">
-                {e.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-[rgba(236,227,206,0.68)]">
-                {e.excerpt}
-              </p>
-              <div
-                aria-hidden
-                className="mt-6 h-px w-8 bg-[var(--accent)] transition-all duration-500 group-hover:w-16"
-                style={{ background: "rgba(212,190,145,0.45)" }}
-              />
             </Reveal>
           ))}
         </div>

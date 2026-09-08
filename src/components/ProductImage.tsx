@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 type ProductImageProps = {
   src: string;
@@ -10,16 +10,6 @@ type ProductImageProps = {
 
 export default function ProductImage({ src, alt, className }: ProductImageProps) {
   const [failed, setFailed] = useState(false);
-  const imgRef = useRef<HTMLImageElement | null>(null);
-
-  useEffect(() => {
-    const img = imgRef.current;
-    if (!img) return;
-    if (img.complete && img.naturalWidth === 0) {
-      setFailed(true);
-    }
-  }, []);
-
   if (failed) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--soil-raised)] to-[var(--soil-muted)] font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--parchment)]/25">
@@ -30,7 +20,6 @@ export default function ProductImage({ src, alt, className }: ProductImageProps)
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      ref={imgRef}
       src={src}
       alt={alt}
       loading="lazy"

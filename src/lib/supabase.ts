@@ -13,3 +13,17 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Phase 28 — error surface: wrap any unhandled supabase-js error into a
+// serializable log. The browser's collapsed-object view of PostgrestError
+// hides code/message/hint. Use JSON.stringify so the full object lands in
+// the console and any logger.
+if (typeof window !== "undefined") {
+  (window as unknown as { __supabaseErrorLog?: (e: unknown) => void }).__supabaseErrorLog = (e: unknown) => {
+    try {
+      console.error("SUPABASE ERROR:", JSON.stringify(e, Object.getOwnPropertyNames(e ?? {}), 2));
+    } catch {
+      console.error("SUPABASE ERROR (unserializable):", e);
+    }
+  };
+}

@@ -84,11 +84,6 @@ export default function FeaturedSection({
 
             {supporting.length > 0 ? (
               <div className="flex flex-col gap-10 lg:col-span-4 lg:gap-0">
-                <div className="hidden lg:block lg:border-t lg:border-[var(--line-on-light)] lg:pt-10">
-                  <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
-                    From the same lot
-                  </p>
-                </div>
                 {supporting.slice(0, 3).map((p, i) => (
                   <Reveal
                     key={p.id}
@@ -105,20 +100,6 @@ export default function FeaturedSection({
               </div>
             ) : null}
           </div>
-        </div>
-
-        <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line-on-light)] pt-7 md:mt-24">
-          <p className="label-on-light">The full collection</p>
-          <Link
-            href="/shop"
-            className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ink)]"
-          >
-            View all
-<span
-                 aria-hidden
-                 className="h-px w-6 bg-[var(--accent-sage)] transition-all duration-500 group-hover:w-10"
-               />
-          </Link>
         </div>
       </div>
     </section>
@@ -139,7 +120,7 @@ function FeaturedLead({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group/lead block focus-visible:outline-none"
+      className="group/lead block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
       aria-label={`View ${product.name}`}
     >
       <div
@@ -206,7 +187,7 @@ function FeaturedLead({
             <div className="flex items-baseline justify-between gap-3">
               {eyebrow ? (
                 <p
-                  className="font-mono text-[10px] uppercase tracking-[0.3em]"
+                  className="font-mono text-[13px] uppercase tracking-[0.2em]"
                   style={{ color: accent }}
                 >
                   {eyebrow}
@@ -214,8 +195,8 @@ function FeaturedLead({
               ) : (
                 <span />
               )}
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--ink-faint)]">
-                Featured lot
+              <p className="font-mono text-[13px] uppercase tracking-[0.2em] text-[var(--ink-faint)]">
+                Featured
               </p>
             </div>
             <h3
@@ -231,7 +212,7 @@ function FeaturedLead({
             )}
             <div className="mt-5 flex items-center gap-3">
               <span
-                className="font-mono text-[11px] uppercase tracking-[0.28em]"
+                className="font-mono text-[13px] uppercase tracking-[0.2em]"
                 style={{ color: accent }}
               >
                 View product
@@ -261,7 +242,7 @@ function FeaturedMini({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group/mini flex gap-5 border-t border-[var(--line-on-light)] py-6 focus-visible:outline-none lg:border-none lg:py-0"
+      className="group/mini flex gap-5 rounded-sm border-t border-[var(--line-on-light)] py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)] lg:border-none lg:py-0"
       aria-label={`View ${product.name}`}
     >
       <div className="relative h-28 w-24 shrink-0 overflow-hidden">
@@ -286,7 +267,7 @@ function FeaturedMini({
 
       <div className="flex min-w-0 flex-1 flex-col justify-center">
         <p
-          className="font-mono text-[10px] uppercase tracking-[0.28em]"
+          className="font-mono text-[13px] uppercase tracking-[0.2em]"
           style={{ color: accent }}
         >
           Enquire

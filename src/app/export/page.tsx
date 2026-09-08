@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { getSiteContent } from "@/lib/queries";
+
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Export",
   description:
-    "Treadville export capabilities — documentation, compliance, and logistics from Nairobi to ports worldwide. For importers, distributors, and hospitality buyers.",
+    "Export and wholesale enquiries for Treadville specialty Kenyan coffee, tea, horticulture, and grains.",
+  alternates: {
+    canonical: "/export",
+  },
 };
 
 const DESTINATIONS = [
@@ -15,7 +21,9 @@ const DESTINATIONS = [
   { region: "East Africa", markets: "Regional distributors, hospitality" },
 ];
 
-export default function ExportPage() {
+export default async function ExportPage() {
+  const content = await getSiteContent();
+  const heroImage = content.export_hero || "";
   return (
     <main className="surface-footer">
       {/* Hero */}
@@ -41,10 +49,25 @@ export default function ExportPage() {
           aria-hidden
           className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,190,145,0.25)] to-transparent"
         />
+        {heroImage ? (
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroImage}
+              alt=""
+              className="h-full w-full object-cover opacity-25"
+              loading="lazy"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg, rgba(14,11,8,0.50) 0%, rgba(14,11,8,0.20) 50%, rgba(14,11,8,0.70) 100%)" }}
+            />
+          </div>
+        ) : null}
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(236,227,206,0.45)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.45)]">
               Treadville · Export
             </p>
           </Reveal>
@@ -57,7 +80,7 @@ export default function ExportPage() {
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-8 max-w-[48ch]">
-            <p className="text-base leading-relaxed text-[rgba(236,227,206,0.70)] md:text-lg">
+            <p className="text-[1.0625rem] leading-relaxed text-[rgba(236,227,206,0.70)] md:text-[1.125rem]">
               Treadville has export capability — from Nairobi to ports around the
               world. We handle documentation, compliance, and logistics so buyers
               can focus on the product.
@@ -78,7 +101,7 @@ export default function ExportPage() {
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
               Capabilities
             </p>
             <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
@@ -123,10 +146,10 @@ export default function ExportPage() {
                   </p>
                   <ul className="mt-4 space-y-3">
                     {col.items.map((item) => (
-                      <li
-                        key={item}
-                        className="flex items-start gap-3 text-sm text-[rgba(236,227,206,0.68)]"
-                      >
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 text-[0.9375rem] text-[rgba(236,227,206,0.72)]"
+                    >
                         <span
                           aria-hidden
                           className="mt-2 h-px w-4 flex-shrink-0 bg-[rgba(212,190,145,0.45)]"
@@ -162,7 +185,7 @@ export default function ExportPage() {
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
               Capability regions
             </p>
             <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
@@ -174,7 +197,7 @@ export default function ExportPage() {
             {DESTINATIONS.map((d, i) => (
               <Reveal key={d.region} as="div" delay={(i % 5) as 0 | 1 | 2 | 3 | 4}>
                 <div className="border border-[rgba(212,190,145,0.18)] bg-[rgba(20,15,7,0.40)] p-7">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
                     {d.region}
                   </p>
                   <p className="mt-3 font-display text-xl italic leading-tight text-[var(--ivory)]">
@@ -199,20 +222,20 @@ export default function ExportPage() {
             <h2 className="font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-5xl">
               Start an export enquiry
             </h2>
-            <p className="mt-4 max-w-[48ch] mx-auto text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
+            <p className="mt-4 max-w-[48ch] mx-auto text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
               Tell us your destination market, product type, and volume. We&apos;ll
               respond with a specification and shipping estimate.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-8 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)]"
+                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07]"
               >
                 Open export enquiry
               </Link>
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
+                className="inline-flex items-center gap-3 font-mono text-[15px] uppercase tracking-[0.16em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
               >
                 Browse catalogue
               </Link>

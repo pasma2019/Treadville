@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { getSiteContent } from "@/lib/queries";
+
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Quality",
   description:
-    "Treadville's quality standards — SCA cupping, KEPHIS compliance, SGS verification, USDA registered warehousing. The references that matter.",
+    "Quality, grading, and traceability at Treadville — the discipline applied to every lot before it leaves Nairobi.",
+  alternates: {
+    canonical: "/quality",
+  },
 };
 
 const STANDARDS = [
@@ -31,7 +37,9 @@ const STANDARDS = [
   },
 ];
 
-export default function QualityPage() {
+export default async function QualityPage() {
+  const content = await getSiteContent();
+  const heroImage = content.quality_hero || "";
   return (
     <main className="surface-footer">
       {/* Hero */}
@@ -57,10 +65,25 @@ export default function QualityPage() {
           aria-hidden
           className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,190,145,0.25)] to-transparent"
         />
+        {heroImage ? (
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroImage}
+              alt=""
+              className="h-full w-full object-cover opacity-25"
+              loading="lazy"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg, rgba(14,11,8,0.50) 0%, rgba(14,11,8,0.20) 50%, rgba(14,11,8,0.70) 100%)" }}
+            />
+          </div>
+        ) : null}
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(236,227,206,0.45)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.45)]">
               Treadville · Standards
             </p>
           </Reveal>
@@ -73,7 +96,7 @@ export default function QualityPage() {
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-8 max-w-[48ch]">
-            <p className="text-base leading-relaxed text-[rgba(236,227,206,0.70)] md:text-lg">
+            <p className="text-[1.0625rem] leading-relaxed text-[rgba(236,227,206,0.70)] md:text-[1.125rem]">
               The expectation of buyers is rising. Treadville&apos;s standard is to
               meet it — through independent evaluation, traceability, and
               certifications that mean something.
@@ -94,13 +117,13 @@ export default function QualityPage() {
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
               Standards & references
             </p>
             <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
               A short, considered list
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-[rgba(236,227,206,0.65)] md:text-base">
+            <p className="mt-4 text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)] md:text-[1.0625rem]">
               We work with the standards recognised by the markets that matter.
             </p>
           </Reveal>
@@ -109,13 +132,13 @@ export default function QualityPage() {
             {STANDARDS.map((s, i) => (
               <Reveal key={s.name} as="div" delay={(i % 5) as 0 | 1 | 2 | 3 | 4}>
                 <div className="h-full border border-[rgba(212,190,145,0.18)] bg-[rgba(20,15,7,0.50)] p-7 backdrop-blur-sm">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
                     {s.name}
                   </p>
                   <p className="mt-5 font-display text-2xl italic leading-tight text-[var(--ivory)]">
                     {s.value}
                   </p>
-                  <p className="mt-3 text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)]">
                     {s.note}
                   </p>
                 </div>
@@ -141,7 +164,7 @@ export default function QualityPage() {
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
               Process
             </p>
             <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
@@ -157,13 +180,13 @@ export default function QualityPage() {
               { n: "04", t: "Traceability", d: "Every lot linked to its source, recorded from intake to delivery." },
             ].map((step) => (
               <li key={step.n} className="relative border-t border-[rgba(212,190,145,0.20)] pt-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+                <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
                   {step.n}
                 </p>
                 <p className="mt-3 font-display text-xl italic text-[var(--ivory)]">
                   {step.t}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
+                <p className="mt-2 text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)]">
                   {step.d}
                 </p>
               </li>
@@ -184,20 +207,20 @@ export default function QualityPage() {
             <h2 className="font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-5xl">
               Talk to us about a specific grade
             </h2>
-            <p className="mt-4 max-w-[48ch] mx-auto text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
+            <p className="mt-4 max-w-[48ch] mx-auto text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
               Sample requests, technical specifications, and export documentation
               on request.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-8 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)]"
+                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07]"
               >
                 Request specification
               </Link>
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
+                className="inline-flex items-center gap-3 font-mono text-[15px] uppercase tracking-[0.16em] text-[rgba(236,227,206,0.65)] underline decoration-[rgba(212,190,145,0.40)] underline-offset-4 transition-colors hover:text-[var(--ivory)]"
               >
                 See the catalogue
               </Link>

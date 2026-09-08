@@ -1,0 +1,1 @@
+Set-Location 'C:\Users\Admin\Documents\treadville-prototype\treadville'; $env:PORT=3461; npm run start 2>&1 | Tee-Object 'C:\Users\Admin\Documents\treadville-prototype\treadville\server.log'

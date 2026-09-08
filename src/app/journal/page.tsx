@@ -1,38 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { getArticles } from "@/lib/queries";
+
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Journal",
   description:
     "Field notes from Kenya — writing on terroir, sourcing, processing, and the people behind Treadville's agricultural products.",
+  alternates: {
+    canonical: "/journal",
+  },
 };
 
-const ESSAYS = [
-  {
-    no: "01",
-    title: "A note on Kirinyaga",
-    excerpt:
-      "Volcanic soil, glacial water, and a particular quality of light — what the highland terroir means for the coffee grown there.",
-    meta: "Coming soon",
-  },
-  {
-    no: "02",
-    title: "Cupping at origin",
-    excerpt:
-      "The discipline of evaluating a lot before it leaves Nairobi — and why SCA protocol matters at the source, not only in the destination market.",
-    meta: "Coming soon",
-  },
-  {
-    no: "03",
-    title: "From farm to export",
-    excerpt:
-      "How a lot moves from cherry to container — and the moments where quality is won or lost along the way.",
-    meta: "Coming soon",
-  },
-];
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
 
-export default function JournalPage() {
+export default async function JournalPage() {
+  const articles = await getArticles(true);
+
   return (
     <main className="surface-footer">
       {/* Hero */}
@@ -61,7 +53,7 @@ export default function JournalPage() {
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(236,227,206,0.45)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(236,227,206,0.45)]">
               Treadville · Journal
             </p>
           </Reveal>
@@ -74,7 +66,7 @@ export default function JournalPage() {
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-8 max-w-[48ch]">
-            <p className="text-base leading-relaxed text-[rgba(236,227,206,0.70)] md:text-lg">
+            <p className="text-[1.0625rem] leading-relaxed text-[rgba(236,227,206,0.70)] md:text-[1.125rem]">
               A journal of writing on Kenyan agriculture, sourcing, processing,
               and the people behind the work.
             </p>
@@ -82,7 +74,7 @@ export default function JournalPage() {
         </div>
       </section>
 
-      {/* Essays list */}
+      {/* Articles list */}
       <section className="relative px-6 py-24 md:py-32">
         <div
           aria-hidden
@@ -93,45 +85,70 @@ export default function JournalPage() {
           }}
         />
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
-          <Reveal as="div" delay={0} className="max-w-2xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[rgba(212,190,145,0.55)]">
-              Forthcoming
-            </p>
-            <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
-              The first three essays
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
-              The Treadville Journal is in preparation. These are the first three
-              pieces we are working on.
-            </p>
-          </Reveal>
-
-          <ul className="mt-14 divide-y divide-[rgba(212,190,145,0.18)]">
-            {ESSAYS.map((e, i) => (
-              <Reveal as="li" key={e.no} delay={(i % 5) as 0 | 1 | 2 | 3 | 4} className="py-10">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
-                  <div className="md:col-span-2">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
-                      Essay {e.no}
-                    </p>
-                  </div>
-                  <div className="md:col-span-7">
-                    <p className="font-display text-2xl italic leading-tight text-[var(--ivory)] md:text-3xl">
-                      {e.title}
-                    </p>
-                    <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-[rgba(236,227,206,0.68)]">
-                      {e.excerpt}
-                    </p>
-                  </div>
-                  <div className="md:col-span-3 md:text-right">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
-                      {e.meta}
-                    </p>
-                  </div>
-                </div>
+          {articles.length === 0 ? (
+            <div className="max-w-2xl">
+              <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+                Coming soon
+              </p>
+              <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
+                The first essays
+              </h2>
+              <p className="mt-4 text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
+                The Treadville Journal is being prepared. The first pieces will appear here as they are completed and reviewed.
+              </p>
+            </div>
+          ) : (
+            <>
+              <Reveal as="div" delay={0} className="max-w-2xl">
+                <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-[rgba(212,190,145,0.55)]">
+                  {articles.length} {articles.length === 1 ? "essay" : "essays"}
+                </p>
+                <h2 className="mt-5 font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-4xl">
+                  {articles.length === 1 ? "From the field" : "From the field"}
+                </h2>
               </Reveal>
-            ))}
-          </ul>
+
+              <ul className="mt-14 divide-y divide-[rgba(212,190,145,0.18)]">
+                {articles.map((article, i) => (
+                  <Reveal
+                    as="li"
+                    key={article.id}
+                    delay={((i % 5) as 0 | 1 | 2 | 3 | 4)}
+                    className="py-10"
+                  >
+                    <Link
+                      href={`/journal/${article.slug}`}
+                      className="group grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10"
+                    >
+                      <div className="md:col-span-2">
+                        <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
+                          Essay {String(i + 1).padStart(2, "0")}
+                        </p>
+                      </div>
+                      <div className="md:col-span-7">
+                        <p className="font-display text-2xl italic leading-tight text-[var(--ivory)] transition-colors group-hover:text-[rgba(212,190,145,0.85)] md:text-3xl">
+                          {article.title}
+                        </p>
+                        {article.excerpt && (
+                          <p className="mt-3 max-w-[60ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.72)]">
+                            {article.excerpt}
+                          </p>
+                        )}
+                      </div>
+                      <div className="md:col-span-3 md:text-right">
+                        <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[rgba(212,190,145,0.55)]">
+                          {article.author_name && (
+                            <span>{article.author_name} · </span>
+                          )}
+                          {formatDate(article.updated_at)}
+                        </p>
+                      </div>
+                    </Link>
+                  </Reveal>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       </section>
 
@@ -145,18 +162,18 @@ export default function JournalPage() {
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)] text-center">
           <Reveal as="div" delay={0}>
             <h2 className="font-display text-3xl italic leading-tight text-[var(--ivory)] md:text-5xl">
-              Subscribe to the journal
+              Write for the journal
             </h2>
-            <p className="mt-4 max-w-[48ch] mx-auto text-sm leading-relaxed text-[rgba(236,227,206,0.65)]">
-              The first essays will be available in the coming season. Tell us
-              where to send them.
+            <p className="mt-4 mx-auto max-w-[48ch] text-[0.9375rem] leading-relaxed text-[rgba(236,227,206,0.65)]">
+              Have a story from the field? We work with partners, producers, and
+              colleagues who want to share what they know.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-8 py-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)]"
+                className="inline-flex items-center gap-3 border border-[var(--ivory)] px-7 py-4 font-mono text-[15px] uppercase tracking-[0.16em] text-[var(--ivory)] transition-colors hover:bg-[var(--ivory)] hover:text-[var(--soil)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07]"
               >
-                Request subscription
+                Get in touch
               </Link>
             </div>
           </Reveal>

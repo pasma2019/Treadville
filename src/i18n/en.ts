@@ -6,6 +6,7 @@ export default {
     export: "Export",
     about: "About",
     journal: "Journal",
+    enquire: "Enquire",
     contact: "Contact",
     shopAll: "Shop all",
     coffee: "Coffee",

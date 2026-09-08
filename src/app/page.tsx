@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getCategories, getFeaturedProducts, getSiteContent } from "@/lib/queries";
 import ProductCard from "@/components/ProductCard";
 import HeroSlideshow from "@/components/HeroSlideshow";
-import CategoryQuickNav from "@/components/CategoryQuickNav";
 import CategoryDiscovery from "@/components/CategoryDiscovery";
 import Provenance from "@/components/Provenance";
 import Reveal from "@/components/Reveal";
 import FeaturedSection from "@/components/FeaturedSection";
 import JournalPreview from "@/components/JournalPreview";
+import EnquirySection from "@/components/EnquirySection";
+import { Clock, LayoutGrid, Award } from "lucide-react";
 import type { Product } from "@/lib/types";
+
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   description:
     "Premium Kenyan agricultural products — specialty coffee, tea, horticulture, and grains. Traceable origins, exceptional quality, built for global markets.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default async function HomePage() {
@@ -26,9 +32,7 @@ export default async function HomePage() {
 
   return (
     <main>
-      <HeroSlideshow />
-
-      <CategoryQuickNav />
+      <HeroSlideshow heroImage={contentMap.homepage_hero || undefined} />
 
       <CategoryDiscovery categories={categories} />
 
@@ -42,6 +46,7 @@ export default async function HomePage() {
           contentMap.provenance_intro ||
           "Every Treadville product travels the same arc — from the soils that grow it, through the hands that refine it, to the markets that receive it. The work between those moments is where quality is made."
         }
+        image={contentMap.provenance_image || undefined}
         stages={[
           {
             number: "01",
@@ -65,20 +70,36 @@ export default async function HomePage() {
         closing={contentMap.provenance_closing || "The collection follows."}
       />
 
-      <JournalPreview />
+      <JournalPreview
+        essays={[
+          {
+            no: "01",
+            title: "A note on Kirinyaga",
+            excerpt:
+              "Volcanic soil, glacial water, and a particular quality of light — what the highland terroir means for the coffee grown there.",
+            meta: "Field notes",
+            image: contentMap.journal_card_coffee || undefined,
+          },
+          {
+            no: "02",
+            title: "Cupping at origin",
+            excerpt:
+              "The discipline of evaluating a lot before it leaves Nairobi — and why SCA protocol matters at the source, not only in the destination market.",
+            meta: "Field notes",
+            image: contentMap.journal_card_horticulture || undefined,
+          },
+          {
+            no: "03",
+            title: "From farm to export",
+            excerpt:
+              "How a lot moves from cherry to container — and the moments where quality is won or lost along the way.",
+            meta: "Field notes",
+            image: contentMap.journal_card_tea || undefined,
+          },
+        ]}
+      />
 
-      {/* Editorial rhythm break — a single quiet line that hands the reader from
-          the dark Provenance / Journal into the light Featured collection. */}
-      <div
-        aria-hidden
-        className="relative flex items-center gap-6 border-b border-[var(--line-on-light)] bg-[#faf7f0] px-6 py-6"
-      >
-        <span className="h-px flex-1 bg-[var(--line-on-light)]" />
-        <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-[var(--ink-faint)]">
-          The collection
-        </p>
-        <span className="h-px flex-1 bg-[var(--line-on-light)]" />
-      </div>
+      {/* Featured collection — no divider, natural transition from Journal */}
 
       {featured.length > 0 && (() => {
         const lead = featured[0];
@@ -101,7 +122,7 @@ export default async function HomePage() {
       {/* STORY — light editorial with stats */}
       <section
         aria-labelledby="story-heading"
-        className="relative surface-ivory px-6 py-24 md:py-36"
+        className="relative surface-ivory px-6 py-20 md:py-28"
       >
         <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
           <Reveal variant="light" as="div" delay={0} className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
@@ -118,33 +139,45 @@ export default async function HomePage() {
               </h2>
             </div>
             <div className="md:col-span-7">
-              <p className="max-w-[42ch] text-base leading-relaxed text-[var(--ink-soft)] md:text-lg">
+              <p className="max-w-[42ch] text-[1.0625rem] leading-relaxed text-[var(--ink-soft)] md:text-[1.125rem]">
                 {contentMap.about_blurb ||
                   "Over 30 years of expertise in Kenyan agriculture — now expanding from specialty coffee into tea, horticulture, and grains, with the same standard of quality and traceability."}
               </p>
 
-              <div className="mt-12 grid grid-cols-2 gap-6 border-t border-[var(--line-on-light)] pt-10 md:grid-cols-3 md:gap-10">
-                <div>
-                  <p className="editorial-stat">
-                    30<span className="editorial-stat-soft">+</span>
-                  </p>
-                  <p className="mt-3 max-w-[18ch] label-on-light">
-                    Years in Kenyan agriculture
-                  </p>
+              {/* Trust-badge stats strip — icon + number + label */}
+              <div className="mt-12 grid grid-cols-1 gap-6 border-t border-[var(--line-on-light)] pt-10 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-[var(--line-on-light)]">
+                <div className="flex items-start gap-4 px-0 sm:px-5 first:sm:pl-0 last:sm:pr-0">
+                  <Clock size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--accent-sage)]" aria-hidden />
+                  <div>
+                    <p className="font-display text-3xl leading-none tracking-[-0.02em] text-[var(--ink)] md:text-4xl">
+                      30<span className="text-[var(--ink-faint)]">+</span>
+                    </p>
+                    <p className="mt-2 max-w-[18ch] text-[0.8125rem] leading-relaxed text-[var(--ink-muted)]">
+                      Years in Kenyan agriculture
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="editorial-stat">04</p>
-                  <p className="mt-3 max-w-[18ch] label-on-light">
-                    Categories under one standard
-                  </p>
+                <div className="flex items-start gap-4 px-0 sm:px-5 first:sm:pl-0 last:sm:pr-0">
+                  <LayoutGrid size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--accent-sage)]" aria-hidden />
+                  <div>
+                    <p className="font-display text-3xl leading-none tracking-[-0.02em] text-[var(--ink)] md:text-4xl">
+                      04
+                    </p>
+                    <p className="mt-2 max-w-[18ch] text-[0.8125rem] leading-relaxed text-[var(--ink-muted)]">
+                      Categories under one standard
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="editorial-stat">
-                    80<span className="editorial-stat-soft">+</span>
-                  </p>
-                  <p className="mt-3 max-w-[18ch] label-on-light">
-                    SCA specialty score
-                  </p>
+                <div className="flex items-start gap-4 px-0 sm:px-5 first:sm:pl-0 last:sm:pr-0">
+                  <Award size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-[var(--accent-sage)]" aria-hidden />
+                  <div>
+                    <p className="font-display text-3xl leading-none tracking-[-0.02em] text-[var(--ink)] md:text-4xl">
+                      80<span className="text-[var(--ink-faint)]">+</span>
+                    </p>
+                    <p className="mt-2 max-w-[18ch] text-[0.8125rem] leading-relaxed text-[var(--ink-muted)]">
+                      SCA specialty score
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -154,7 +187,7 @@ export default async function HomePage() {
             variant="light"
             as="div"
             delay={1}
-            className="mt-20 flex items-center gap-4 border-t border-[var(--line-on-light)] pt-8 md:mt-28"
+            className="mt-16 flex items-center gap-4 border-t border-[var(--line-on-light)] pt-8 md:mt-24"
           >
             <span aria-hidden className="label-on-light">
               Treadville
@@ -167,95 +200,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ENQUIRY CTA — light, premium close */}
-      <section
-        aria-labelledby="enquiry-heading"
-        className="relative surface-cream px-6 py-24 md:py-36"
-      >
-        <div className="relative z-10 mx-auto max-w-[var(--content-wide)]">
-          <Reveal variant="light" as="div" delay={0} className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
-            <div className="md:col-span-7">
-              <p className="label-on-light">Engage with Treadville</p>
-              <h2
-                id="enquiry-heading"
-                className="mt-6 max-w-[18ch] font-display text-3xl leading-[1.02] tracking-[-0.025em] text-[var(--ink)] md:text-5xl lg:text-[4rem]"
-              >
-                A conversation, not a checkout.
-              </h2>
-              <p className="mt-6 max-w-[44ch] text-base leading-relaxed text-[var(--ink-soft)] md:text-lg">
-                Whether you are sourcing for a roastery, an importer, a retail
-                shelf, or a private-label programme, our team responds to
-                every enquiry directly.
-              </p>
-            </div>
-            <div className="md:col-span-5">
-              <ul className="space-y-4">
-                {[
-                  {
-                    href: "/contact",
-                    eyebrow: "General enquiry",
-                    headline: "Talk to Treadville",
-                    note: "Speak with our team about any product line.",
-                    accent: "var(--copper)",
-                    icon: "→",
-                  },
-                  {
-                    href: "/contact?type=sample",
-                    eyebrow: "Sample request",
-                    headline: "Request a sample",
-                    note: "Cup, taste, and evaluate before you commit.",
-                    accent: "var(--jade)",
-                    icon: "→",
-                  },
-                  {
-                    href: "/contact?type=quote",
-                    eyebrow: "Export & wholesale",
-                    headline: "Request a quote",
-                    note: "Volume pricing and shipping terms for international buyers.",
-                    accent: "var(--gold)",
-                    icon: "→",
-                  },
-                ].map((card) => (
-                  <li key={card.href}>
-                    <Link
-                      href={card.href}
-                      className="group flex items-start gap-5 border p-5 transition-shadow duration-[var(--dur)] hover:shadow-[var(--shadow-lift-light)]"
-                      style={{
-                        borderColor: "var(--line-on-light)",
-                        background: "var(--warm-white)",
-                      }}
-                    >
-                      <div
-                        className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center border font-mono text-[11px] transition-all duration-[var(--dur)] group-hover:w-10"
-                        style={{
-                          borderColor: card.accent,
-                          color: card.accent,
-                        }}
-                      >
-                        {card.icon}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p
-                          className="label-on-light"
-                          style={{ color: card.accent }}
-                        >
-                          {card.eyebrow}
-                        </p>
-                        <p className="mt-1 font-display text-xl italic text-[var(--ink)]">
-                          {card.headline}
-                        </p>
-                        <p className="mt-1 text-sm text-[var(--ink-muted)]">
-                          {card.note}
-                        </p>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <EnquirySection />
     </main>
   );
 }
