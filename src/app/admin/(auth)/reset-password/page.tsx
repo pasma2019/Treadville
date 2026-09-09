@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getClient } from "@/lib/supabase/client";
+import AdminAuthShell from "@/components/admin/AdminAuthShell";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -50,84 +51,70 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="text-center mb-12">
-        <p className="font-display text-xl font-semibold uppercase tracking-[0.12em] text-[var(--ivory)]">
-          Treadville
-        </p>
-        <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.32em] text-[var(--ink-muted)]">
-          Admin · New password
-        </p>
-      </div>
+    <AdminAuthShell
+      script="Admin"
+      title="Set a new password"
+      description="Choose a new password for your admin account."
+    >
+      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+        <div>
+          <label htmlFor="password" className="block mb-2.5">
+            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--ivory)]/70">
+              New password
+            </span>
+          </label>
+          <input
+            id="password"
+            type="password"
+            autoComplete="new-password"
+            required
+            placeholder="At least 8 characters"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={state === "loading"}
+            className="field-dark rounded-md"
+          />
+        </div>
 
-      <div className="border border-[rgba(212,190,145,0.15)] bg-[rgba(20,15,7,0.80)] p-8 backdrop-blur-sm">
-        <h1 className="font-display text-2xl italic text-[var(--ivory)]">
-          Set a new password
-        </h1>
-        <p className="mt-2 text-[0.9375rem] text-[var(--ivory)]/55">
-          Choose a new password for your admin account.
-        </p>
+        <div>
+          <label htmlFor="confirm" className="block mb-2.5">
+            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--ivory)]/70">
+              Confirm new password
+            </span>
+          </label>
+          <input
+            id="confirm"
+            type="password"
+            autoComplete="new-password"
+            required
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            disabled={state === "loading"}
+            className="field-dark rounded-md"
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
-          <div>
-            <label htmlFor="password" className="block mb-2.5">
-              <span className="text-[1rem] text-[var(--ivory)]/80">
-                New password
-              </span>
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              placeholder="At least 8 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={state === "loading"}
-              className="field-dark w-full"
-            />
+        {message && (
+          <div role="alert" className="font-mono text-[12px] text-red-300">
+            {message}
           </div>
+        )}
 
-          <div>
-            <label htmlFor="confirm" className="block mb-2.5">
-              <span className="text-[1rem] text-[var(--ivory)]/80">
-                Confirm new password
-              </span>
-            </label>
-            <input
-              id="confirm"
-              type="password"
-              autoComplete="new-password"
-              required
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              disabled={state === "loading"}
-              className="field-dark w-full"
-            />
-          </div>
+        <button
+          type="submit"
+          disabled={state === "loading" || !password || !confirm}
+          className="btn-cta w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-light)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {state === "loading" ? "Saving…" : "Update password"}
+        </button>
 
-          {message && (
-            <div role="alert" className="font-mono text-[12px] text-red-300">
-              {message}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={state === "loading" || !password || !confirm}
-            className="w-full border border-[var(--ivory)] bg-[var(--ivory)] px-6 py-3.5 text-[15px] tracking-[0.16em] text-[var(--soil)] transition-colors hover:bg-transparent hover:text-[var(--ivory)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(212,190,145,0.50)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07] disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {state === "loading" ? "Saving…" : "Update password"}
-          </button>
-
-          <Link
-            href="/admin/login"
-            className="block text-center font-mono text-[10px] uppercase tracking-[0.20em] text-[var(--ink-muted)] transition-colors hover:text-[var(--ivory)]"
-          >
-            Back to sign in
-          </Link>
-        </form>
-      </div>
-    </div>
+        <Link
+          href="/admin/login"
+          className="block text-center font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ivory)]/45 transition-colors hover:text-[var(--ivory)]"
+        >
+          Back to sign in
+        </Link>
+      </form>
+    </AdminAuthShell>
   );
 }

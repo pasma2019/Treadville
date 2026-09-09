@@ -45,7 +45,7 @@ export default function ProductCard({
         className={
           isLight
             ? "stage-product-card relative aspect-[4/5] w-full overflow-hidden"
-            : "relative aspect-[4/5] w-full overflow-hidden bg-[var(--soil-raised)] shadow-[var(--shadow-soft)] transition-shadow duration-500 ease-out group-hover:shadow-[var(--shadow-lift)] group-focus-visible:shadow-[var(--shadow-lift)]"
+            : "relative aspect-[4/5] w-full overflow-hidden rounded-[14px] bg-[var(--soil-raised)] shadow-[var(--shadow-soft)] transition-shadow duration-500 ease-out group-hover:shadow-[var(--shadow-lift)] group-focus-visible:shadow-[var(--shadow-lift)]"
         }
       >
         {product.image_url && !forceIdentity ? (

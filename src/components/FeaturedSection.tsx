@@ -124,7 +124,7 @@ function FeaturedLead({
       aria-label={`View ${product.name}`}
     >
       <div
-        className="relative w-full overflow-hidden"
+        className="relative w-full overflow-hidden rounded-[14px] shadow-[var(--shadow-card-light)]"
         style={{ aspectRatio: "3 / 4" }}
       >
         {product.image_url ? (
@@ -244,7 +244,7 @@ function FeaturedMini({
       className="group/mini flex gap-5 rounded-sm border-t border-[var(--line-on-light)] py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)] lg:border-none lg:py-0"
       aria-label={`View ${product.name}`}
     >
-      <div className="relative h-28 w-24 shrink-0 overflow-hidden">
+      <div className="relative h-28 w-24 shrink-0 overflow-hidden rounded-lg shadow-[var(--shadow-card-light)]">
         {product.image_url ? (
           <ProductImage
             src={product.image_url}
