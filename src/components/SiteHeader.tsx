@@ -62,6 +62,15 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
     setShopOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [menuOpen]);
+
   const handleMenuClose = () => {
     setMenuOpen(false);
     hamburgerRef.current?.focus();
@@ -87,7 +96,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
         {/* Desktop nav */}
         <nav
           aria-label="Main navigation"
-          className="nav-links hidden lg:flex"
+          className="nav-links"
         >
           {/* Shop dropdown */}
           <div ref={shopRef} className="relative">
@@ -173,7 +182,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="site-mobile-menu"
-            className="nav-icon-btn lg:hidden"
+            className="nav-icon-btn nav-burger"
           >
             {menuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -186,9 +195,9 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
         id="site-mobile-menu"
         aria-hidden={!menuOpen}
         inert={!menuOpen}
-        className={`nav-mobile-panel lg:hidden ${menuOpen ? "is-open" : ""}`}
+        className={`nav-mobile-panel ${menuOpen ? "is-open" : ""}`}
       >
-        <nav aria-label="Mobile navigation" className="flex flex-col gap-0 px-8 py-24">
+        <nav aria-label="Mobile navigation" className="flex flex-col gap-0 px-8 py-28">
           {/* Shop section */}
           <div className="mb-2 mt-2">
             <Link
@@ -196,7 +205,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
               href="/shop"
               onClick={handleMenuClose}
               aria-current={isActive("/shop") ? "page" : undefined}
-              className="mb-3 block rounded-sm text-[1.0625rem] font-medium text-[var(--gold-deep)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+              className="mb-3 block rounded-sm text-[1.25rem] font-semibold text-[var(--gold-deep)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               Shop
             </Link>
@@ -208,7 +217,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
                   href={`/shop/${cat.slug}`}
                   onClick={handleMenuClose}
                   aria-current={isActive(`/shop/${cat.slug}`) ? "page" : undefined}
-                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3.5 text-[1.0625rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                 >
                   {label}
                 </Link>
@@ -217,8 +226,8 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
           </div>
 
           {/* IA section */}
-          <div className="mb-2 mt-8">
-            <p className="mb-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-[var(--gold-deep)]">
+          <div className="mb-2 mt-10">
+            <p className="mb-4 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-[var(--gold-deep)]">
               Company
             </p>
             {IA_LINKS.map(({ key, href }) => {
@@ -229,7 +238,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
                   href={href}
                   onClick={handleMenuClose}
                   aria-current={isActive(href) ? "page" : undefined}
-                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3 text-[1rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3.5 text-[1.0625rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                 >
                   {label}
                 </Link>
@@ -237,7 +246,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             })}
           </div>
 
-          <div className="mt-6">
+          <div className="mt-8">
             <LanguageSelector />
           </div>
         </nav>

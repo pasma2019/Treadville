@@ -4,10 +4,6 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { CartProvider } from "@/components/CartContext";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
-import CartDrawer from "@/components/CartDrawer";
-import SiteHeader from "@/components/SiteHeader";
-import SiteFooter from "@/components/SiteFooter";
-import { getCategories } from "@/lib/queries";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/lib/structured-data";
 
 const display = Cormorant_Garamond({
@@ -92,21 +88,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const categories = await getCategories();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         <CartProvider>
-          <LanguageProvider>
-            <SiteHeader categories={categories} />
-            {children}
-            <SiteFooter />
-            <CartDrawer />
-          </LanguageProvider>
+          <LanguageProvider>{children}</LanguageProvider>
         </CartProvider>
         <Analytics />
       </body>

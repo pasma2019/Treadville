@@ -103,7 +103,7 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={state === "loading" || !password || !confirm}
-          className="btn-cta w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-light)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#140f07] disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn-admin w-full"
         >
           {state === "loading" ? "Saving…" : "Update password"}
         </button>

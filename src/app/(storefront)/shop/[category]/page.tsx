@@ -280,33 +280,45 @@ function CategoryEmptyState({
   };
 
   return (
-    <div className="mx-auto max-w-lg py-16 text-center">
-      <p
-        className="font-mono text-[12px] uppercase tracking-[0.20em]"
-        style={{ color: accent }}
+    <div className="mx-auto max-w-2xl">
+      <div
+        className="cat-empty-surface px-8 py-14 text-center sm:px-12 sm:py-16 md:py-20"
+        style={{ ["--accent" as string]: accent }}
       >
-        {desc.eyebrow}
-      </p>
-      <h2 className="mt-4 font-display text-2xl italic leading-tight tracking-[-0.01em] text-[var(--ink)] md:text-3xl">
-        {desc.headline}
-      </h2>
-      <p className="mt-4 text-[15px] leading-relaxed text-[var(--ink-soft)]">
-        {desc.body}
-      </p>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <Link
-          href="/contact?type=sample"
-          className="btn-cta"
+        <span
+          aria-hidden
+          className="mx-auto mb-6 block h-px w-12"
+          style={{ background: accent }}
+        />
+        <p
+          className="font-mono text-[12px] font-semibold uppercase tracking-[0.22em]"
+          style={{ color: accent }}
         >
-          Request a sample
-        </Link>
-        <Link
-          href="/contact"
-          className="btn-cta-ghost"
-        >
-          Make an enquiry
-        </Link>
+          {desc.eyebrow}
+        </p>
+        <h2 className="mx-auto mt-5 max-w-[18ch] font-display text-3xl italic leading-[1.08] tracking-[-0.02em] text-[var(--ink)] md:text-[2.75rem]">
+          {desc.headline}
+        </h2>
+        <p className="mx-auto mt-6 max-w-[46ch] text-[1.0625rem] leading-relaxed text-[var(--ink-soft)]">
+          {desc.body}
+        </p>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <Link href="/contact?type=sample" className="btn-cta group">
+            Request a sample
+            <span
+              aria-hidden
+              className="inline-block h-px w-6 bg-current transition-all duration-500 group-hover:w-10"
+            />
+          </Link>
+          <Link href="/contact" className="btn-cta-ghost">
+            Make an enquiry
+          </Link>
+        </div>
       </div>
+      <p className="mx-auto mt-8 max-w-[52ch] text-center text-[13px] leading-relaxed text-[var(--ink-muted)]">
+        New lots are published from the Treadville catalogue as they are confirmed
+        and made available for order.
+      </p>
     </div>
   );
 }

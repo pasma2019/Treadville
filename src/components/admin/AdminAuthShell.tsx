@@ -82,7 +82,7 @@ export default function AdminAuthShell({
                 Operations Portal
               </p>
               <h2 className="mt-6 max-w-[14ch] font-display text-4xl italic leading-[1.06] tracking-[-0.02em] text-[var(--ivory)] xl:text-[3.4rem]">
-                From Kenyan soil, to global markets.
+                From Kenyan soil to global markets.
               </h2>
               <p className="mt-6 max-w-[38ch] text-[0.9375rem] leading-relaxed text-[var(--ivory)]/65">
                 Treadville operations, catalogue and trade enquiries — managed

@@ -6,6 +6,12 @@ import { ChevronDown } from "lucide-react";
 const THESIS_LINE_1 = "From Kenyan soil";
 const THESIS_LINE_2 = "to global markets.";
 
+const HERO_META = [
+  { value: "30+", label: "Years" },
+  { value: "04", label: "Categories" },
+  { value: "Traceable", label: "Origin" },
+] as const;
+
 export default function HeroSlideshow({ heroImage }: { heroImage?: string }) {
   return (
     <section
@@ -71,14 +77,33 @@ export default function HeroSlideshow({ heroImage }: { heroImage?: string }) {
               delivered to global markets.
             </p>
 
-            <div className="mt-12">
+            <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6">
               <Link href="/shop" className="btn-cta group">
-                Shop the collection
+                Explore the collection
                 <span
                   aria-hidden
                   className="inline-block h-px w-6 bg-current transition-all duration-500 group-hover:w-10"
                 />
               </Link>
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-2 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-deep)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+              >
+                Work with Treadville
+                <span
+                  aria-hidden
+                  className="inline-block h-px w-5 bg-current transition-all duration-500 group-hover:w-8"
+                />
+              </Link>
+            </div>
+
+            <div className="mt-10 flex flex-wrap items-center divide-x divide-[var(--line-on-light-strong)] font-mono text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--ink-muted)]">
+              {HERO_META.map((m, i) => (
+                <span key={m.label} className={i === 0 ? "pr-6" : "px-6"}>
+                  {m.value}{" "}
+                  <span className="text-[var(--ink-faint)]">{m.label}</span>
+                </span>
+              ))}
             </div>
           </div>
         </div>
