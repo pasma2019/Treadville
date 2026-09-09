@@ -42,3 +42,8 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# local build/qa artifacts
+/*.out
+/*.log
+/*.err
