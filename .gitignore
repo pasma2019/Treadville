@@ -47,3 +47,10 @@ next-env.d.ts
 /*.out
 /*.log
 /*.err
+
+# one-off root work files (not part of the product)
+/admin-login.html
+/journal.html
+/proxy.ts
+/db-rollback.json
+/upload-results.json
