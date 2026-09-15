@@ -9,6 +9,7 @@ import type { Article } from "@/lib/types";
 import type { ArticleFormState } from "@/lib/admin-actions";
 import ImageUpload from "./ImageUpload";
 import TiptapEditor from "./TiptapEditor";
+import { useUnsavedGuard } from "@/lib/use-unsaved-guard";
 
 type Props = {
   article?: Article;
@@ -22,6 +23,10 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
   const [imageUrl, setImageUrl] = useState<string>(article?.cover_image_url ?? "");
   const [publishNow, setPublishNow] = useState(article?.status === "published");
   const [bodyContent, setBodyContent] = useState(article?.body ?? "");
+  const [dirty, setDirty] = useState(false);
+  useUnsavedGuard(dirty, "This article has unsaved changes. Leave without saving?");
+
+  const markDirty = () => setDirty(true);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,6 +51,11 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {dirty && (
+        <p className="inline-flex rounded bg-[var(--champagne)]/60 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--ink)]">
+          Unsaved changes
+        </p>
+      )}
       <div className="grid gap-5 md:grid-cols-2">
         <div>
           <label htmlFor="af-title" className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.20em] text-[var(--ink-muted)]">
@@ -57,6 +67,7 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
             type="text"
             required
             defaultValue={article?.title ?? ""}
+            onChange={markDirty}
             placeholder="e.g. The Harvest Season Begins"
             className="field-light w-full"
           />
@@ -70,6 +81,7 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
             name="slug"
             type="text"
             defaultValue={article?.slug ?? ""}
+            onChange={markDirty}
             placeholder="Auto-generated if blank"
             className="field-light w-full"
           />
@@ -83,6 +95,7 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
             name="author_name"
             type="text"
             defaultValue={article?.author_name ?? ""}
+            onChange={markDirty}
             placeholder="e.g. Eunice Wanjiku"
             className="field-light w-full"
           />
@@ -92,10 +105,15 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
             Cover image
           </span>
           <ImageUpload
-            bucket="article-images"
             initialUrl={imageUrl}
-            onUpload={(url) => setImageUrl(url)}
-            onRemove={() => setImageUrl("")}
+            onUpload={(url) => {
+              setImageUrl(url);
+              markDirty();
+            }}
+            onRemove={() => {
+              setImageUrl("");
+              markDirty();
+            }}
             label=""
           />
         </div>
@@ -108,6 +126,7 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
             name="excerpt"
             rows={2}
             defaultValue={article?.excerpt ?? ""}
+            onChange={markDirty}
             placeholder="A brief summary shown in article listings…"
             className="field-light w-full resize-none"
           />
@@ -118,7 +137,10 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
           </span>
           <TiptapEditor
             content={bodyContent}
-            onChange={setBodyContent}
+            onChange={(v) => {
+              setBodyContent(v);
+              markDirty();
+            }}
             placeholder="Write the full article here…"
           />
         </div>
@@ -127,7 +149,10 @@ export default function ArticleForm({ article, onSuccess, onCancel }: Props) {
             <input
               type="checkbox"
               checked={publishNow}
-              onChange={(e) => setPublishNow(e.target.checked)}
+              onChange={(e) => {
+                setPublishNow(e.target.checked);
+                markDirty();
+              }}
               className="h-4 w-4 accent-[var(--accent)]"
             />
             Publish immediately

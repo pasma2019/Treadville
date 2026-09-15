@@ -5,13 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getClient } from "@/lib/supabase/client";
 import AdminAuthShell from "@/components/admin/AdminAuthShell";
+import { sanitizeAdminRedirect } from "@/lib/safe-redirect";
 
 type State = "idle" | "loading" | "error";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? "/admin";
+  const next = sanitizeAdminRedirect(searchParams.get("next"));
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -86,19 +87,6 @@ function LoginForm() {
           disabled={state === "loading"}
           className="field-dark rounded-md"
         />
-      </div>
-
-      <div className="flex items-center justify-between">
-        <label className="flex cursor-pointer items-center gap-2.5">
-          <input
-            type="checkbox"
-            name="remember"
-            className="h-4 w-4 rounded-sm border border-[var(--gold-light)]/30 bg-transparent accent-[var(--gold-light)]"
-          />
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ivory)]/60">
-            Remember me
-          </span>
-        </label>
       </div>
 
       {message && (

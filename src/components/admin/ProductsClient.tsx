@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   deleteProductAction,
   setProductStatusAction,
@@ -43,10 +44,12 @@ type Props = {
 type ViewMode = "list" | "add" | "edit";
 
 export default function ProductsClient({ products, categories }: Props) {
+  const router = useRouter();
   const [, startTransition] = useTransition();
   const [view, setView] = useState<ViewMode>("list");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<ProductWithMetadata | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
   const [serverMessage, setServerMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const showMessage = (type: "success" | "error", text: string) => {
@@ -55,27 +58,37 @@ export default function ProductsClient({ products, categories }: Props) {
   };
 
   const handleDelete = (id: string, name: string) => {
+    if (busyId) return;
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    setBusyId(id);
     startTransition(async () => {
       try {
         await deleteProductAction(id);
         showMessage("success", "Product deleted.");
+        router.refresh();
       } catch {
-        showMessage("error", "Could not delete product.");
+        showMessage("error", "Could not delete product. Nothing was changed.");
+      } finally {
+        setBusyId(null);
       }
     });
   };
 
   const handleStatus = (id: string, currentStatus: string, name: string) => {
+    if (busyId) return;
     const next = currentStatus === "published" ? "draft" : "published";
     const action = currentStatus === "published" ? "unpublished" : "published";
     if (!confirm(`${action.charAt(0).toUpperCase() + action.slice(1)} "${name}"?`)) return;
+    setBusyId(id);
     startTransition(async () => {
       try {
         await setProductStatusAction(id, next as "draft" | "published");
         showMessage("success", `Product ${action}.`);
+        router.refresh();
       } catch {
-        showMessage("error", "Could not update status.");
+        showMessage("error", "Could not update status. Nothing was changed.");
+      } finally {
+        setBusyId(null);
       }
     });
   };
@@ -178,7 +191,9 @@ export default function ProductsClient({ products, categories }: Props) {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {products.map((product) => {
+            const busy = busyId === product.id;
+            return (
             <article
               key={product.id}
               className="overflow-hidden rounded border border-[var(--line-on-light)] bg-[var(--warm-white)] transition-shadow hover:shadow-md"
@@ -230,30 +245,34 @@ export default function ProductsClient({ products, categories }: Props) {
                 <div className="mt-4 flex flex-wrap gap-2 border-t border-[var(--line-on-light)] pt-3">
                   <button
                     onClick={() => startEdit(product.id)}
-                    className="border border-[var(--line-on-light)] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
+                    disabled={busy}
+                    className="border border-[var(--line-on-light)] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleStatus(product.id, product.status, product.name)}
-                    className={`border px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] transition-colors ${
+                    disabled={busy}
+                    className={`border px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                       product.status === "published"
                         ? "border-[var(--champagne)]/60 text-[var(--ink-muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]"
                         : "border-[var(--forest)]/30 text-[var(--forest)] hover:border-[var(--forest)] hover:text-[var(--forest)]"
                     }`}
                   >
-                    {product.status === "published" ? "Unpublish" : "Publish"}
+                    {busy ? "Working…" : product.status === "published" ? "Unpublish" : "Publish"}
                   </button>
                   <button
                     onClick={() => handleDelete(product.id, product.name)}
-                    className="border border-red-200 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-red-500 transition-colors hover:border-red-500 hover:text-red-700"
+                    disabled={busy}
+                    className="border border-red-200 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-red-500 transition-colors hover:border-red-500 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Delete
+                    {busy ? "Working…" : "Delete"}
                   </button>
                 </div>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { inviteAdminAction, setUserRoleAction, removeAdminRoleAction } from "@/lib/admin-actions";
 
 type User = {
@@ -18,11 +19,17 @@ type Props = {
 };
 
 export default function UsersClient({ currentUserId, users, hasServiceRole }: Props) {
+  const router = useRouter();
   const [, startTransition] = useTransition();
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<"OWNER" | "SYSTEM_ADMIN">("OWNER");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [inviting, setInviting] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  const showMessage = (type: "success" | "error", text: string) => {
+    setMessage({ type, text });
+  };
 
   const handleInvite = () => {
     if (!inviteEmail) return;
@@ -35,6 +42,40 @@ export default function UsersClient({ currentUserId, users, hasServiceRole }: Pr
       if (result.success) {
         setMessage({ type: "success", text: result.success });
         setInviteEmail("");
+        router.refresh();
+      }
+    });
+  };
+
+  const changeRole = (userId: string, role: "OWNER" | "SYSTEM_ADMIN") => {
+    if (busyId) return;
+    setBusyId(userId);
+    startTransition(async () => {
+      try {
+        await setUserRoleAction(userId, role);
+        showMessage("success", `Role updated to ${role === "OWNER" ? "Owner" : "System Admin"}.`);
+        router.refresh();
+      } catch {
+        showMessage("error", "Could not change role. Nothing was changed.");
+      } finally {
+        setBusyId(null);
+      }
+    });
+  };
+
+  const removeRole = (userId: string, email: string) => {
+    if (busyId) return;
+    if (!confirm(`Remove admin access for ${email}?`)) return;
+    setBusyId(userId);
+    startTransition(async () => {
+      try {
+        await removeAdminRoleAction(userId);
+        showMessage("success", `Admin access removed for ${email}.`);
+        router.refresh();
+      } catch {
+        showMessage("error", "Could not remove admin access. Nothing was changed.");
+      } finally {
+        setBusyId(null);
       }
     });
   };
@@ -155,12 +196,10 @@ export default function UsersClient({ currentUserId, users, hasServiceRole }: Pr
                         value={u.role}
                         onChange={(e) => {
                           if (!confirm(`Change role to ${e.target.value}?`)) return;
-                          startTransition(async () => {
-                            await setUserRoleAction(u.id, e.target.value as "OWNER" | "SYSTEM_ADMIN");
-                          });
+                          changeRole(u.id, e.target.value as "OWNER" | "SYSTEM_ADMIN");
                         }}
-                        disabled={u.id === currentUserId}
-                        className="field-light cursor-pointer text-[11px]"
+                        disabled={u.id === currentUserId || busyId === u.id}
+                        className="field-light cursor-pointer text-[11px] disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         <option value="OWNER">Owner</option>
                         <option value="SYSTEM_ADMIN">System Admin</option>
@@ -170,15 +209,11 @@ export default function UsersClient({ currentUserId, users, hasServiceRole }: Pr
                   <td className="px-5 py-4 text-right">
                     {u.id !== currentUserId && u.role !== "—" && (
                       <button
-                        onClick={() => {
-                          if (!confirm(`Remove admin access for ${u.email}?`)) return;
-                          startTransition(async () => {
-                            await removeAdminRoleAction(u.id);
-                          });
-                        }}
-                        className="font-mono text-[10px] uppercase tracking-[0.20em] text-red-600 transition-colors hover:text-red-800"
+                        onClick={() => removeRole(u.id, u.email)}
+                        disabled={busyId === u.id}
+                        className="font-mono text-[10px] uppercase tracking-[0.20em] text-red-600 transition-colors hover:text-red-800 disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        Remove
+                        {busyId === u.id ? "Working…" : "Remove"}
                       </button>
                     )}
                   </td>

@@ -32,7 +32,11 @@ export default async function HomePage() {
 
   return (
     <main>
-      <HeroSlideshow heroImage={contentMap.homepage_hero || undefined} />
+      <HeroSlideshow
+        heroImage={contentMap.homepage_hero || undefined}
+        headline={contentMap.homepage_hero_headline || undefined}
+        subheadline={contentMap.homepage_hero_subheadline || undefined}
+      />
 
       <CategoryDiscovery categories={categories} />
 

@@ -45,6 +45,49 @@ export type Enquiry = {
   created_at: string;
 };
 
+export type OrderStatus =
+  | "pending"
+  | "contacted"
+  | "quoted"
+  | "confirmed"
+  | "fulfilled"
+  | "completed"
+  | "cancelled";
+
+export type Customer = {
+  id: string;
+  full_name: string;
+  phone: string;
+  email: string | null;
+  delivery_location: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Order = {
+  id: string;
+  reference_number: string;
+  customer_id: string;
+  status: OrderStatus;
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string | null;
+  delivery_location: string | null;
+  customer_notes: string | null;
+  internal_notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type OrderItem = {
+  id: string;
+  order_id: string;
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  created_at: string;
+};
+
 export type AuditLog = {
   id: string;
   actor_id: string;

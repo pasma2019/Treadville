@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition, useEffect } from "react";
+import { useState, useCallback, useTransition, useEffect, useRef, useMemo } from "react";
 import ImageUpload from "./ImageUpload";
 import {
   createProductAction,
@@ -8,9 +8,11 @@ import {
   deleteProductAction,
   setProductStatusAction,
   upsertProductMetadata,
+  deleteImageAction,
 } from "@/lib/admin-actions";
 import type { ProductFormState } from "@/lib/admin-actions";
 import { METADATA_SCHEMAS } from "@/lib/product-metadata";
+import { useUnsavedGuard } from "@/lib/use-unsaved-guard";
 
 type Category = { id: string; name: string; slug: string; active: boolean };
 
@@ -61,6 +63,44 @@ export default function ProductStudio({ productId, categories, initial, onCancel
   const categorySlug = selectedCategory?.slug ?? "";
   const metadataFields = METADATA_SCHEMAS[categorySlug] ?? [];
 
+  // Slice 17 (§9 — unsaved changes): snapshot the values this form opened with
+  // and warn when they diverge. Publication is explicit (Publish now), so a
+  // dirty form never changes the live site without Save.
+  const BASE = useRef({
+    name: initial?.name ?? "",
+    slug: initial?.slug ?? "",
+    category_id: initial?.category_id ?? "",
+    description: initial?.description ?? "",
+    price: initial?.price?.toString() ?? "",
+    stock: initial?.stock?.toString() ?? "0",
+    featured: initial?.featured ?? false,
+    publishOnSave: initial?.status === "published",
+    primaryImage: initial?.image_url ?? null,
+    gallery: initial?.gallery ?? [],
+    metadata: initial?.metadata ?? {},
+  }).current;
+
+  const dirty = useMemo(
+    () =>
+      name !== BASE.name ||
+      slug !== BASE.slug ||
+      categoryId !== BASE.category_id ||
+      description !== BASE.description ||
+      price !== BASE.price ||
+      stock !== BASE.stock ||
+      featured !== BASE.featured ||
+      publishOnSave !== BASE.publishOnSave ||
+      primaryImage !== BASE.primaryImage ||
+      gallery.length !== BASE.gallery.length ||
+      gallery.some((u, i) => u !== BASE.gallery[i]) ||
+      Object.keys(BASE.metadata).some((k) => (metadata[k] ?? "") !== BASE.metadata[k]) ||
+      Object.entries(metadata).some(([k, v]) => v !== (BASE.metadata[k] ?? "")),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [name, slug, categoryId, description, price, stock, featured, publishOnSave, primaryImage, gallery, metadata]
+  );
+
+  useUnsavedGuard(dirty, "This product has unsaved changes. Leave without saving?");
+
   // When category changes, prune metadata to only fields in the new schema
   useEffect(() => {
     if (!categoryId) return;
@@ -79,6 +119,30 @@ export default function ProductStudio({ productId, categories, initial, onCancel
       setCategoryChanged(true);
     }
   }, [categoryId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Slice 15: session-upload cleanup on unmount (Cancel without Save)
+  const savedRef = useRef(false);
+  const sessionUploadsRef = useRef<string[]>([]);
+  const persistedUrls = useMemo(() => {
+    const s = new Set<string>();
+    if (initial?.image_url) s.add(initial.image_url);
+    (initial?.gallery ?? []).forEach((u) => s.add(u));
+    return s;
+  }, [initial?.image_url, initial?.gallery]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    return () => {
+      if (savedRef.current) return;
+      const pending = sessionUploadsRef.current.filter((u) => !persistedUrls.has(u)).slice(0, 40);
+      for (const u of pending) {
+        deleteImageAction(u).catch(() => {});
+      }
+    };
+  }, [persistedUrls]);
+
+  const trackUpload = useCallback((url: string) => {
+    sessionUploadsRef.current = [...new Set([...sessionUploadsRef.current, url])];
+  }, []);
 
   const handleMetadataChange = (key: string, value: string) => {
     setMetadata((prev) => ({ ...prev, [key]: value }));
@@ -170,6 +234,7 @@ export default function ProductStudio({ productId, categories, initial, onCancel
       }
 
       setPending(false);
+      savedRef.current = true;
       onSuccess();
     });
   };
@@ -183,13 +248,20 @@ export default function ProductStudio({ productId, categories, initial, onCancel
           <h2 className="font-display text-xl font-semibold text-[var(--ink)]">
             {productId ? "Edit product" : "New product"}
           </h2>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="border border-[var(--line-on-light)] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
-          >
-            Cancel
-          </button>
+          <div className="flex items-center gap-3">
+            {dirty && (
+              <span className="rounded bg-[var(--champagne)]/60 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--ink)]">
+                Unsaved changes
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={onCancel}
+              className="border border-[var(--line-on-light)] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
 
         {/* Section: Identity */}
@@ -271,9 +343,8 @@ export default function ProductStudio({ productId, categories, initial, onCancel
           <div className="space-y-6">
             {/* Primary image */}
             <ImageUpload
-              bucket="product-images"
               initialUrl={primaryImage}
-              onUpload={(url) => setPrimaryImage(url)}
+              onUpload={(url) => { setPrimaryImage(url); trackUpload(url); }}
               onRemove={removePrimary}
               label="Primary image"
             />
@@ -320,8 +391,7 @@ export default function ProductStudio({ productId, categories, initial, onCancel
               {/* Upload more into gallery */}
               <div className="mt-4 max-w-sm">
                 <ImageUpload
-                  bucket="product-images"
-                  onUpload={addToGallery}
+                  onUpload={(url) => { addToGallery(url); trackUpload(url); }}
                   label="Add gallery image"
                 />
               </div>
@@ -479,6 +549,7 @@ export default function ProductStudio({ productId, categories, initial, onCancel
                     }
                   }
                   setPending(false);
+                  savedRef.current = true;
                   onSuccess();
                 });
               }}
@@ -582,7 +653,7 @@ function GalleryItem({
       <button
         type="button"
         onClick={onRemove}
-        className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full border border-[var(--line-on-light)] bg-[var(--warm-white)] text-[var(--ink-muted)] opacity-0 transition-opacity group-hover:opacity-100 hover:border-red-400 hover:text-red-600"
+        className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full border border-[var(--line-on-light)] bg-[var(--warm-white)] text-[var(--ink-muted)] transition-colors hover:border-red-400 hover:text-red-600"
         aria-label="Remove image"
       >
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -594,23 +665,23 @@ function GalleryItem({
           Main
         </span>
       )}
-      <div className="absolute inset-y-0 left-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="absolute inset-y-0 left-0 flex items-center">
         <button
           type="button"
           onClick={onMoveLeft}
           disabled={index === 0}
-          className="flex h-5 w-4 items-center justify-center rounded-r bg-[var(--ink)]/60 text-white disabled:opacity-30"
+          className="flex h-5 w-4 items-center justify-center rounded-r bg-[var(--ink)]/60 text-white transition-opacity disabled:opacity-30"
           aria-label="Move left"
         >
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
       </div>
-      <div className="absolute inset-y-0 right-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="absolute inset-y-0 right-0 flex items-center">
         <button
           type="button"
           onClick={onMoveRight}
           disabled={index === total - 1}
-          className="flex h-5 w-4 items-center justify-center rounded-l bg-[var(--ink)]/60 text-white disabled:opacity-30"
+          className="flex h-5 w-4 items-center justify-center rounded-l bg-[var(--ink)]/60 text-white transition-opacity disabled:opacity-30"
           aria-label="Move right"
         >
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M3 1l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -620,7 +691,7 @@ function GalleryItem({
         <button
           type="button"
           onClick={onSetPrimary}
-          className="absolute bottom-1 right-1 rounded bg-[var(--ink)]/60 px-1 py-0.5 font-mono text-[7px] uppercase tracking-[0.1em] text-white opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute bottom-1 right-1 rounded bg-[var(--ink)]/60 px-1 py-0.5 font-mono text-[7px] uppercase tracking-[0.1em] text-white transition-colors hover:bg-[var(--ink)]"
           title="Set as primary image"
         >
           Set main

@@ -55,3 +55,8 @@ next-env.d.ts
 /db-rollback.json
 /upload-results.json
 "" 
+
+# local database inspection/state files
+/db-state.json
+/db-rls.json
+/supabase/.temp/

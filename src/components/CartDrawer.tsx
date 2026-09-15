@@ -6,7 +6,7 @@ import { useCart } from "./CartContext";
 import Link from "next/link";
 
 export default function CartDrawer() {
-  const { lines, isOpen, closeCart, removeFromCart, count } = useCart();
+  const { lines, isOpen, closeCart, removeFromCart, count, notice, dismissNotice } = useCart();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLElement>(null);
   const wasOpen = useRef(false);
@@ -66,6 +66,22 @@ export default function CartDrawer() {
             <X size={20} />
           </button>
         </div>
+
+        {notice && (
+          <div
+            role="status"
+            className="flex items-start justify-between gap-3 border-b border-[var(--glass-border)] bg-[var(--sand)]/10 px-6 py-3"
+          >
+            <p className="text-xs leading-relaxed text-[var(--ink-muted)]">{notice}</p>
+            <button
+              onClick={dismissNotice}
+              aria-label="Dismiss notice"
+              className="shrink-0 font-mono text-[10px] uppercase tracking-wide text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)]"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-6">

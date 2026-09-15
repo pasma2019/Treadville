@@ -1,4 +1,5 @@
 import type { Product, Article, Category } from "@/lib/types";
+import { serializeJsonLd } from "@/lib/json-ld-serializer";
 
 const SITE_URL = "https://treadville.co.ke";
 const SITE_NAME = "Treadville";
@@ -13,7 +14,7 @@ function JsonLdScript({ data }: JsonLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }}
     />
   );
 }

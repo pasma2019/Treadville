@@ -215,11 +215,19 @@ drop policy if exists "OWNER can manage own role" on admin_roles;
 
 alter table enquiries enable row level security;
 
--- Anyone can submit an enquiry
-drop policy if exists "Anyone can submit enquiry" on enquiries;
-create policy "Anyone can submit enquiry"
-  on enquiries for insert
-  with check (true);
+-- Admins can delete enquiries.
+-- Slice 11: the public/anonymous INSERT policy ("Anyone can submit enquiry")
+-- was removed in the Slice 10 M2 remediation; public submissions now run
+-- through the trusted service-role path in submitEnquiryAction. DELETE is
+-- granted here so the existing admin delete workflow (deleteEnquiryAction,
+-- session-role client) is permitted by RLS, gated by the same admin JWT
+-- role expression as the SELECT/UPDATE policies.
+drop policy if exists "Admins delete enquiries" on enquiries;
+create policy "Admins delete enquiries"
+  on enquiries for delete
+  using (
+    (auth.jwt() -> 'app_metadata' ->> 'role') in ('OWNER', 'SYSTEM_ADMIN')
+  );
 
 -- Admins can read enquiries
 drop policy if exists "Admins read enquiries" on enquiries;

@@ -1,17 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useActionState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import Reveal from "@/components/Reveal";
 import CategoryMark from "@/components/CategoryMark";
+import { submitOrderAction, type OrderFormState } from "@/lib/order-actions";
+
+const initialState: OrderFormState = {};
 
 export default function CheckoutPage() {
   const { lines, removeFromCart, clearCart } = useCart();
-  const [submitted, setSubmitted] = useState(false);
+  const [state, formAction, pending] = useActionState(submitOrderAction, initialState);
   const totalItems = lines.reduce((sum, l) => sum + l.qty, 0);
 
-  if (submitted) {
+  const itemsJson = useMemo(
+    () =>
+      JSON.stringify(lines.map((l) => ({ product_id: l.product.id, quantity: l.qty }))),
+    [lines]
+  );
+
+  useEffect(() => {
+    if (state.success) clearCart();
+  }, [state.success, clearCart]);
+
+  if (state.success) {
     return (
       <main className="surface-base">
         <div className="mx-auto max-w-2xl px-6 py-32 text-center">
@@ -26,6 +39,11 @@ export default function CheckoutPage() {
               Your enquiry has been received. We&apos;ll respond within two
               business days with a specification, pricing, and shipping options.
             </p>
+            {state.referenceNumber && (
+              <p className="mt-6 font-mono text-xs uppercase tracking-[0.28em] text-[var(--gold-deep)]">
+                Reference · {state.referenceNumber}
+              </p>
+            )}
             <Link
               href="/"
               className="btn-cta mt-8"
@@ -143,11 +161,7 @@ export default function CheckoutPage() {
             <Reveal as="div" delay={1}>
               <div className="glass-card">
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    clearCart();
-                    setSubmitted(true);
-                  }}
+                  action={formAction}
                   className="space-y-5"
                   noValidate
                 >
@@ -156,6 +170,7 @@ export default function CheckoutPage() {
                   </p>
                   <input
                     type="text"
+                    name="full_name"
                     required
                     placeholder="Full name"
                     className="field-light"
@@ -163,6 +178,7 @@ export default function CheckoutPage() {
                   />
                   <input
                     type="email"
+                    name="email"
                     required
                     placeholder="Email address"
                     className="field-light"
@@ -170,20 +186,33 @@ export default function CheckoutPage() {
                   />
                   <input
                     type="tel"
-                    placeholder="Phone (optional)"
+                    name="phone"
+                    required
+                    placeholder="Phone number"
                     className="field-light"
                     autoComplete="tel"
                   />
                   <textarea
+                    name="customer_notes"
                     rows={3}
                     placeholder="Notes — destination, timeline, sample request…"
                     className="field-light resize-none"
                   />
+                  {state.error && (
+                    <div
+                      role="alert"
+                      className="border border-red-300 bg-red-50 px-4 py-3 font-mono text-xs text-red-700"
+                    >
+                      {state.error}
+                    </div>
+                  )}
+                  <input type="hidden" name="items" value={itemsJson} />
                   <button
                     type="submit"
-                    className="btn-cta w-full"
+                    disabled={pending}
+                    className="btn-cta w-full disabled:opacity-50"
                   >
-                    Send enquiry
+                    {pending ? "Sending…" : "Send enquiry"}
                   </button>
                   <p className="font-mono text-[10px] uppercase text-[var(--gold-deep)]">
                     Prototype · No payment is processed

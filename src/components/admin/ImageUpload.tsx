@@ -1,10 +1,9 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-import { createImageUploadAction, recordImageUploadAction } from "@/lib/admin-actions";
+import { createImageUploadAction, recordImageUploadAction, deleteImageAction } from "@/lib/admin-actions";
 
 type Props = {
-  bucket: string;
   initialUrl?: string | null;
   onUpload: (url: string) => void;
   onRemove?: () => void;
@@ -15,7 +14,6 @@ type Props = {
 type State = "idle" | "uploading" | "preview" | "error";
 
 export default function ImageUpload({
-  bucket,
   initialUrl,
   onUpload,
   onRemove,
@@ -48,7 +46,7 @@ export default function ImageUpload({
 
     try {
       // Get pre-signed URL from server
-      const result = await createImageUploadAction(bucket, file.name, file.type, file.size);
+      const result = await createImageUploadAction(file.name, file.type, file.size);
 
       if ("error" in result) {
         setState("error");
@@ -69,14 +67,28 @@ export default function ImageUpload({
       await new Promise<void>((resolve, reject) => {
         xhr.onload = async () => {
           if (xhr.status >= 200 && xhr.status < 300) {
-            // Record the upload in storage_files
-            await recordImageUploadAction(
-              bucket,
+            const recorded = await recordImageUploadAction(
               result.storagePath,
               file.name,
               file.type,
               file.size
             );
+            if ("error" in recorded) {
+              // The bytes reached storage but the managed ledger could not be
+              // recorded. Remove the un-managed object so it can never orphan,
+              // and fail honestly instead of reporting an untrackable success.
+              try {
+                await deleteImageAction(result.publicUrl);
+              } catch {
+                // best-effort cleanup; no reference will ever point at it
+              }
+              reject(
+                new Error(
+                  "The image was uploaded but could not be recorded. Please try again."
+                )
+              );
+              return;
+            }
             onUpload(result.publicUrl);
             setState("preview");
             resolve();
@@ -96,7 +108,7 @@ export default function ImageUpload({
       URL.revokeObjectURL(objectUrl);
       setPreviewUrl(null);
     }
-  }, [bucket, onUpload]);
+  }, [onUpload]);
 
   const handleFile = (file: File | null) => {
     if (!file) return;

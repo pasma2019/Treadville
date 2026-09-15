@@ -1,35 +1,19 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { updateProfileAction, setSiteContentAction, changePasswordAction } from "@/lib/admin-actions";
-import type { SiteContent } from "@/lib/types";
+import { updateProfileAction, changePasswordAction } from "@/lib/admin-actions";
 
 type Props = {
   userId: string;
   userEmail: string;
   initialProfile: { id: string; display_name: string | null };
-  initialSiteContent: SiteContent[];
 };
 
-const BUSINESS_FIELDS = [
-  { key: "company_name", label: "Company name" },
-  { key: "company_tagline", label: "Tagline" },
-  { key: "company_email", label: "Email" },
-  { key: "company_phone", label: "Phone" },
-  { key: "company_location", label: "Location" },
-  { key: "company_description", label: "Short description" },
-];
-
-export default function SettingsClient({ userId: _userId, userEmail, initialProfile, initialSiteContent }: Props) {
-  const [tab, setTab] = useState<"account" | "business" | "security">("account");
+export default function SettingsClient({ userId: _userId, userEmail, initialProfile }: Props) {
+  const [tab, setTab] = useState<"account" | "security">("account");
   const [pending, startTransition] = useTransition();
   const [accountState, setAccountState] = useState<{ success?: string; error?: string } | null>(null);
-  const [businessState, setBusinessState] = useState<{ success?: string; error?: string } | null>(null);
   const [passwordState, setPasswordState] = useState<{ success?: string; error?: string } | null>(null);
-
-  const contentMap = Object.fromEntries(
-    (initialSiteContent ?? []).map((c) => [c.key, c.value ?? ""])
-  );
 
   const handleAccountSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,20 +26,10 @@ export default function SettingsClient({ userId: _userId, userEmail, initialProf
     });
   };
 
-  const handleBusinessSave = async (key: string, value: string) => {
-    setBusinessState(null);
-    const result = await setSiteContentAction(key, value);
-    if ("error" in result) {
-      setBusinessState({ error: result.error });
-    } else {
-      setBusinessState({ success: result.success });
-    }
-  };
-
   return (
     <div className="max-w-2xl">
       <div className="mb-6 flex gap-1 border-b border-[var(--line-on-light)]">
-        {(["account", "business", "security"] as const).map((t) => (
+        {(["account", "security"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -65,7 +39,7 @@ export default function SettingsClient({ userId: _userId, userEmail, initialProf
                 : "border-transparent text-[var(--ink-muted)] hover:text-[var(--ink)]"
             }`}
           >
-            {t === "account" ? "Account" : t === "business" ? "Business" : "Security"}
+            {t === "account" ? "Account" : "Security"}
           </button>
         ))}
       </div>
@@ -120,45 +94,6 @@ export default function SettingsClient({ userId: _userId, userEmail, initialProf
         </form>
       )}
 
-      {tab === "business" && (
-        <div className="space-y-6">
-          <p className="font-mono text-xs text-[var(--ink-muted)]">
-            These fields appear in the footer and brand sections of the public site.
-          </p>
-          {BUSINESS_FIELDS.map(({ key, label }) => (
-            <div key={key}>
-              <label htmlFor={`biz_${key}`} className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.20em] text-[var(--ink-muted)]">
-                {label}
-              </label>
-              <div className="flex gap-3">
-                <input
-                  id={`biz_${key}`}
-                  type="text"
-                  defaultValue={contentMap[key] ?? ""}
-                  className="field-light w-full max-w-sm"
-                  onBlur={(e) => {
-                    if (e.target.defaultValue !== e.target.value) {
-                      handleBusinessSave(key, e.target.value);
-                      e.target.defaultValue = e.target.value;
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-          {businessState?.error && (
-            <div className="rounded border border-red-200 bg-red-50 px-4 py-3 font-mono text-xs text-red-600">
-              {businessState.error}
-            </div>
-          )}
-          {businessState?.success && (
-            <div className="rounded border border-[var(--forest)]/30 bg-[var(--forest)]/5 px-4 py-3 font-mono text-xs text-[var(--forest)]">
-              {businessState.success}
-            </div>
-          )}
-        </div>
-      )}
-
       {tab === "security" && (
         <div className="space-y-6">
           <div>
@@ -175,10 +110,13 @@ export default function SettingsClient({ userId: _userId, userEmail, initialProf
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                if (pending) return;
                 setPasswordState(null);
                 const fd = new FormData(e.currentTarget);
-                const result = changePasswordAction({}, fd);
-                result.then(setPasswordState);
+                startTransition(async () => {
+                  const result = await changePasswordAction({}, fd);
+                  setPasswordState(result);
+                });
               }}
               className="space-y-4"
             >
@@ -222,14 +160,25 @@ export default function SettingsClient({ userId: _userId, userEmail, initialProf
               )}
               <button
                 type="submit"
-                className="border border-[var(--ink)] bg-[var(--ink)] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--warm-white)] transition-colors hover:bg-[var(--warm-white)] hover:text-[var(--ink)]"
+                disabled={pending}
+                className="border border-[var(--ink)] bg-[var(--ink)] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--warm-white)] transition-colors hover:bg-[var(--warm-white)] hover:text-[var(--ink)] disabled:opacity-50"
               >
-                Update password
+                {pending ? "Updating…" : "Update password"}
               </button>
             </form>
           </div>
         </div>
       )}
+
+      <div className="mt-10 rounded border border-[var(--line-on-light)] bg-[var(--champagne)]/20 p-5">
+        <p className="label-on-light">Business and site identity</p>
+        <p className="mt-2 text-[12px] leading-relaxed text-[var(--ink-muted)]">
+          Company name, email, phone, location, tagline and description settings are currently not
+          consumed anywhere on the public storefront, so they&apos;ve been removed from this panel
+          until they are wired to real customer-facing output. Edit all live site content from the
+          Content section instead.
+        </p>
+      </div>
     </div>
   );
 }

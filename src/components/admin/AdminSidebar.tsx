@@ -24,15 +24,18 @@ const OWNER_NAV: NavSection[] = [
       { href: "/admin/categories", label: "Categories" },
     ],
   },
-  { label: "Content", links: [{ href: "/admin/content", label: "Homepage" }] },
+  { label: "Content", links: [{ href: "/admin/content", label: "Content" }] },
   { label: "Journal", links: [{ href: "/admin/journal", label: "Articles" }] },
   {
     label: "Business",
-    links: [{ href: "/admin/enquiries", label: "Enquiries" }],
+    links: [
+      { href: "/admin/enquiries", label: "Enquiries" },
+      { href: "/admin/orders", label: "Orders" },
+    ],
   },
   {
     label: "Settings",
-    links: [{ href: "/admin/settings", label: "Account & Business" }],
+    links: [{ href: "/admin/settings", label: "Account" }],
   },
 ];
 
@@ -45,11 +48,14 @@ const SYSTEM_ADMIN_NAV: NavSection[] = [
       { href: "/admin/categories", label: "Categories" },
     ],
   },
-  { label: "Content", links: [{ href: "/admin/content", label: "Homepage" }] },
+  { label: "Content", links: [{ href: "/admin/content", label: "Content" }] },
   { label: "Journal", links: [{ href: "/admin/journal", label: "Articles" }] },
   {
     label: "Business",
-    links: [{ href: "/admin/enquiries", label: "Enquiries" }],
+    links: [
+      { href: "/admin/enquiries", label: "Enquiries" },
+      { href: "/admin/orders", label: "Orders" },
+    ],
   },
   {
     label: "System",
@@ -62,7 +68,7 @@ const SYSTEM_ADMIN_NAV: NavSection[] = [
   },
   {
     label: "Settings",
-    links: [{ href: "/admin/settings", label: "Account & Business" }],
+    links: [{ href: "/admin/settings", label: "Account" }],
   },
 ];
 

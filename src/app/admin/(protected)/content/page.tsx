@@ -1,46 +1,37 @@
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import ContentClient from "@/components/admin/ContentClient";
+import CmsClient from "@/components/admin/CmsClient";
+import { CMS_STATIC_FIELDS, cmsFieldsForCategories, type CmsField } from "@/lib/cms-fields";
 
 export const dynamic = "force-dynamic";
 
-async function loadContent() {
-  const supabase = await createClient();
-  const { data } = await supabase.from("site_content").select("*");
-  return Object.fromEntries(
-    (data ?? []).map((row: { key: string; value: string | null }) => [row.key, row.value ?? ""])
-  ) as Record<string, string>;
-}
-
-const FIELDS = [
-  {
-    key: "hero_headline",
-    label: "Homepage headline",
-    rows: 1,
-    hint: "Top of the homepage hero",
-  },
-  {
-    key: "hero_subheadline",
-    label: "Homepage subheadline",
-    rows: 2,
-    hint: "Subtext below the hero",
-  },
-  {
-    key: "hero_image",
-    label: "Homepage hero image URL",
-    rows: 1,
-    hint: "Optional background image",
-  },
-  {
-    key: "about_blurb",
-    label: "Story section text",
-    rows: 3,
-    hint: "Used in the homepage story section",
-  },
-];
-
 export default async function AdminContentPage() {
   await requireAdmin();
-  const values = await loadContent();
-  return <ContentClient initialValues={values} fields={FIELDS} />;
+
+  const supabase = await createClient();
+  const [{ data: siteContent }, { data: categories }] = await Promise.all([
+    supabase.from("site_content").select("*"),
+    supabase.from("categories").select("*").order("sort_order"),
+  ]);
+
+  const dbMap = Object.fromEntries(
+    (siteContent ?? []).map((r: { key: string; value: string | null }) => [r.key, r.value ?? ""])
+  );
+
+  // Effective values show what the storefront actually renders today: the
+  // database value when present, otherwise the code fallback. Saving a field
+  // persists it, making the CMS the source of truth.
+  const allFields: CmsField[] = [
+    ...CMS_STATIC_FIELDS,
+    ...cmsFieldsForCategories(categories ?? []),
+  ];
+  const effective = Object.fromEntries(
+    allFields.map((f) => [f.key, dbMap[f.key] ?? f.fallback ?? ""])
+  );
+
+  return (
+    <div>
+      <CmsClient initialValues={effective} categories={categories ?? []} />
+    </div>
+  );
 }

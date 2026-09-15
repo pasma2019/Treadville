@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getArticleBySlug } from "@/lib/queries";
+import { sanitizeArticleHtml } from "@/lib/sanitize";
 import Reveal from "@/components/Reveal";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/lib/structured-data";
 
@@ -48,7 +49,12 @@ function formatDate(dateStr: string) {
 function renderBody(body: string | null): React.ReactNode {
   if (!body) return null;
   if (body.includes("<")) {
-    return <div dangerouslySetInnerHTML={{ __html: body }} />;
+    // Article bodies are admin-authored but stored unsanitized; defuse stored
+    // XSS (script tags, event handlers, javascript: URLs) at render time.
+    // Existing rows are sanitized here rather than backfilled so no
+    // destructive data migration is needed.
+    const safeHtml = sanitizeArticleHtml(body);
+    return <div dangerouslySetInnerHTML={{ __html: safeHtml }} />;
   }
   return (
     <div className="space-y-5">

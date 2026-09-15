@@ -1,12 +1,29 @@
-import { requireRole } from "@/lib/auth";
+import { requireRole, ForbiddenError } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import { formatAuditAction } from "@/lib/audit-utils";
 import type { AuditLog, AdminRole } from "@/lib/types";
+import { redirect } from "next/navigation";
 
 export const metadata = { title: "Security — Treadville Admin" };
 
 export default async function SecurityPage() {
-  const user = await requireRole(["SYSTEM_ADMIN"]);
+  try {
+    await requireRole(["SYSTEM_ADMIN"]);
+  } catch (e) {
+    if (e instanceof ForbiddenError) {
+      return (
+        <div className="max-w-[600px]">
+          <p className="label-on-light">Access denied</p>
+          <h1 className="mt-2 font-display text-4xl italic text-[var(--ink)]">403</h1>
+          <p className="mt-4 body-on-light">
+            You need System Administrator access to view this page.
+          </p>
+        </div>
+      );
+    }
+    redirect("/admin");
+  }
 
   const supabase = await createClient();
   const svcRole = await createServiceRoleClient();
@@ -140,7 +157,7 @@ export default async function SecurityPage() {
             <div className="space-y-2">
               {recentActivity.map((entry) => (
                 <div key={entry.id} className="rounded border border-[var(--line-on-light)] px-4 py-2.5">
-                  <p className="font-mono text-xs text-[var(--ink)]">{entry.action.replace(/_/g, " ")}</p>
+                  <p className="font-mono text-xs text-[var(--ink)]">{formatAuditAction(entry.action)}</p>
                   <p className="mt-0.5 font-mono text-[10px] text-[var(--ink-faint)]">
                     {entry.actor_email ?? "—"} · {new Date(entry.created_at).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}
                   </p>

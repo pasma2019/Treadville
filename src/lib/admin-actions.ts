@@ -4,6 +4,37 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin, requireRole } from "@/lib/auth";
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { logAudit } from "@/lib/audit";
+import { sanitizeArticleHtml } from "@/lib/sanitize";
+import {
+  nextOrderStatuses,
+  ORDER_COMMUNICATION_CHANNELS,
+  ORDER_COMMUNICATION_MAX_LENGTH,
+  ORDER_STATUSES,
+  ORDER_STATUS_LABELS,
+} from "@/lib/order-status";
+import type { AdminRole, OrderStatus } from "@/lib/types";
+import {
+  CMS_IMAGE_VALUE_MAX_LENGTH,
+  CMS_TEXT_MAX_LENGTH,
+  CMS_STATIC_FIELD_BY_KEY,
+  CATEGORY_HERO_PREFIX,
+  isCmsContentKey,
+} from "@/lib/cms-fields";
+
+// ============================================================
+// Slice 17 — operator-safe failure messages
+// ============================================================
+// Raw database / Supabase error strings are never rendered to the admin.
+// They are logged server-side for diagnosis; the admin gets a stable, honest
+// message and the failed operation is never reported as success.
+function safeDbError(context: string, error: unknown): string {
+  if (error instanceof Error) {
+    console.error(`[admin] ${context}: ${error.message}`);
+  } else {
+    console.error(`[admin] ${context}:`, error);
+  }
+  return "The change could not be completed. Nothing was saved — please try again.";
+}
 
 // ============================================================
 // PRODUCTS
@@ -40,12 +71,12 @@ export async function createProductAction(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("products")
-    .insert({ name, slug, category_id, description, price, image_url, stock, featured, status, gallery: [] })
+    .insert({ name, slug, category_id, description, price, image_url, stock, featured, status, gallery: parseGalleryValue(String(formData.get("gallery") ?? "")) })
     .select("id")
     .single();
 
   if (error) {
-    return { error: "Could not create product. " + error.message };
+    return { error: safeDbError("create product", error) };
   }
 
   await logAudit({
@@ -91,23 +122,37 @@ export async function updateProductAction(
   const slug = String(formData.get("slug") ?? "").trim();
   if (slug) updates.slug = slug;
 
-  // Gallery: parse JSON array from form data
-  const galleryRaw = String(formData.get("gallery") ?? "");
-  let gallery: string[] = [];
-  if (galleryRaw) {
-    try { gallery = JSON.parse(galleryRaw); } catch { gallery = []; }
-  }
-  updates.gallery = gallery;
+  // Gallery: parse JSON array from form data (validated)
+  updates.gallery = parseGalleryValue(String(formData.get("gallery") ?? ""));
 
   const supabase = await createClient();
-  const { error } = await supabase.from("products").update(updates).eq("id", id);
-  if (error) return { error: "Could not update product. " + error.message };
 
+  // Slice 15: snapshot current image refs + status before update for orphan-safe deletion.
+  const { data: prevProduct } = await supabase
+    .from("products")
+    .select("image_url, gallery, status")
+    .eq("id", id)
+    .maybeSingle();
+
+  const { error } = await supabase.from("products").update(updates).eq("id", id);
+  if (error) return { error: safeDbError("update product", error) };
+
+  // Slice 15: delete storage objects no longer referenced (DB-first, storage-after).
+  if (prevProduct) {
+    const prevRefs = [prevProduct.image_url, ...(prevProduct.gallery ?? [])].filter(Boolean);
+    const newRefs = [(updates.image_url ?? null) as string | null, ...((updates.gallery as string[]) ?? [])].filter(Boolean) as string[];
+    await deleteRemovedManagedImages(prevRefs, newRefs);
+  }
+
+  // Slice 15: do not mislabel a plain edit as a publish/unpublish event.
+  const prevStatus = prevProduct?.status ?? null;
+  const nextStatus = updates.status as "draft" | "published";
+  const statusChanged = prevStatus !== nextStatus;
   await logAudit({
-    action: statusRaw === "published" ? "product_published" : "product_unpublished",
+    action: statusChanged ? (nextStatus === "published" ? "product_published" : "product_unpublished") : "product_updated",
     entity: "products",
     entity_id: id,
-    details: { name: updates.name, status: updates.status },
+    details: { name: updates.name, status: nextStatus },
   });
 
   revalidatePath("/admin");
@@ -152,6 +197,7 @@ export async function deleteProductAction(id: string) {
   revalidatePath("/admin");
   revalidatePath("/admin/products");
   revalidatePath("/shop");
+  revalidatePath("/");
 }
 
 // ============================================================
@@ -168,6 +214,8 @@ export async function createCategoryAction(
   const description = String(formData.get("description") ?? "").trim() || null;
   const image_url = String(formData.get("image_url") ?? "").trim() || null;
   const active = formData.get("active") !== null ? formData.get("active") === "on" : true;
+  const sortOrderRaw = String(formData.get("sort_order") ?? "").trim();
+  const sort_order = sortOrderRaw !== "" && Number.isFinite(Number(sortOrderRaw)) ? Math.max(0, Math.floor(Number(sortOrderRaw))) : 0;
 
   if (!name) return { error: "Category name is required." };
 
@@ -176,21 +224,22 @@ export async function createCategoryAction(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("categories")
-    .insert({ name, slug, description, image_url, active })
+    .insert({ name, slug, description, image_url, active, sort_order })
     .select("id")
     .single();
-  if (error) return { error: "Could not create category. " + error.message };
+  if (error) return { error: safeDbError("create category", error) };
 
   await logAudit({
     action: "category_created",
     entity: "categories",
     entity_id: data.id,
-    details: { name, active },
+    details: { name, active, sort_order },
   });
 
   revalidatePath("/admin");
   revalidatePath("/admin/categories");
   revalidatePath("/shop");
+  revalidatePath("/");
 
   return { success: "Category added." };
 }
@@ -209,6 +258,7 @@ export async function toggleCategoryActiveAction(id: string, active: boolean) {
   revalidatePath("/admin");
   revalidatePath("/admin/categories");
   revalidatePath("/shop");
+  revalidatePath("/");
 }
 
 export async function updateCategoryAction(
@@ -228,9 +278,25 @@ export async function updateCategoryAction(
   updates.description = description || null;
   const image_url = String(formData.get("image_url") ?? "").trim();
   updates.image_url = image_url || null;
+  const sortOrderRaw = String(formData.get("sort_order") ?? "").trim();
+  if (sortOrderRaw !== "") {
+    updates.sort_order = Number.isFinite(Number(sortOrderRaw)) ? Math.max(0, Math.floor(Number(sortOrderRaw))) : 0;
+  }
 
+  const { data: prevCategory } = await supabase
+    .from("categories")
+    .select("image_url")
+    .eq("id", id)
+    .maybeSingle();
   const { error } = await supabase.from("categories").update(updates).eq("id", id);
-  if (error) return { error: "Could not update category. " + error.message };
+  if (error) return { error: safeDbError("update category", error) };
+  // Slice 15: delete replaced category image (best-effort, DB-first).
+  if (prevCategory?.image_url) {
+    const newUrl = updates.image_url as string | null;
+    if (newUrl !== prevCategory.image_url) {
+      await deleteRemovedManagedImages([prevCategory.image_url], newUrl ? [newUrl] : []);
+    }
+  }
 
   await logAudit({
     action: "category_updated",
@@ -242,6 +308,7 @@ export async function updateCategoryAction(
   revalidatePath("/admin");
   revalidatePath("/admin/categories");
   revalidatePath("/shop");
+  revalidatePath("/");
   return { success: "Category updated." };
 }
 
@@ -258,6 +325,7 @@ export async function deleteCategoryAction(id: string) {
   revalidatePath("/admin");
   revalidatePath("/admin/categories");
   revalidatePath("/shop");
+  revalidatePath("/");
 }
 
 // ============================================================
@@ -269,17 +337,76 @@ export async function setSiteContentAction(
   value: string
 ): Promise<{ success: string } | { error: string }> {
   await requireAdmin();
+
+  // Slice 16: strict CMS allowlist — the browser cannot write arbitrary
+  // site_content keys. Only fields declared in cms-fields.ts are editable.
+  const fieldKey = String(key ?? "");
+  if (!isCmsContentKey(fieldKey)) {
+    return { error: "Unknown content field." };
+  }
+
+  // Category hero keys must map to a real, active category.
+  let isImage = false;
+  if (fieldKey.startsWith(CATEGORY_HERO_PREFIX)) {
+    const supabaseCheck = await createClient();
+    const { data: cat } = await supabaseCheck
+      .from("categories")
+      .select("slug, active")
+      .eq("slug", fieldKey.slice(CATEGORY_HERO_PREFIX.length))
+      .maybeSingle();
+    if (!cat || !cat.active) {
+      return { error: "Unknown category." };
+    }
+    isImage = true;
+  } else {
+    const field = CMS_STATIC_FIELD_BY_KEY[fieldKey];
+    if (!field) return { error: "Unknown content field." };
+    isImage = field.type === "image";
+  }
+
+  const nextValue = String(value ?? "");
+  if (isImage) {
+    if (nextValue.length > CMS_IMAGE_VALUE_MAX_LENGTH) {
+      return { error: "That image reference is too long." };
+    }
+    if (nextValue !== "") {
+      const managed = deriveManagedStoragePath(nextValue);
+      if (!managed) {
+        return { error: "That image is not a managed Treadville image." };
+      }
+    }
+  } else {
+    if (nextValue.length > CMS_TEXT_MAX_LENGTH) {
+      return { error: `Content is too long (max ${CMS_TEXT_MAX_LENGTH} characters).` };
+    }
+  }
+
   const supabase = await createClient();
+
+  // Slice 16: snapshot the current value so a replaced managed image can be
+  // retired through the approved Slice 15 lifecycle (DB-first, storage-after).
+  const { data: prevRow } = await supabase
+    .from("site_content")
+    .select("value")
+    .eq("key", fieldKey)
+    .maybeSingle();
+  const prevValue = prevRow?.value ?? "";
+
   const { error } = await supabase
     .from("site_content")
-    .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" });
-  if (error) return { error: "Could not save. " + error.message };
+    .upsert({ key: fieldKey, value: nextValue, updated_at: new Date().toISOString() }, { onConflict: "key" });
+  if (error) return { error: safeDbError("save site content", error) };
+
+  // Retire the previous managed image only after the reference has moved.
+  if (isImage && prevValue && prevValue !== nextValue) {
+    await deleteRemovedManagedImages([prevValue], nextValue ? [nextValue] : []);
+  }
 
   await logAudit({
     action: "content_updated",
     entity: "site_content",
-    entity_id: key,
-    details: { value_length: value.length },
+    entity_id: fieldKey,
+    details: { kind: isImage ? "image" : "text", value_length: nextValue.length },
   });
 
   revalidatePath("/");
@@ -332,6 +459,191 @@ export async function deleteEnquiryAction(id: string) {
 }
 
 // ============================================================
+// ORDERS — Slice 3 (admin order queue + order detail)
+// ============================================================
+
+export async function setOrderStatusAction(
+  id: string,
+  status: string
+): Promise<{ success: true } | { error: string }> {
+  await requireAdmin();
+
+  // Server-side validation even though the UI only offers known values:
+  // defense in depth against a forged/malformed action payload. The schema
+  // CHECK constraint on orders.status is the final guard.
+  if (!ORDER_STATUSES.includes(status as OrderStatus)) {
+    return { error: "Invalid order status." };
+  }
+
+  const supabase = await createClient();
+  const { data: current, error: readError } = await supabase
+    .from("orders")
+    .select("status")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (readError || !current) {
+    return { error: "Order not found." };
+  }
+
+  if (current.status === status) return { success: true };
+
+  // Slice 5: light state machine. Free transitions are gone — only the
+  // transitions in ORDER_TRANSITIONS (order-status.ts) are allowed. Reject
+  // directly here so a forged action payload cannot bypass the UI. Message
+  // names the attempted transition so the admin understands the failure.
+  const from = current.status as OrderStatus;
+  const allowed = nextOrderStatuses(from);
+  if (!allowed.includes(status as OrderStatus)) {
+    const fromLabel = ORDER_STATUS_LABELS[from] ?? from;
+    const allowedText = allowed.length > 0 ? allowed.join(", ") : "none — this status is terminal";
+    return {
+      error: `Cannot change order status from "${fromLabel}" to "${String(status)}". Allowed next statuses: ${allowedText}.`,
+    };
+  }
+
+  const { error } = await supabase
+    .from("orders")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) {
+    return { error: safeDbError("update order status", error) };
+  }
+
+  await logAudit({
+    action: "order_status_changed",
+    entity: "orders",
+    entity_id: id,
+    details: { from, to: status },
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${id}`, "page");
+
+  return { success: true };
+}
+
+export async function updateOrderNotesAction(
+  id: string,
+  internalNotes: string
+): Promise<{ success: true } | { error: string }> {
+  await requireAdmin();
+
+  const value = String(internalNotes ?? "").trim() || null;
+
+  const supabase = await createClient();
+  const { data: current, error: readError } = await supabase
+    .from("orders")
+    .select("id")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (readError || !current) {
+    return { error: "Order not found." };
+  }
+
+  const { error } = await supabase
+    .from("orders")
+    .update({ internal_notes: value, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) {
+    return { error: safeDbError("update order notes", error) };
+  }
+
+  await logAudit({
+    action: "order_notes_updated",
+    entity: "orders",
+    entity_id: id,
+    details: { updated: true, length: value?.length ?? 0 },
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${id}`, "page");
+
+  return { success: true };
+}
+
+// ============================================================
+// ORDERS — Slice 5 (customer communication, manual send + record)
+// ============================================================
+
+export async function logOrderCommunicationAction(
+  orderId: string,
+  channel: string,
+  messageSummary: string
+): Promise<{ success: true } | { error: string }> {
+  const user = await requireAdmin();
+
+  // Server-side validation of the channel against the CHECK set, mirroring
+  // the order_communications.channel constraint. The DB CHECK is the final
+  // guard, but reject early with a clear message rather than a 500.
+  if (!ORDER_COMMUNICATION_CHANNELS.includes(channel as (typeof ORDER_COMMUNICATION_CHANNELS)[number])) {
+    return { error: `Invalid channel "${channel}". Allowed: ${ORDER_COMMUNICATION_CHANNELS.join(", ")}.` };
+  }
+
+  const summary = String(messageSummary ?? "").trim();
+  if (!summary) {
+    return { error: "Message summary is required." };
+  }
+  if (summary.length > ORDER_COMMUNICATION_MAX_LENGTH) {
+    return {
+      error: `Message summary is too long (max ${ORDER_COMMUNICATION_MAX_LENGTH} characters).`,
+    };
+  }
+
+  const supabase = await createClient();
+  const { data: order, error: orderError } = await supabase
+    .from("orders")
+    .select("id, reference_number")
+    .eq("id", orderId)
+    .maybeSingle();
+
+  if (orderError || !order) {
+    return { error: "Order not found." };
+  }
+
+  // Only the communicated content is recorded — no delivery state, no read
+  // receipt. sent_by snapshots the admin (uuid + email mirroring audit_log's
+  // actor convention so the history can show *who* sent it without reading
+  // auth.users, which PostgREST never exposes).
+  const { data: inserted, error } = await supabase
+    .from("order_communications")
+    .insert({
+      order_id: order.id,
+      channel: channel as (typeof ORDER_COMMUNICATION_CHANNELS)[number],
+      message_summary: summary,
+      sent_by: user.id,
+      sent_by_email: user.email || null,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    return { error: safeDbError("log order communication", error) };
+  }
+
+  await logAudit({
+    action: "order_communication_logged",
+    entity: "order_communications",
+    entity_id: inserted.id,
+    details: {
+      order_id: order.id,
+      reference_number: order.reference_number,
+      channel,
+      summary_length: summary.length,
+    },
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${orderId}`, "page");
+
+  return { success: true };
+}
+
+// ============================================================
 // USER MANAGEMENT (SYSTEM_ADMIN only)
 // ============================================================
 
@@ -353,7 +665,7 @@ export async function inviteAdminAction(email: string, role: "OWNER" | "SYSTEM_A
   });
 
   if (error) {
-    return { error: "Could not send invitation. " + error.message };
+    return { error: safeDbError("send invitation", error) };
   }
 
   if (data?.user) {
@@ -458,7 +770,11 @@ export async function createArticleAction(
 
   const slug = String(formData.get("slug") ?? "").trim() || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   const excerpt = String(formData.get("excerpt") ?? "").trim() || null;
-  const body = String(formData.get("body") ?? "").trim() || null;
+  // Sanitize on write so hostile Tiptap HTML never enters the database and the
+  // admin editor can never reload raw stored markup (Finding H1).
+  const body = String(formData.get("body") ?? "").trim()
+    ? sanitizeArticleHtml(String(formData.get("body") ?? ""))
+    : null;
   const author_name = String(formData.get("author_name") ?? "").trim() || null;
   const cover_image_url = String(formData.get("cover_image_url") ?? "").trim() || null;
   const wantsPublished = formData.get("status") === "published";
@@ -476,7 +792,7 @@ export async function createArticleAction(
     if (error.message.includes("articles_slug_key")) {
       return { error: "An article with this slug already exists. Choose a different slug." };
     }
-    return { error: "Could not create article. " + error.message };
+    return { error: safeDbError("create article", error) };
   }
 
   await logAudit({
@@ -511,13 +827,27 @@ export async function updateArticleAction(
   const slug = String(formData.get("slug") ?? "").trim();
   if (slug) updates.slug = slug;
   updates.excerpt = String(formData.get("excerpt") ?? "").trim() || null;
-  updates.body = String(formData.get("body") ?? "").trim() || null;
+  updates.body = String(formData.get("body") ?? "").trim()
+    ? sanitizeArticleHtml(String(formData.get("body") ?? ""))
+    : null;
   updates.author_name = String(formData.get("author_name") ?? "").trim() || null;
   updates.cover_image_url = String(formData.get("cover_image_url") ?? "").trim() || null;
 
   const supabase = await createClient();
+  const { data: prevArticle } = await supabase
+    .from("articles")
+    .select("cover_image_url")
+    .eq("id", id)
+    .maybeSingle();
   const { error } = await supabase.from("articles").update(updates).eq("id", id);
-  if (error) return { error: "Could not update article. " + error.message };
+  if (error) return { error: safeDbError("update article", error) };
+  // Slice 15: delete replaced cover image (best-effort, DB-first).
+  if (prevArticle?.cover_image_url) {
+    const newCover = updates.cover_image_url as string | null;
+    if (newCover !== prevArticle.cover_image_url) {
+      await deleteRemovedManagedImages([prevArticle.cover_image_url], newCover ? [newCover] : []);
+    }
+  }
 
   await logAudit({
     action: "article_updated",
@@ -590,8 +920,97 @@ export type UploadUrlResult = {
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_MIME = ["image/jpeg", "image/png", "image/webp"];
 
+// Storage bucket is fixed server-side (L5): a client-supplied bucket could
+// steer signed-upload URLs at arbitrary buckets. site-images is the single
+// intended image bucket; its public read is intentional for product, article
+// and category images.
+const IMAGE_UPLOAD_BUCKET = "site-images";
+
+// ---- Slice 15 helpers ------------------------------------------------
+
+const STORAGE_PATH_MAX = 500;
+
+function isSafeRelativePath(path: string): boolean {
+  if (!path || path.length > STORAGE_PATH_MAX) return false;
+  if (path.startsWith("/") || path.endsWith("/")) return false;
+  if (/^\s|\s$/.test(path)) return false;
+  const segments = path.split("/");
+  for (const seg of segments) {
+    if (!seg || seg === "." || seg === "..") return false;
+    if (!/^[\w.\-+]+$/.test(seg)) return false;
+  }
+  return true;
+}
+
+function deriveManagedStoragePath(urlOrPath: string): { bucket: string; path: string } | null {
+  const value = String(urlOrPath ?? "").trim();
+  if (!value) return null;
+  const marker = "/storage/v1/object/public/";
+  if (!value.includes(marker)) return null;
+
+  // Managed refs are only the public URLs produced by this app's project.
+  const projectUrl = String(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim().replace(/\/+$/, "");
+  if (!projectUrl) return null;
+  if (!value.startsWith(projectUrl + marker)) return null;
+
+  const rest = value.slice(value.indexOf(marker) + marker.length);
+  const [bucketRaw, ...pathParts] = rest.split("/");
+  const bucket = decodeURIComponent(bucketRaw);
+  const path = pathParts.map((p) => decodeURIComponent(p)).join("/");
+  if (bucket !== IMAGE_UPLOAD_BUCKET || !isSafeRelativePath(path)) return null;
+  return { bucket, path };
+}
+
+function parseGalleryValue(raw: string): string[] {
+  if (!raw) return [];
+  let parsed: unknown;
+  try { parsed = JSON.parse(raw); } catch { return []; }
+  if (!Array.isArray(parsed)) return [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of parsed) {
+    if (typeof item !== "string") continue;
+    const v = item.trim();
+    if (!v || !/^https?:\/\//.test(v)) continue;
+    if (seen.has(v)) continue;
+    seen.add(v);
+    out.push(v);
+  }
+  return out.slice(0, 12);
+}
+
+async function deleteManagedImage(storagePath: string): Promise<{ success: true } | { error: string }> {
+  if (!isSafeRelativePath(storagePath)) return { error: "Invalid storage path." };
+  const supabase = await createServiceRoleClient();
+  if (!supabase) return { error: "Storage service not configured." };
+  const { error: storageError } = await (supabase.storage as any)
+    .from(IMAGE_UPLOAD_BUCKET)
+    .remove([storagePath]);
+  if (storageError) return { error: safeDbError("delete managed image", storageError) };
+  await (supabase as any).from("storage_files").delete().eq("storage_path", storagePath);
+  await logAudit({
+    action: "image_deleted",
+    entity: "storage_files",
+    entity_id: storagePath,
+    details: { bucket: IMAGE_UPLOAD_BUCKET },
+  });
+  return { success: true };
+}
+
+async function deleteRemovedManagedImages(prevUrls: string[], currentUrls: string[]): Promise<void> {
+  const removed = prevUrls.filter((u) => !currentUrls.includes(u));
+  const derived = Array.from(new Set(removed))
+    .map((u) => deriveManagedStoragePath(u))
+    .filter((d): d is NonNullable<typeof d> => d !== null);
+  for (const d of derived) {
+    const res = await deleteManagedImage(d.path);
+    if ("error" in res) {
+      console.error("[Slice 15] best-effort image deletion failed:", d.path, res.error);
+    }
+  }
+}
+
 export async function createImageUploadAction(
-  bucket: string,
   originalFilename: string,
   mimeType: string,
   fileSize: number
@@ -619,29 +1038,28 @@ export async function createImageUploadAction(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (supabase.storage as any)
-    .from(bucket)
+    .from(IMAGE_UPLOAD_BUCKET)
     .createSignedUploadUrl(storagePath);
 
   if (error || !data) {
-    return { error: "Could not prepare upload. " + (error?.message ?? "Unknown error") };
+    return { error: safeDbError("prepare image upload", error) };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: publicData } = (supabase.storage as any)
-    .from(bucket)
+    .from(IMAGE_UPLOAD_BUCKET)
     .getPublicUrl(storagePath);
 
   return {
     uploadUrl: data.signedUrl,
     storagePath,
     publicUrl: publicData.publicUrl,
-    bucket,
+    bucket: IMAGE_UPLOAD_BUCKET,
     token: data.token,
   };
 }
 
 export async function recordImageUploadAction(
-  bucket: string,
   storagePath: string,
   originalFilename: string,
   mimeType: string,
@@ -653,7 +1071,7 @@ export async function recordImageUploadAction(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase as any).from("storage_files").insert({
-    bucket,
+    bucket: IMAGE_UPLOAD_BUCKET,
     storage_path: storagePath,
     original_filename: originalFilename,
     mime_type: mimeType,
@@ -661,47 +1079,26 @@ export async function recordImageUploadAction(
   });
 
   if (error) {
-    return { error: "Could not record upload. " + error.message };
+    return { error: safeDbError("record image upload", error) };
   }
 
   await logAudit({
     action: "image_uploaded",
     entity: "storage_files",
     entity_id: storagePath,
-    details: { bucket, original_filename: originalFilename, file_size: fileSize },
+    details: { bucket: IMAGE_UPLOAD_BUCKET, original_filename: originalFilename, file_size: fileSize },
   });
 
   return { success: true };
 }
 
 export async function deleteImageAction(
-  bucket: string,
-  storagePath: string
+  reference: string
 ): Promise<{ success: true } | { error: string }> {
   await requireAdmin();
-  const supabase = await createServiceRoleClient();
-  if (!supabase) return { error: "Storage service not configured." };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error: storageError } = await (supabase.storage as any)
-    .from(bucket)
-    .remove([storagePath]);
-
-  if (storageError) {
-    return { error: "Could not delete from storage. " + storageError.message };
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any).from("storage_files").delete().eq("storage_path", storagePath);
-
-  await logAudit({
-    action: "image_deleted",
-    entity: "storage_files",
-    entity_id: storagePath,
-    details: { bucket },
-  });
-
-  return { success: true };
+  const managed = deriveManagedStoragePath(String(reference ?? ""));
+  if (!managed) return { error: "Not a managed image reference." };
+  return deleteManagedImage(managed.path);
 }
 
 // ============================================================
@@ -722,7 +1119,7 @@ export async function updateProfileAction(
     .eq("id", user.id);
 
   if (error) {
-    return { error: "Could not update profile. " + error.message };
+    return { error: safeDbError("update profile", error) };
   }
 
   await logAudit({
@@ -788,7 +1185,7 @@ export async function upsertProductMetadata(
     const { error } = await supabase
       .from("product_metadata")
       .upsert(rows, { onConflict: "product_id,key" });
-    if (error) return { error: "Could not save metadata. " + error.message };
+    if (error) return { error: safeDbError("save product metadata", error) };
   }
 
   // Delete keys that were cleared
@@ -803,7 +1200,16 @@ export async function upsertProductMetadata(
       .in("key", clearedKeys);
   }
 
-  revalidatePath(`/product/[slug]`, "page");
+  // Revalidate the product's concrete URL. Metadata lives on the product
+  // detail page, so revalidating the unresolved pattern is never enough.
+  const { data: product } = await supabase
+    .from("products")
+    .select("slug")
+    .eq("id", productId)
+    .maybeSingle();
+  if (product?.slug) {
+    revalidatePath(`/product/${product.slug}`, "page");
+  }
   revalidatePath("/admin/products");
   return { success: true };
 }
@@ -832,7 +1238,7 @@ export async function changePasswordAction(
   const { error } = await (supabase.auth as any).updateUser({ password: newPassword });
 
   if (error) {
-    return { error: "Could not update password. " + error.message };
+    return { error: safeDbError("update password", error) };
   }
 
   await logAudit({

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   createArticleAction,
   updateArticleAction,
@@ -23,26 +24,64 @@ const STATUS_CLASS: Record<string, string> = {
 };
 
 export default function JournalClient({ articles }: Props) {
+  const router = useRouter();
   const [filter, setFilter] = useState<"all" | "draft" | "published">("all");
   const [editing, setEditing] = useState<Article | null>(null);
   const [creating, setCreating] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [serverMessage, setServerMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [, startTransition] = useTransition();
 
   const filtered = articles.filter((a) =>
     filter === "all" ? true : a.status === filter
   );
 
+  const showMessage = (type: "success" | "error", text: string) => {
+    setServerMessage({ type, text });
+    setTimeout(() => setServerMessage(null), 4000);
+  };
+
+  const refreshAfterChange = () => {
+    router.refresh();
+  };
+
   const handleStatus = (id: string, status: "draft" | "published") => {
+    if (busyId) return;
+    setBusyId(id);
+    const label = status === "published" ? "published" : "unpublished";
     startTransition(async () => {
-      await setArticleStatusAction(id, status);
+      try {
+        await setArticleStatusAction(id, status);
+        showMessage("success", `Article ${label}.`);
+        refreshAfterChange();
+      } catch {
+        showMessage("error", "Could not update article status. Nothing was changed.");
+      } finally {
+        setBusyId(null);
+      }
     });
   };
 
-  const handleDelete = (id: string) => {
-    if (!confirm("Delete this article? This cannot be undone.")) return;
+  const handleDelete = (id: string, title: string) => {
+    if (busyId) return;
+    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    setBusyId(id);
     startTransition(async () => {
-      await deleteArticleAction(id);
+      try {
+        await deleteArticleAction(id);
+        showMessage("success", "Article deleted.");
+        refreshAfterChange();
+      } catch {
+        showMessage("error", "Could not delete article. Nothing was changed.");
+      } finally {
+        setBusyId(null);
+      }
     });
+  };
+
+  const closeEditor = () => {
+    setCreating(false);
+    setEditing(null);
   };
 
   return (
@@ -74,6 +113,18 @@ export default function JournalClient({ articles }: Props) {
         </button>
       </div>
 
+      {serverMessage && (
+        <div
+          className={`mb-6 rounded px-4 py-3 font-mono text-xs ${
+            serverMessage.type === "success"
+              ? "border border-[var(--forest)]/30 bg-[var(--forest)]/5 text-[var(--forest)]"
+              : "border border-red-200 bg-red-50 text-red-600"
+          }`}
+        >
+          {serverMessage.text}
+        </div>
+      )}
+
       {(creating || editing) && (
         <div className="mb-8 rounded border border-[var(--line-on-light)] bg-[var(--warm-white)] p-6">
           <h2 className="mb-4 font-display text-lg font-semibold text-[var(--ink)]">
@@ -82,13 +133,10 @@ export default function JournalClient({ articles }: Props) {
           <ArticleForm
             article={editing ?? undefined}
             onSuccess={() => {
-              setCreating(false);
-              setEditing(null);
+              closeEditor();
+              refreshAfterChange();
             }}
-            onCancel={() => {
-              setCreating(false);
-              setEditing(null);
-            }}
+            onCancel={closeEditor}
           />
         </div>
       )}
@@ -104,65 +152,71 @@ export default function JournalClient({ articles }: Props) {
         </div>
       ) : (
         <div className="space-y-3">
-          {filtered.map((article) => (
-            <article
-              key={article.id}
-              className="flex flex-col gap-4 rounded border border-[var(--line-on-light)] bg-[var(--warm-white)] p-5 md:flex-row md:items-start md:justify-between"
-            >
-              <div className="flex gap-4">
-                {article.cover_image_url && (
-                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded">
-                    <img
-                      src={article.cover_image_url}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="font-display text-base font-medium text-[var(--ink)] truncate">
-                      {article.title}
-                    </h3>
-                    <span
-                      className={`shrink-0 rounded px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] ${STATUS_CLASS[article.status]}`}
-                    >
-                      {STATUS_LABELS[article.status]}
-                    </span>
-                  </div>
-                  {article.excerpt && (
-                    <p className="mt-1 line-clamp-2 font-mono text-xs text-[var(--ink-muted)]">
-                      {article.excerpt}
-                    </p>
+          {filtered.map((article) => {
+            const busy = busyId === article.id;
+            return (
+              <article
+                key={article.id}
+                className="flex flex-col gap-4 rounded border border-[var(--line-on-light)] bg-[var(--warm-white)] p-5 md:flex-row md:items-start md:justify-between"
+              >
+                <div className="flex gap-4">
+                  {article.cover_image_url && (
+                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded">
+                      <img
+                        src={article.cover_image_url}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
                   )}
-                  <p className="mt-1.5 font-mono text-[10px] text-[var(--ink-faint)]">
-                    {article.author_name && <span>{article.author_name} · </span>}
-                    Updated {new Date(article.updated_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                  </p>
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-display text-base font-medium text-[var(--ink)] truncate">
+                        {article.title}
+                      </h3>
+                      <span
+                        className={`shrink-0 rounded px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] ${STATUS_CLASS[article.status]}`}
+                      >
+                        {STATUS_LABELS[article.status]}
+                      </span>
+                    </div>
+                    {article.excerpt && (
+                      <p className="mt-1 line-clamp-2 font-mono text-xs text-[var(--ink-muted)]">
+                        {article.excerpt}
+                      </p>
+                    )}
+                    <p className="mt-1.5 font-mono text-[10px] text-[var(--ink-faint)]">
+                      {article.author_name && <span>{article.author_name} · </span>}
+                      Updated {new Date(article.updated_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex shrink-0 items-center gap-2">
-                <button
-                  onClick={() => handleStatus(article.id, article.status === "published" ? "draft" : "published")}
-                  className="border border-[var(--line-on-light)] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
-                >
-                  {article.status === "published" ? "Unpublish" : "Publish"}
-                </button>
-                <button
-                  onClick={() => setEditing(article)}
-                  className="border border-[var(--line-on-light)] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)]"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(article.id)}
-                  className="border border-red-200 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-red-500 transition-colors hover:border-red-500 hover:text-red-700"
-                >
-                  Delete
-                </button>
-              </div>
-            </article>
-          ))}
+                <div className="flex shrink-0 items-center gap-2">
+                  <button
+                    onClick={() => handleStatus(article.id, article.status === "published" ? "draft" : "published")}
+                    disabled={busy}
+                    className="border border-[var(--line-on-light)] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {busy ? "Working…" : article.status === "published" ? "Unpublish" : "Publish"}
+                  </button>
+                  <button
+                    onClick={() => setEditing(article)}
+                    disabled={busy}
+                    className="border border-[var(--line-on-light)] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-muted)] transition-colors hover:border-[var(--ink)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(article.id, article.title)}
+                    disabled={busy}
+                    className="border border-red-200 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-red-500 transition-colors hover:border-red-500 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {busy ? "Working…" : "Delete"}
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
     </div>

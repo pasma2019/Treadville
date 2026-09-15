@@ -3,16 +3,24 @@
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
-const THESIS_LINE_1 = "From Kenyan soil";
-const THESIS_LINE_2 = "to global markets.";
-
 const HERO_META = [
   { value: "30+", label: "Years" },
   { value: "04", label: "Categories" },
   { value: "Traceable", label: "Origin" },
 ] as const;
 
-export default function HeroSlideshow({ heroImage }: { heroImage?: string }) {
+export default function HeroSlideshow({
+  heroImage,
+  headline = "From Kenyan soil\nto global markets.",
+  subheadline = "Premium Kenyan agricultural products — specialty coffee, tea, horticulture, and grains — sourced with traceability and delivered to global markets.",
+}: {
+  heroImage?: string;
+  headline?: string;
+  subheadline?: string;
+}) {
+  const lines = (headline ?? "").split("\n").filter((l) => l.trim().length > 0);
+  const thesisLine1 = lines[0] ?? "From Kenyan soil";
+  const thesisLine2 = lines[1] ?? "";
   return (
     <section
       aria-label="Treadville — From Kenyan soil to global markets"
@@ -67,14 +75,14 @@ export default function HeroSlideshow({ heroImage }: { heroImage?: string }) {
             </p>
 
             <h1 id="hero-headline" className="hero-headline text-balance">
-              <span className="block italic">{THESIS_LINE_1}{" "}</span>
-              <span className="hero-accent-line">{THESIS_LINE_2}</span>
+              <span className="block italic">{thesisLine1}{" "}</span>
+              {thesisLine2 ? (
+                <span className="hero-accent-line">{thesisLine2}</span>
+              ) : null}
             </h1>
 
             <p className="mt-8 max-w-[42ch] text-[1.0625rem] leading-[1.7] text-[var(--ink-soft)]">
-              Premium Kenyan agricultural products — specialty coffee, tea,
-              horticulture, and grains — sourced with traceability and
-              delivered to global markets.
+              {subheadline}
             </p>
 
             <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6">

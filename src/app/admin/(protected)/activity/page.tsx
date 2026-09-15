@@ -1,27 +1,27 @@
 import { requireRole, ForbiddenError } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { formatAuditAction } from "@/lib/audit-utils";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-const ACTION_LABELS: Record<string, string> = {
-  product_created: "Created product",
-  product_updated: "Updated product",
-  product_published: "Published product",
-  product_unpublished: "Unpublished product",
-  product_deleted: "Deleted product",
-  category_created: "Created category",
-  category_updated: "Updated category",
-  category_deleted: "Deleted category",
-  content_updated: "Updated site content",
-  enquiry_status_changed: "Changed enquiry status",
-  enquiry_deleted: "Deleted enquiry",
-  user_invited: "Invited admin user",
-  role_changed: "Changed user role",
-  role_removed: "Removed admin access",
-  session_created: "Signed in",
-  session_destroyed: "Signed out",
-};
+// Slice 17: audit labels come from the single canonical source (audit-utils)
+// so the activity view and dashboard can never drift apart.
+
+function formatDetails(details: Record<string, unknown>): string {
+  return Object.entries(details)
+    .map(([key, value]) => {
+      const label = key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/_/g, " ");
+      const shown =
+        value === null || value === undefined
+          ? "—"
+          : typeof value === "object"
+            ? JSON.stringify(value)
+            : String(value);
+      return `${label}: ${shown}`;
+    })
+    .join("  ·  ");
+}
 
 async function loadAuditLog() {
   const supabase = await createClient();
@@ -89,11 +89,11 @@ export default async function AdminActivityPage() {
             >
               <div className="min-w-0 flex-1">
                 <p className="font-display text-sm italic text-[var(--ink)]">
-                  {ACTION_LABELS[entry.action] ?? entry.action}
+                  {formatAuditAction(entry.action)}
                 </p>
                 {entry.details && Object.keys(entry.details).length > 0 && (
                   <p className="mt-0.5 font-mono text-[10px] text-[var(--ink-faint)]">
-                    {JSON.stringify(entry.details)}
+                    {formatDetails(entry.details as Record<string, unknown>)}
                   </p>
                 )}
               </div>

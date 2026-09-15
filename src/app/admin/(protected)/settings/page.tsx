@@ -14,23 +14,18 @@ export default async function SettingsPage() {
     .eq("id", user.id)
     .single();
 
-  const { data: siteContent } = await supabase
-    .from("site_content")
-    .select("*");
-
   return (
     <div>
       <header className="mb-8">
         <h1 className="font-display text-2xl font-semibold text-[var(--ink)]">Settings</h1>
         <p className="mt-1 font-mono text-sm text-[var(--ink-muted)]">
-          Manage your account and business information.
+          Manage your account.
         </p>
       </header>
       <SettingsClient
         userId={user.id}
         userEmail={user.email}
         initialProfile={profile ?? { id: user.id, display_name: null, created_at: "", updated_at: "" }}
-        initialSiteContent={siteContent ?? []}
       />
     </div>
   );
