@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCategories, getFeaturedProducts, getSiteContent } from "@/lib/queries";
+import { getCategories, getFeaturedProducts, getSiteContent, getArticles } from "@/lib/queries";
 import ProductCard from "@/components/ProductCard";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import CategoryDiscovery from "@/components/CategoryDiscovery";
@@ -22,10 +22,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [categories, featured, content] = await Promise.all([
+  const [categories, featured, content, articles] = await Promise.all([
     getCategories(),
     getFeaturedProducts(),
     getSiteContent(),
+    getArticles(true),
   ]);
 
   const contentMap = content as Record<string, string>;
@@ -75,32 +76,14 @@ export default async function HomePage() {
       />
 
       <JournalPreview
-        essays={[
-          {
-            no: "01",
-            title: "A note on Kirinyaga",
-            excerpt:
-              "Volcanic soil, glacial water, and a particular quality of light — what the highland terroir means for the coffee grown there.",
-            meta: "Field notes",
-            image: contentMap.journal_card_coffee || undefined,
-          },
-          {
-            no: "02",
-            title: "Cupping at origin",
-            excerpt:
-              "The discipline of evaluating a lot before it leaves Nairobi — and why SCA protocol matters at the source, not only in the destination market.",
-            meta: "Field notes",
-            image: contentMap.journal_card_horticulture || undefined,
-          },
-          {
-            no: "03",
-            title: "From farm to export",
-            excerpt:
-              "How a lot moves from cherry to container — and the moments where quality is won or lost along the way.",
-            meta: "Field notes",
-            image: contentMap.journal_card_tea || undefined,
-          },
-        ]}
+        essays={articles.slice(0, 3).map((article, i) => ({
+          no: String(i + 1).padStart(2, "0"),
+          title: article.title,
+          excerpt: article.excerpt || "",
+          meta: article.author_name ? `${article.author_name}` : "Field notes",
+          image: article.cover_image_url || undefined,
+          slug: article.slug,
+        }))}
       />
 
       {/* Featured collection — no divider, natural transition from Journal */}
