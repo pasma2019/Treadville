@@ -7,24 +7,8 @@ type Essay = {
   excerpt: string;
   meta: string;
   image?: string;
+  slug?: string;
 };
-
-const DEFAULT_ESSAYS: Essay[] = [
-  {
-    no: "01",
-    title: "A note on Kirinyaga",
-    excerpt:
-      "Volcanic soil, glacial water, and a particular quality of light — what the highland terroir means for the coffee grown there.",
-    meta: "Field notes",
-  },
-  {
-    no: "02",
-    title: "Cupping at origin",
-    excerpt:
-      "The discipline of evaluating a lot before it leaves Nairobi — and why SCA protocol matters at the source, not only in the destination market.",
-    meta: "Field notes",
-  },
-];
 
 type Props = {
   eyebrow?: string;
@@ -39,7 +23,7 @@ export default function JournalPreview({
   headline = "From the journal",
   intro = "Writing on terroir, sourcing, processing, and the people behind Treadville's agricultural products.",
   ctaLabel = "View the journal",
-  essays = DEFAULT_ESSAYS,
+  essays = [],
 }: Props) {
   return (
     <section
@@ -81,50 +65,78 @@ export default function JournalPreview({
           </div>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-3 md:gap-8">
-          {essays.map((e, i) => (
-            <Reveal
-              key={e.no}
-              as="article"
-              delay={((i + 1) as 0 | 1 | 2 | 3 | 4 | 5)}
-              className="journal-card group relative overflow-hidden border border-[var(--line-on-light)] bg-[var(--warm-white)]"
-            >
-              {e.image ? (
-                <div className="aspect-[4/3] w-full overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={e.image}
-                    alt=""
-                    aria-hidden
-                    loading="lazy"
-                    className="h-full w-full object-cover opacity-90 transition-[opacity,transform] duration-[600ms] ease-[var(--ease-smooth)] group-hover:opacity-100 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-                    style={{ objectPosition: "center 50%" }}
-                  />
-                </div>
-              ) : null}
-              <div className="p-6 md:p-7">
-                <div className="flex items-center justify-between">
-                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[var(--ink-muted)]">
-                    {e.meta}
-                  </p>
-                  <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[var(--ink-faint)]">
-                    No. {e.no}
-                  </p>
-                </div>
-                <h3 className="mt-5 font-display text-2xl italic leading-tight text-[var(--ink)] md:text-[1.75rem]">
-                  {e.title}
-                </h3>
-                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
-                  {e.excerpt}
-                </p>
-                <div
-                  aria-hidden
-                  className="journal-line mt-6 h-px w-8 transition-all duration-500 group-hover:w-16"
-                />
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        {essays.length === 0 ? (
+          <Reveal as="div" delay={1} className="mt-12 max-w-[52ch] md:mt-16">
+            <p className="text-[1.0625rem] leading-relaxed text-[var(--ink-soft)]">
+              The first essays are being prepared. New field notes will appear
+              here as they are completed and reviewed.
+            </p>
+          </Reveal>
+        ) : (
+          <div className="mt-12 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-3 md:gap-8">
+            {essays.map((e, i) => {
+              const inner = (
+                <>
+                  {e.image ? (
+                    <div className="aspect-[4/3] w-full overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={e.image}
+                        alt=""
+                        aria-hidden
+                        loading="lazy"
+                        className="h-full w-full object-cover opacity-90 transition-[opacity,transform] duration-[600ms] ease-[var(--ease-smooth)] group-hover:opacity-100 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                        style={{ objectPosition: "center 50%" }}
+                      />
+                    </div>
+                  ) : null}
+                  <div className="p-6 md:p-7">
+                    <div className="flex items-center justify-between">
+                      <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[var(--ink-muted)]">
+                        {e.meta}
+                      </p>
+                      <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-[var(--ink-faint)]">
+                        No. {e.no}
+                      </p>
+                    </div>
+                    <h3 className="mt-5 font-display text-2xl italic leading-tight text-[var(--ink)] md:text-[1.75rem]">
+                      {e.title}
+                    </h3>
+                    {e.excerpt ? (
+                      <p className="mt-3 text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
+                        {e.excerpt}
+                      </p>
+                    ) : null}
+                    <div
+                      aria-hidden
+                      className="journal-line mt-6 h-px w-8 transition-all duration-500 group-hover:w-16"
+                    />
+                  </div>
+                </>
+              );
+
+              return (
+                <Reveal
+                  key={e.slug ?? e.no}
+                  as="article"
+                  delay={((i + 1) as 0 | 1 | 2 | 3 | 4 | 5)}
+                  className="journal-card group relative overflow-hidden border border-[var(--line-on-light)] bg-[var(--warm-white)]"
+                >
+                  {e.slug ? (
+                    <Link
+                      href={`/journal/${e.slug}`}
+                      className="block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-sage)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                    >
+                      {inner}
+                    </Link>
+                  ) : (
+                    inner
+                  )}
+                </Reveal>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
