@@ -1,4 +1,4 @@
-﻿# 1. Executive Summary
+# 1. Executive Summary
 
 The Treadville prototype is a functional, data-driven storefront built on Next.js 16.3.3, React 19.2.8, Tailwind CSS v4, and Supabase. Its core architecture (centralized data layer in queries.ts, server-rendered pages, admin that drives the storefront) is sound.
 
