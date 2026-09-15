@@ -60,3 +60,4 @@ next-env.d.ts
 /db-state.json
 /db-rls.json
 /supabase/.temp/
+.env
