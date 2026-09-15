@@ -8,7 +8,7 @@ export default function SiteFooter() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="surface-footer px-6 py-16 md:py-20"
+      className="surface-footer relative px-6 py-16 md:py-20"
     >
       <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-[rgba(236,227,206,0.14)]" />
 
