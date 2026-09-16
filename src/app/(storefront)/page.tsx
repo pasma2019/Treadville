@@ -39,66 +39,6 @@ export default async function HomePage() {
         subheadline={contentMap.homepage_hero_subheadline || undefined}
       />
 
-      <CategoryDiscovery categories={categories} />
-
-      <Provenance
-        eyebrow={contentMap.provenance_eyebrow || "From origin to experience"}
-        headline={
-          contentMap.provenance_headline ||
-          "Kenyan agriculture, considered at every step."
-        }
-        intro={
-          contentMap.provenance_intro ||
-          "Every Treadville product travels the same arc — from the soils that grow it, through the hands that refine it, to the markets that receive it. The work between those moments is where quality is made."
-        }
-        image={contentMap.provenance_image || undefined}
-        stages={[
-          {
-            number: "01",
-            label: "Origin",
-            line:
-              "Kenyan volcanic highlands and fertile plains. Soils, altitude, and climate shape the raw material before a hand ever touches it.",
-          },
-          {
-            number: "02",
-            label: "Craft",
-            line:
-              "Selection, processing, and quality control. Each lot is handled with the same discipline, in service of the same standard.",
-          },
-          {
-            number: "03",
-            label: "Experience",
-            line:
-              "Packaged, documented, and delivered. The result is a product that carries its origin — and is ready for tables far from it.",
-          },
-        ]}
-        closing={contentMap.provenance_closing || "The collection follows."}
-      />
-
-      <JournalPreview
-        articles={articles}
-      />
-
-      {/* Featured collection — no divider, natural transition from Journal */}
-
-      {featured.length > 0 && (() => {
-        const lead = featured[0];
-        const supporting = featured.slice(1);
-        const featuredEyebrow = contentMap.featured_eyebrow || "From the current collection";
-        const featuredHeadline = contentMap.featured_headline || "Curated lots, ready to ship.";
-        const featuredIntro = contentMap.featured_intro || "A small selection from across our categories — chosen for character, condition, and the way they present.";
-        return (
-          <FeaturedSection
-            lead={lead}
-            supporting={supporting}
-            categories={categories}
-            eyebrow={featuredEyebrow}
-            headline={featuredHeadline}
-            intro={featuredIntro}
-          />
-        );
-      })()}
-
       {/* STORY — light editorial with stats */}
       <section
         aria-labelledby="story-heading"
@@ -176,6 +116,66 @@ export default async function HomePage() {
           </Reveal>
         </div>
       </section>
+
+      <CategoryDiscovery categories={categories} />
+
+      <Provenance
+        eyebrow={contentMap.provenance_eyebrow || "From origin to experience"}
+        headline={
+          contentMap.provenance_headline ||
+          "Kenyan agriculture, considered at every step."
+        }
+        intro={
+          contentMap.provenance_intro ||
+          "Every Treadville product travels the same arc — from the soils that grow it, through the hands that refine it, to the markets that receive it. The work between those moments is where quality is made."
+        }
+        image={contentMap.provenance_image || undefined}
+        stages={[
+          {
+            number: "01",
+            label: "Origin",
+            line:
+              "Kenyan volcanic highlands and fertile plains. Soils, altitude, and climate shape the raw material before a hand ever touches it.",
+          },
+          {
+            number: "02",
+            label: "Craft",
+            line:
+              "Selection, processing, and quality control. Each lot is handled with the same discipline, in service of the same standard.",
+          },
+          {
+            number: "03",
+            label: "Experience",
+            line:
+              "Packaged, documented, and delivered. The result is a product that carries its origin — and is ready for tables far from it.",
+          },
+        ]}
+        closing={contentMap.provenance_closing || "The collection follows."}
+      />
+
+      <JournalPreview
+        articles={articles}
+      />
+
+      {/* Featured collection — no divider, natural transition from Journal */}
+
+      {featured.length > 0 && (() => {
+        const lead = featured[0];
+        const supporting = featured.slice(1);
+        const featuredEyebrow = contentMap.featured_eyebrow || "From the current collection";
+        const featuredHeadline = contentMap.featured_headline || "Curated lots, ready to ship.";
+        const featuredIntro = contentMap.featured_intro || "A small selection from across our categories — chosen for character, condition, and the way they present.";
+        return (
+          <FeaturedSection
+            lead={lead}
+            supporting={supporting}
+            categories={categories}
+            eyebrow={featuredEyebrow}
+            headline={featuredHeadline}
+            intro={featuredIntro}
+          />
+        );
+      })()}
 
       <EnquirySection />
     </main>

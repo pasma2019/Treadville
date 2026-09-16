@@ -48,20 +48,6 @@ export default function HeroSlideshow({
         className="hero-glow pointer-events-none absolute -left-40 top-1/4 z-[5] h-[34rem] w-[34rem] rounded-full"
       />
 
-      <div className="absolute left-0 right-0 z-20 hidden overflow-hidden px-6 md:top-[100px] md:block md:px-12">
-        <div className="flex items-center justify-between">
-          <div className="flex shrink-0 items-center gap-3">
-            <span aria-hidden className="h-px w-6 bg-[var(--gold)]" />
-            <p className="font-mono text-[13px] font-semibold uppercase tracking-[0.30em] text-[var(--ink)]">
-              Treadville — Kirinyaga, Kenya
-            </p>
-          </div>
-          <p className="shrink-0 font-mono text-[13px] font-semibold uppercase tracking-[0.30em] text-[var(--ink)]">
-            Specialty agricultural products
-          </p>
-        </div>
-      </div>
-
       <div className="relative z-10 mx-auto flex min-h-[88svh] w-full max-w-[var(--content-cinema)] flex-col">
         <div className="mt-auto pb-12 pt-[5rem] md:pb-16 md:pt-[6rem]">
           <div className="px-6 md:max-w-[42rem] md:px-12">
@@ -81,7 +67,7 @@ export default function HeroSlideshow({
               ) : null}
             </h1>
 
-            <p className="mt-8 max-w-[42ch] text-[1.0625rem] leading-[1.7] text-[var(--ink-soft)]">
+            <p className="mt-8 max-w-[42ch] text-[1.0625rem] leading-[1.7] text-[#E5E5E0] font-normal">
               {subheadline}
             </p>
 
@@ -90,26 +76,27 @@ export default function HeroSlideshow({
                 Explore the collection
                 <span
                   aria-hidden
-                  className="inline-block h-px w-6 bg-current transition-all duration-500 group-hover:w-10"
-                />
-              </Link>
+                  className="inline-block h-px w-6 bg-current origin-left transition-transform duration-500 group-hover:scale-x-100"
+                  style={{ transform: 'scaleX(0.6)' } as React.CSSProperties}
+                /></Link>
               <Link
                 href="/contact"
-                className="group inline-flex items-center gap-2 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-deep)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+                className="hero-secondary-cta group inline-flex items-center justify-center gap-2 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-deep)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
               >
                 Work with Treadville
                 <span
                   aria-hidden
-                  className="inline-block h-px w-5 bg-current transition-all duration-500 group-hover:w-8"
+                  className="inline-block h-px w-5 bg-current origin-left transition-transform duration-500 group-hover:scale-x-100"
+                  style={{ transform: 'scaleX(0.625)' } as React.CSSProperties}
                 />
               </Link>
             </div>
 
-            <div className="mt-10 flex flex-wrap items-center divide-x divide-[var(--line-on-light-strong)] font-mono text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--ink-muted)]">
+            <div className="mt-10 flex flex-wrap items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.24em]">
               {HERO_META.map((m, i) => (
-                <span key={m.label} className={i === 0 ? "pr-6" : "px-6"}>
-                  {m.value}{" "}
-                  <span className="text-[var(--ink-faint)]">{m.label}</span>
+                <span key={m.label} className="hero-stat-pill">
+                  <span className="hero-stat-value">{m.value}</span>{" "}
+                  <span className="hero-stat-label">{m.label}</span>
                 </span>
               ))}
             </div>

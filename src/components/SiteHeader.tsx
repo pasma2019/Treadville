@@ -83,14 +83,14 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
 
   return (
     <header className="nav-shell">
-      <div className={`nav-pill ${scrolled ? "is-scrolled" : ""}`}>
+      <div className={`nav-pill ${scrolled ? "glass-nav-scrolled" : "glass-nav"}`}>
         {/* Logo */}
         <Link
           href="/"
           className="flex shrink-0 items-center"
           onClick={handleMenuClose}
         >
-          <span className="nav-logo text-[1.25rem]">TREADVILLE</span>
+          <span className="nav-logo">TREADVILLE</span>
         </Link>
 
         {/* Desktop nav */}
@@ -117,7 +117,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
             </button>
             {shopOpen && (
               <div
-                className="absolute left-0 top-full z-50 mt-3 min-w-[180px] overflow-hidden rounded-xl border border-[var(--glass-border)] bg-[var(--bg-elevated)]/90 shadow-[var(--shadow-elite)] backdrop-blur-xl"
+                className="absolute left-0 top-full z-50 mt-3 min-w-[180px] overflow-hidden rounded-xl border border-[rgba(184,134,11,0.18)] glass-nav shadow-[var(--shadow-elite)]"
                 role="menu"
               >
                 <Link
