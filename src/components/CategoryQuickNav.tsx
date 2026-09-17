@@ -62,17 +62,15 @@ function CategoryNavCard({ cat, index }: { cat: Category; index: number }) {
   return (
     <Link
       href={`/shop/${cat.slug}`}
-      className="group flex items-start gap-4 rounded-sm border p-4 sm:p-5 transition-all duration-[600ms] ease-[var(--ease-out)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift-light)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+      className="quick-nav-card group flex items-start gap-4 rounded-sm border p-4 sm:p-5 transition-all duration-[600ms] ease-[var(--ease-out)]"
       style={{
         borderColor: "rgba(236,227,206,0.20)",
         background: `rgba(255,255,255,0.02)`,
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
       }}
       aria-label={`Browse ${cat.name} products`}
     >
       <div
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border font-display text-[14px] font-medium transition-all duration-[600ms] ease-[var(--ease-out)] group-hover:scale-[1.08] motion-reduce:transition-none motion-reduce:hover:scale-100"
+        className="quick-nav-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border font-display text-[14px] font-medium transition-all duration-[600ms] ease-[var(--ease-out)]"
         style={{
           borderColor: cat.tint,
           background: `${cat.tint}15`,
@@ -95,7 +93,7 @@ function CategoryNavCard({ cat, index }: { cat: Category; index: number }) {
           {cat.descriptor}
         </p>
         <div
-          className="mt-2 h-px w-4 transition-all duration-[600ms] ease-[var(--ease-out)] group-hover:w-6 motion-reduce:transition-none motion-reduce:hover:w-4"
+          className="quick-nav-line mt-2 h-px w-4 transition-all duration-[600ms] ease-[var(--ease-out)]"
           style={{ background: cat.tint }}
         />
       </div>

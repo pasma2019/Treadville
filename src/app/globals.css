@@ -1809,6 +1809,13 @@ textarea.field-light {
     linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 100%);
 }
 
+@media (max-width: 767px) {
+  .hero-atmosphere {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+}
+
 .hero-overlay {
   background: linear-gradient(
     90deg,
@@ -2001,7 +2008,7 @@ textarea.field-light {
 
 /* ============================================================
     CATEGORY DISCOVERY — full-bleed photographic gallery
-    Dark field behind four panels; reads as ONE continuous mural.
+    Image-first cards. No glass. Subtle desktop hover.
     ============================================================ */
 
 .category-tile {
@@ -2023,15 +2030,40 @@ textarea.field-light {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 650ms var(--ease-smooth);
 }
 
-/* Lift on hover / focus-visible (CLS-safe: transform + box-shadow only) */
-.category-tile:hover,
-.category-tile:focus-visible {
-  transform: translateY(-3px);
-  box-shadow:
-    0 14px 40px -10px rgba(0,0,0,0.50),
-    0 0 0 1px rgba(236,227,206,0.12);
+/* Desktop hover only: subtle zoom + lift + gradient deepening */
+@media (hover: hover) and (pointer: fine) {
+  .category-tile:hover,
+  .category-tile:focus-visible {
+    transform: translateY(-3px);
+    box-shadow:
+      0 14px 40px -10px rgba(0,0,0,0.50),
+      0 0 0 1px rgba(236,227,206,0.12);
+  }
+
+  .category-tile:hover img,
+  .category-tile:focus-visible img {
+    transform: scale(1.03);
+  }
+
+  .category-tile:hover .category-scrim,
+  .category-tile:focus-visible .category-scrim {
+    background:
+      linear-gradient(180deg, transparent 0%, transparent 15%, rgba(26,20,16,0.28) 45%, rgba(26,20,16,0.70) 70%, rgba(26,20,16,0.92) 100%);
+  }
+
+  .category-tile:hover .category-accent-line,
+  .category-tile:focus-visible .category-accent-line,
+  .category-tile:focus-within .category-accent-line {
+    transform: scaleX(1);
+  }
+
+  .category-tile:hover .category-arrow svg,
+  .category-tile:focus-visible .category-arrow svg {
+    transform: translateX(4px);
+  }
 }
 
 .category-scrim {
@@ -2040,77 +2072,7 @@ textarea.field-light {
   background:
     linear-gradient(180deg, transparent 0%, transparent 25%, rgba(26,20,16,0.22) 50%, rgba(26,20,16,0.60) 70%, rgba(26,20,16,0.90) 100%);
   pointer-events: none;
-}
-
-/* Glass atmosphere — full-bleed translucent layer, not a card */
-.category-glass {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 420ms var(--ease-smooth),
-    transform 450ms var(--ease-smooth);
-  pointer-events: none;
-  -webkit-backdrop-filter: blur(16px) saturate(130%);
-  backdrop-filter: blur(16px) saturate(130%);
-}
-
-/* Category gradient tint — very low opacity, visible through frost */
-.category-glass-gradient {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 420ms var(--ease-smooth) 40ms,
-    transform 450ms var(--ease-smooth) 40ms;
-}
-
-/* Reveal on hover / focus */
-.category-tile:hover .category-glass,
-.category-tile:focus-visible .category-glass,
-.category-tile:focus-within .category-glass {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.category-tile:hover .category-glass-gradient,
-.category-tile:focus-visible .category-glass-gradient,
-.category-tile:focus-within .category-glass-gradient {
-  opacity: 0.14;
-  transform: translateY(0);
-}
-
-/* Specular sweep — one restrained light catch across the tile */
-.category-shine {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      105deg,
-      transparent 0%,
-      transparent 35%,
-      rgba(255,255,255,0.07) 45%,
-      rgba(255,255,255,0.04) 50%,
-      transparent 60%,
-      transparent 100%
-    );
-  transform: translateX(-100%);
-  pointer-events: none;
-  opacity: 0;
-  z-index: 5;
-}
-
-.category-tile:hover .category-shine,
-.category-tile:focus-visible .category-shine {
-  animation: category-shine-sweep 500ms var(--ease-smooth) forwards;
-}
-
-@keyframes category-shine-sweep {
-  0%   { transform: translateX(-100%); opacity: 1; }
-  70%  { opacity: 1; }
-  100% { transform: translateX(100%); opacity: 0; }
+  transition: background 500ms var(--ease-smooth);
 }
 
 /* Content — title + metadata, always visible at rest */
@@ -2156,18 +2118,25 @@ textarea.field-light {
   text-shadow: 0 2px 18px rgba(18,13,8,0.50);
 }
 
-/* Gradient accent line on hover / focus-visible */
+/* Gradient accent line */
 .category-accent-line {
   height: 1px;
-  transform: scaleX(0);
+  transform: scaleX(1);
   transform-origin: left;
   transition: transform 400ms var(--ease-smooth);
 }
 
-.category-tile:hover .category-accent-line,
-.category-tile:focus-visible .category-accent-line,
-.category-tile:focus-within .category-accent-line {
-  transform: scaleX(1);
+/* Arrow indicator */
+.category-arrow {
+  color: rgba(245, 240, 232, 0.6);
+  transition: color 300ms var(--ease-smooth);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .category-tile:hover .category-arrow,
+  .category-tile:focus-visible .category-arrow {
+    color: rgba(245, 240, 232, 1);
+  }
 }
 
 /* ============================================================
@@ -2205,28 +2174,16 @@ textarea.field-light {
 }
 
 /* ============================================================
-    Touch devices — atmospheric layer visible at rest
+    Touch / coarse pointer — accent line always visible
     ============================================================ */
 
 @media (hover: none) {
-  .category-glass {
-    opacity: 1;
-    transform: translateY(0);
-    transition: none;
-  }
-
-  .category-glass-gradient {
-    opacity: 0.12;
-    transform: translateY(0);
-    transition: none;
-  }
-
   .category-accent-line {
     transform: scaleX(1);
     transition: none;
   }
 
-  .category-shine {
+  .category-arrow {
     display: none;
   }
 }
@@ -2254,25 +2211,13 @@ textarea.field-light {
     transform: none;
   }
 
-  .category-glass {
-    opacity: 1;
-    transform: translateY(0);
-    transition: none;
-  }
-
-  .category-glass-gradient {
-    opacity: 0.14;
-    transform: translateY(0);
-    transition: none;
-  }
-
-  .category-shine {
-    display: none;
-  }
-
   .category-accent-line {
     transform: scaleX(1);
     transition: none;
+  }
+
+  .category-arrow svg {
+    transition: none !important;
   }
 }
 
@@ -2281,6 +2226,44 @@ textarea.field-light {
     transform: translateY(-6px);
     border-color: rgba(184, 134, 11, 0.4);
     box-shadow: var(--shadow-elite);
+  }
+}
+
+/* ============================================================
+    QUICK NAV — hover effects guarded for desktop only
+    ============================================================ */
+
+@media (hover: hover) and (pointer: fine) {
+  .quick-nav-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lift-light);
+  }
+
+  .quick-nav-card:hover .quick-nav-icon {
+    transform: scale(1.08);
+  }
+
+  .quick-nav-card:hover .quick-nav-line {
+    width: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-nav-card {
+    transition: box-shadow 200ms ease;
+  }
+
+  .quick-nav-card:hover {
+    transform: none;
+  }
+
+  .quick-nav-card:hover .quick-nav-icon {
+    transform: none;
+  }
+
+  .quick-nav-icon,
+  .quick-nav-line {
+    transition: none !important;
   }
 }
 

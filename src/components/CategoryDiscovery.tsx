@@ -64,7 +64,7 @@ function CategoryImageLayerFor({ cat }: { cat: Category }) {
   return (
     <CategoryImageLayer
       src={cat.image_url}
-      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[650ms] ease-[var(--ease-smooth)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+      className="absolute inset-0 h-full w-full object-cover"
     />
   );
 }
@@ -89,22 +89,7 @@ function CategoryTile({ cat, index }: { cat: Category; index: number }) {
           aria-hidden
         />
 
-        {/* Atmospheric glass layer — full-bleed translucent */}
-        <div className="category-glass pointer-events-none">
-          {/* Category gradient tint — very subtle, visible through frost */}
-          <div
-            className="category-glass-gradient pointer-events-none"
-            aria-hidden
-            style={{
-              background: gv,
-            }}
-          />
-        </div>
-
-        {/* Specular shine — sweeps once on interaction */}
-        <div className="category-shine pointer-events-none absolute inset-0" aria-hidden />
-
-        {/* Content — elevated above glass */}
+        {/* Content — text directly over image with gradient scrim */}
         <div className="category-content relative z-10 absolute inset-x-0 bottom-0 p-4 md:p-6">
           <p
             className={`category-eyebrow font-mono text-[12px] uppercase tracking-[0.14em] ${accentClass(cat.slug)}`}
@@ -120,13 +105,20 @@ function CategoryTile({ cat, index }: { cat: Category; index: number }) {
             {cat.name}
           </h3>
           <div
-            className="category-accent-line mt-3 h-px w-full origin-left transition-transform duration-300 ease-[var(--ease-smooth)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
+            className="category-accent-line mt-3 h-px w-full origin-left"
             style={{
               background: gv,
-              transform: "scaleX(0)",
+              transform: "scaleX(1)",
               transformOrigin: "left",
             }}
           />
+        </div>
+
+        {/* Arrow indicator */}
+        <div className="category-arrow pointer-events-none absolute bottom-4 right-4 z-10 md:bottom-6 md:right-6" aria-hidden>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10H15M15 10L11 6M15 10L11 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
       </Link>
     </Reveal>
