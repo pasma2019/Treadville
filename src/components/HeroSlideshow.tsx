@@ -33,8 +33,7 @@ export default function HeroSlideshow({
             src={heroImage}
             alt=""
             aria-hidden
-            className="h-full w-full object-cover"
-            style={{ objectPosition: "center 42%" }}
+            className="hero-image h-full w-full object-cover"
             loading="eager"
             decoding="async"
             fetchPriority="high"
@@ -49,7 +48,7 @@ export default function HeroSlideshow({
       />
 
       <div className="relative z-10 mx-auto flex min-h-[88svh] w-full max-w-[var(--content-cinema)] flex-col">
-        <div className="mt-auto pb-12 pt-[5rem] md:pb-16 md:pt-[6rem]">
+        <div className="hero-content mt-auto pb-12 pt-[5rem] md:pb-16 md:pt-[6rem]">
           <div className="px-6 md:max-w-[42rem] md:px-12">
             <span aria-hidden className="hero-gold-rule mb-5 block" />
             <p className="hero-eyebrow mb-6">

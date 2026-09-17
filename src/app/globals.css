@@ -1809,10 +1809,46 @@ textarea.field-light {
     linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 100%);
 }
 
+.hero-image {
+  object-position: center 42%;
+}
+
+@media (max-width: 767px) {
+  .hero-image {
+    object-position: 8% 42%;
+  }
+}
+
 @media (max-width: 767px) {
   .hero-atmosphere {
     min-height: 100svh;
     min-height: 100dvh;
+  }
+
+  .hero-content {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .hero-content .hero-gold-rule + .hero-eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  .hero-content h1 + p,
+  .hero-content .hero-accent-line + p {
+    margin-top: 1.25rem;
+  }
+
+  .hero-content .mt-8 {
+    margin-top: 1.25rem;
+  }
+
+  .hero-content .mt-12 {
+    margin-top: 2rem;
+  }
+
+  .hero-content .mt-10 {
+    margin-top: 1.5rem;
   }
 }
 
@@ -1831,11 +1867,11 @@ textarea.field-light {
   .hero-overlay {
     background: linear-gradient(
       180deg,
-      rgba(26, 20, 16, 0.08) 0%,
-      rgba(26, 20, 16, 0.25) 30%,
-      rgba(26, 20, 16, 0.55) 55%,
-      rgba(26, 20, 16, 0.78) 80%,
-      rgba(26, 20, 16, 0.92) 100%
+      rgba(26, 20, 16, 0.18) 0%,
+      rgba(26, 20, 16, 0.40) 25%,
+      rgba(26, 20, 16, 0.68) 50%,
+      rgba(26, 20, 16, 0.88) 75%,
+      rgba(26, 20, 16, 0.95) 100%
     );
   }
 }
