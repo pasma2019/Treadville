@@ -1,6 +1,7 @@
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CartDrawer from "@/components/CartDrawer";
+import WhatsAppCTA from "@/components/WhatsAppCTA";
 import { getCategories } from "@/lib/queries";
 
 // Slice 12: nonce-based CSP requires dynamic SSR so Next.js can apply the
@@ -19,6 +20,7 @@ export default async function StorefrontLayout({ children }: { children: React.R
       {children}
       <SiteFooter />
       <CartDrawer />
+      <WhatsAppCTA />
     </>
   );
 }

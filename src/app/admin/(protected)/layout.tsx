@@ -5,8 +5,12 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
 export default async function AdminProtectedLayout({ children }: { children: React.ReactNode }) {
   const user = await getUser();
 
-  if (!isAdmin(user)) {
+  if (!user) {
     redirect("/admin/login");
+  }
+
+  if (!isAdmin(user)) {
+    redirect("/");
   }
 
   return (

@@ -45,14 +45,14 @@ export default function ProductCard({
         className={
           isLight
             ? "stage-product-card relative aspect-[4/5] w-full overflow-hidden"
-            : "relative aspect-[4/5] w-full overflow-hidden rounded-[14px] bg-[var(--soil-raised)] shadow-[var(--shadow-soft)] transition-shadow duration-500 ease-out group-hover:shadow-[var(--shadow-lift)] group-focus-visible:shadow-[var(--shadow-lift)]"
+            : "product-card relative aspect-[4/5] w-full overflow-hidden rounded-[14px] bg-[var(--soil-raised)] shadow-[var(--shadow-soft)] transition-shadow duration-500 ease-out group-focus-visible:shadow-[var(--shadow-lift)]"
         }
       >
         {product.image_url && !forceIdentity ? (
           <ProductImage
             src={product.image_url}
             alt={product.name}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-[var(--ease-out)] group-hover:scale-[1.03] group-hover:translate-y-[-3px] motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-hover:translate-y-0"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-[var(--ease-out)] motion-reduce:transition-none"
           />
         ) : (
           <ProductIdentity
@@ -65,7 +65,7 @@ export default function ProductCard({
         {!isLight && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[var(--soil)]/70 to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-visible:opacity-100"
+            className="product-card-scrim pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[var(--soil)]/70 to-transparent opacity-0 transition-opacity duration-500 ease-out group-focus-visible:opacity-100"
           />
         )}
       </div>
@@ -200,8 +200,8 @@ function ProductIdentity({
           slug={slug}
           className={
             isLight
-              ? "h-32 w-32 opacity-[0.28] transition-opacity duration-700 ease-out group-hover:opacity-40 md:h-40 md:w-40"
-              : "h-32 w-32 opacity-[0.18] transition-opacity duration-700 ease-out group-hover:opacity-30 md:h-40 md:w-40"
+              ? "product-card-watermark h-32 w-32 opacity-[0.28] transition-opacity duration-700 ease-out md:h-40 md:w-40"
+              : "product-card-watermark h-32 w-32 opacity-[0.18] transition-opacity duration-700 ease-out md:h-40 md:w-40"
           }
           style={{ strokeWidth: 0.8 }}
         />

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
+import { ShoppingBag, Menu, X, ChevronDown, Phone } from "lucide-react";
 import { useCart } from "./CartContext";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import LanguageSelector from "./LanguageSelector";
@@ -164,6 +164,13 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
 
         {/* Right side */}
         <div className="flex shrink-0 items-center gap-1.5 lg:gap-2">
+          <a
+            href="tel:+254722479985"
+            aria-label="Call Treadville: +254 722 479985"
+            className="nav-icon-btn hidden sm:flex"
+          >
+            <Phone size={16} />
+          </a>
           <button
             onClick={openCart}
             aria-label={`Open enquiry cart (${count} items)`}
@@ -217,7 +224,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
                   href={`/shop/${cat.slug}`}
                   onClick={handleMenuClose}
                   aria-current={isActive(`/shop/${cat.slug}`) ? "page" : undefined}
-                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3.5 text-[1.0625rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3.5 text-[var(--text-body-lg)] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                 >
                   {label}
                 </Link>
@@ -227,7 +234,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
 
           {/* IA section */}
           <div className="mb-2 mt-10">
-            <p className="mb-4 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-[var(--gold-deep)]">
+            <p className="type-micro mb-4 text-[var(--gold-deep)]">
               Company
             </p>
             {IA_LINKS.map(({ key, href }) => {
@@ -238,7 +245,7 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
                   href={href}
                   onClick={handleMenuClose}
                   aria-current={isActive(href) ? "page" : undefined}
-                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3.5 text-[1.0625rem] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                  className="mb-1 block rounded-sm border-b border-[var(--line-on-light)] py-3.5 text-[var(--text-body-lg)] text-[var(--ink-soft)] transition-colors hover:text-[var(--gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                 >
                   {label}
                 </Link>

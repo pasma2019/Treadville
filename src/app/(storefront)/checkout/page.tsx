@@ -1,17 +1,26 @@
 "use client";
 
-import { useEffect, useMemo, useActionState } from "react";
+import { useEffect, useMemo, useState, useActionState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import Reveal from "@/components/Reveal";
 import CategoryMark from "@/components/CategoryMark";
 import { submitOrderAction, type OrderFormState } from "@/lib/order-actions";
+import { getEnabledPaymentMethods, type EnabledPaymentMethod } from "@/lib/payment-config";
+
+// Register payment providers (side effect import)
+import "@/lib/payment";
 
 const initialState: OrderFormState = {};
+
+const enabledMethods = getEnabledPaymentMethods();
 
 export default function CheckoutPage() {
   const { lines, removeFromCart, clearCart } = useCart();
   const [state, formAction, pending] = useActionState(submitOrderAction, initialState);
+  const [selectedProvider, setSelectedProvider] = useState<string>(
+    enabledMethods[0]?.provider ?? ""
+  );
   const totalItems = lines.reduce((sum, l) => sum + l.qty, 0);
 
   const itemsJson = useMemo(
@@ -168,36 +177,113 @@ export default function CheckoutPage() {
                   <p className="font-mono text-[10px] uppercase eyebrow-gold">
                     Your details
                   </p>
-                  <input
-                    type="text"
-                    name="full_name"
-                    required
-                    placeholder="Full name"
-                    className="field-light"
-                    autoComplete="name"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    placeholder="Email address"
-                    className="field-light"
-                    autoComplete="email"
-                  />
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    placeholder="Phone number"
-                    className="field-light"
-                    autoComplete="tel"
-                  />
-                  <textarea
-                    name="customer_notes"
-                    rows={3}
-                    placeholder="Notes — destination, timeline, sample request…"
-                    className="field-light resize-none"
-                  />
+                  <div>
+                    <label htmlFor="full_name" className="mb-2.5 block">
+                      <span className="text-[1rem] text-[var(--ink)]">
+                        Full name<span className="ml-1.5 text-[var(--accent-sage)]" aria-hidden>*</span>
+                      </span>
+                    </label>
+                    <input
+                      id="full_name"
+                      type="text"
+                      name="full_name"
+                      required
+                      placeholder="Your full name"
+                      className="field-light"
+                      autoComplete="name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="mb-2.5 block">
+                      <span className="text-[1rem] text-[var(--ink)]">
+                        Email address<span className="ml-1.5 text-[var(--accent-sage)]" aria-hidden>*</span>
+                      </span>
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      name="email"
+                      required
+                      placeholder="you@company.com"
+                      className="field-light"
+                      autoComplete="email"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="mb-2.5 block">
+                      <span className="text-[1rem] text-[var(--ink)]">
+                        Phone number<span className="ml-1.5 text-[var(--accent-sage)]" aria-hidden>*</span>
+                      </span>
+                    </label>
+                    <input
+                      id="phone"
+                      type="tel"
+                      name="phone"
+                      required
+                      placeholder="+254 ..."
+                      className="field-light"
+                      autoComplete="tel"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="customer_notes" className="mb-2.5 block">
+                      <span className="text-[1rem] text-[var(--ink)]">
+                        Notes <span className="text-[0.875rem] text-[var(--ink-faint)]">(optional)</span>
+                      </span>
+                    </label>
+                    <textarea
+                      id="customer_notes"
+                      name="customer_notes"
+                      rows={3}
+                      placeholder="Destination, timeline, sample request…"
+                      className="field-light resize-none"
+                    />
+                  </div>
+
+                  {enabledMethods.length > 0 ? (
+                    <div>
+                      <p className="mb-3 text-[1rem] text-[var(--ink)]">
+                        Payment method
+                      </p>
+                      <div className="space-y-2">
+                        {enabledMethods.map((method) => (
+                          <label
+                            key={method.provider}
+                            className={`flex cursor-pointer items-center gap-3 rounded border px-4 py-3 transition-colors ${
+                              selectedProvider === method.provider
+                                ? "border-[var(--gold-deep)] bg-[rgba(184,134,11,0.06)]"
+                                : "border-[var(--line-on-light)] hover:border-[var(--ink-faint)]"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="payment_provider"
+                              value={method.provider}
+                              checked={selectedProvider === method.provider}
+                              onChange={(e) => setSelectedProvider(e.target.value)}
+                              className="accent-[var(--gold-deep)]"
+                            />
+                            <div>
+                              <p className="text-[0.9375rem] font-medium text-[var(--ink)]">
+                                {method.label}
+                              </p>
+                              <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--ink-faint)]">
+                                {method.currencies.join(" · ")}
+                              </p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded border border-[rgba(184,134,11,0.20)] bg-[rgba(184,134,11,0.04)] px-4 py-3">
+                      <p className="text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
+                        Payment methods are currently being configured. Please
+                        contact us to complete your order.
+                      </p>
+                    </div>
+                  )}
+
                   {state.error && (
                     <div
                       role="alert"

@@ -28,6 +28,12 @@ export default async function JournalPage() {
   return (
     <main className="surface-base">
       {/* Hero */}
+      {/*
+        Intentional: no background photo while Journal has no published
+        articles yet. The plain gradient hero is deliberate — do not "fix" it
+        by adding a photograph or the graduated photo scrim until real
+        articles exist.
+      */}
       <section className="relative flex min-h-[85vh] flex-col justify-end px-6 pb-20 pt-40 md:pb-28 md:pt-56 lg:pb-36">
         <div aria-hidden className="page-hero-light absolute inset-0" />
         <div

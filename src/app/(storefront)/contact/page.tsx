@@ -14,6 +14,18 @@ const ENQUIRY_TYPES = [
   "Partnership",
 ];
 
+const ENQUIRY_TYPE_ALIASES: Record<string, string> = {
+  sample: "Sample request",
+  quote: "Export / wholesale",
+};
+
+function resolveEnquiryType(raw: string | null | undefined): string {
+  if (!raw) return "";
+  const value = raw.trim();
+  if (ENQUIRY_TYPES.includes(value)) return value;
+  return ENQUIRY_TYPE_ALIASES[value] ?? "";
+}
+
 const initialState: EnquiryFormState = {};
 
 export default function ContactPage() {
@@ -39,7 +51,7 @@ export default function ContactPage() {
     }
   }, [productSlug]);
 
-  const initialType = searchParams.get("type") || "";
+  const initialType = resolveEnquiryType(searchParams.get("type"));
 
   useEffect(() => {
     if (state.success) {
@@ -202,7 +214,7 @@ export default function ContactPage() {
                         name="type"
                         required
                         className="field-light cursor-pointer"
-                        defaultValue={searchParams.get("type") ?? ""}
+                        defaultValue={initialType}
                       >
                         <option value="" disabled>
                           Select an option

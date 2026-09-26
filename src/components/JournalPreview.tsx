@@ -73,7 +73,7 @@ export default function JournalPreview({
                 {ctaLabel}
                 <span
                   aria-hidden
-                  className="h-px w-6 bg-[var(--ink)]/30 transition-all duration-500 group-hover:w-10"
+                  className="h-px w-6 bg-[var(--ink)]/30 transition-all duration-500"
                 />
               </Link>
             </div>
@@ -133,7 +133,7 @@ export default function JournalPreview({
               {ctaLabel}
               <span
                 aria-hidden
-                className="h-px w-6 bg-[var(--ink)]/30 transition-all duration-500 group-hover:w-10"
+                className="h-px w-6 bg-[var(--ink)]/30 transition-all duration-500"
               />
             </Link>
           </div>
@@ -159,7 +159,7 @@ export default function JournalPreview({
                       alt=""
                       aria-hidden
                       loading="lazy"
-                      className="h-full w-full object-cover opacity-90 transition-[opacity,transform] duration-[600ms] ease-[var(--ease-smooth)] group-hover:opacity-100 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                      className="h-full w-full object-cover opacity-90 transition-[opacity,transform] duration-[600ms] ease-[var(--ease-smooth)] motion-reduce:transition-none"
                       style={{ objectPosition: "center 50%" }}
                     />
                   </div>
@@ -181,7 +181,7 @@ export default function JournalPreview({
                   </p>
                   <div
                     aria-hidden
-                    className="journal-line mt-6 h-px w-8 transition-all duration-500 group-hover:w-16"
+                    className="journal-line mt-6 h-px w-8 transition-all duration-500"
                   />
                 </div>
               </Reveal>

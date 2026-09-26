@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import type { AdminRole } from "@/lib/types";
 
 // Slice 12 — CSP / security headers baseline + Supabase session / admin proxy.
 //
@@ -100,7 +101,7 @@ export async function proxy(request: NextRequest) {
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: { user } } = await (supabase.auth as any).getUser() as { data: { user: { id: string } | null } };
+  const { data: { user } } = await (supabase.auth as any).getUser() as { data: { user: { id: string; app_metadata?: Record<string, unknown> } | null } };
 
   const pathname = request.nextUrl.pathname;
 
@@ -112,8 +113,26 @@ export async function proxy(request: NextRequest) {
     pathname === "/admin/reset-password" ||
     pathname.startsWith("/admin/reset-password/");
 
+  // Role claim mirrors src/lib/auth.ts isAdmin() — read inline here because
+  // this proxy runs on the edge runtime and cannot import the server-only
+  // auth helpers or query the profiles table.
+  const role = (user?.app_metadata?.role as AdminRole | null) ?? null;
+  const userIsAdmin = role === "OWNER" || role === "SYSTEM_ADMIN";
+
   if (user && pathname === "/admin/login") {
-    const redirect = NextResponse.redirect(new URL("/admin", request.url));
+    // Signed-in users never see the login page again: admins continue into
+    // the console, while authenticated non-admins are sent away from admin
+    // entirely (previously they were bounced /admin -> /admin/login forever).
+    const destination = userIsAdmin ? "/admin" : "/";
+    const redirect = NextResponse.redirect(new URL(destination, request.url));
+    redirect.headers.set("Content-Security-Policy", csp);
+    return redirect;
+  }
+
+  if (user && !userIsAdmin && pathname.startsWith("/admin") && !isPublicAdminRoute) {
+    // A signed-in non-admin must not loop between protected /admin and
+    // /admin/login — send them back to the storefront instead.
+    const redirect = NextResponse.redirect(new URL("/", request.url));
     redirect.headers.set("Content-Security-Policy", csp);
     return redirect;
   }

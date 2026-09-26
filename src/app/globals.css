@@ -24,6 +24,7 @@
   --amber: #c99a3d;           /* warm amber for grains/highlight */
   --jade: #5c7440;            /* deep botanical green for tea */
   --emerald: #2d4a35;         /* deeper emerald for tea environments */
+  --botanical: #6b8c56;       /* warm muted botanical — tea/horticulture accent detail */
 
   /* --- Category accents ("terroir" switches, the system doesn't) --- */
   --accent-coffee: #a8461f;
@@ -157,6 +158,93 @@
   /* 19.3.3: Increased vibrancy — previous #d9a94d was too muted over warm-white glass */
   --gold-vivid: #f0c040;
   --nav-logo-gradient: linear-gradient(115deg, var(--gold-vivid) 0%, #e8a820 50%, var(--gold-deep) 100%);
+
+  /* ============================================================
+     SLICE 26: WARM SURFACE TOKENS
+     Hierarchical surface scale for editorial rhythm.
+     Every section should pick its surface deliberately.
+     ============================================================ */
+  --bg-soft: #f5f0e6;
+  --bg-glow: rgba(184, 134, 11, 0.03);
+  --bg-muted: #eee8da;
+  --bg-accent: rgba(184, 134, 11, 0.04);
+
+  /* Warm atmospheric gradients — for hero and editorial bands */
+  --gradient-warm-subtle: linear-gradient(165deg, #faf7f0 0%, #f3ecdd 40%, #eee8da 100%);
+  --gradient-warm-deep: linear-gradient(165deg, #f3ecdd 0%, #e8dfd0 50%, #ddd3c0 100%);
+  --gradient-gold-wash: linear-gradient(135deg, rgba(184,134,11,0.04) 0%, rgba(250,247,240,0) 60%);
+  --gradient-hero-atmosphere: linear-gradient(175deg, #faf7f0 0%, #f3ecdd 35%, rgba(184,134,11,0.06) 100%);
+
+  /* Category-specific warm surfaces */
+  --surface-coffee: linear-gradient(165deg, #faf7f0 0%, rgba(168,70,31,0.04) 100%);
+  --surface-tea: linear-gradient(165deg, #faf7f0 0%, rgba(92,116,64,0.04) 100%);
+  --surface-horticulture: linear-gradient(165deg, #faf7f0 0%, rgba(147,161,60,0.04) 100%);
+  --surface-grains: linear-gradient(165deg, #faf7f0 0%, rgba(201,154,61,0.04) 100%);
+
+  /* ============================================================
+     SLICE 26: PREMIUM GRADIENT TOKENS
+     Directional, subtle, editorial. Not decorative — atmospheric.
+     ============================================================ */
+  --gradient-premium-gold: linear-gradient(135deg, #b8860b 0%, #d4a843 50%, #b8860b 100%);
+  --gradient-premium-dark: linear-gradient(165deg, #211d17 0%, #2d2820 50%, #1a1612 100%);
+  --gradient-section-divider: linear-gradient(90deg, transparent 0%, var(--line-on-light) 20%, var(--line-on-light) 80%, transparent 100%);
+
+  /* ============================================================
+     SLICE 26: TYPOGRAPHY TOKENS
+     Editorial hierarchy — display, headline, body, utility.
+     ============================================================ */
+  --type-display: var(--font-display), serif;
+  --type-body: var(--font-body), sans-serif;
+  --type-mono: var(--font-body), sans-serif;
+  --type-label: var(--font-body), sans-serif;
+
+  /* Headline scale */
+  --text-headline-xl: clamp(2.5rem, 5vw + 0.5rem, 4.5rem);
+  --text-headline-lg: clamp(2rem, 3.5vw + 0.5rem, 3rem);
+  --text-headline-md: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+  --text-headline-sm: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem);
+
+  /* Body scale */
+  --text-body-lg: 1.0625rem;
+  --text-body: 0.9375rem;
+  --text-body-sm: 0.8125rem;
+  --text-caption: 0.75rem;
+  --text-micro: 0.6875rem;
+
+  /* ============================================================
+     SLICE 26: MOTION TOKENS
+     Premium easing curves and durations for refined motion.
+     ============================================================ */
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-instant: 120ms;
+  --dur-quick: 200ms;
+  --dur-normal: 350ms;
+  --dur-slow: 550ms;
+  --dur-reveal: 700ms;
+
+  /* ============================================================
+     SLICE 26: SPACING RHYTHM
+     Consistent spatial relationships across components.
+     ============================================================ */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-section: clamp(4rem, 8vw, 8rem);
+
+  /* ============================================================
+     SLICE 26: BORDER RADIUS TOKENS
+     ============================================================ */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
 }
 
 * {
@@ -223,6 +311,178 @@ h3,
 }
 
 /* ============================================================
+   SLICE 26: EXTENDED SURFACE SYSTEM
+   Premium editorial surfaces for section rhythm.
+   ============================================================ */
+
+.surface-soft {
+  background: var(--bg-soft);
+  color: var(--ink);
+}
+
+.surface-glow {
+  background: var(--bg-glow);
+  color: var(--ink);
+}
+
+.surface-accent {
+  background: var(--bg-accent);
+  color: var(--ink);
+}
+
+.surface-gradient-warm {
+  background: var(--gradient-warm-subtle);
+  color: var(--ink);
+}
+
+.surface-gradient-deep {
+  background: var(--gradient-warm-deep);
+  color: var(--ink);
+}
+
+/* Section divider — thin editorial line */
+.section-divider {
+  height: 1px;
+  background: var(--gradient-section-divider);
+  border: none;
+  margin: 0;
+}
+
+/* ============================================================
+   SLICE 26: TYPOGRAPHY UTILITY CLASSES
+   ============================================================ */
+
+.type-headline-xl {
+  font-family: var(--type-display);
+  font-size: var(--text-headline-xl);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.type-headline-lg {
+  font-family: var(--type-display);
+  font-size: var(--text-headline-lg);
+  font-weight: 600;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.type-headline-md {
+  font-family: var(--type-display);
+  font-size: var(--text-headline-md);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.type-headline-sm {
+  font-family: var(--type-display);
+  font-size: var(--text-headline-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.type-body-lg {
+  font-size: var(--text-body-lg);
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.type-body {
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.type-body-sm {
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+.type-caption {
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+
+.type-micro {
+  font-family: var(--type-label);
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--ink-muted);
+}
+
+/* Gold accent text */
+.type-accent-gold {
+  color: var(--gold-deep);
+}
+
+/* Italic editorial */
+.type-editorial-italic {
+  font-family: var(--type-display);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+/* ============================================================
+   SLICE 26: MICRO TEXTURE / GRAIN
+   Subtle noise overlay for premium depth on key surfaces.
+   ============================================================ */
+
+.texture-grain {
+  position: relative;
+}
+
+.texture-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   SLICE 26: IMAGE TREATMENT
+   Premium image presentation utilities.
+   ============================================================ */
+
+.image-editorial {
+  object-fit: cover;
+  object-position: center;
+}
+
+.image-warm {
+  filter: saturate(0.92) contrast(1.02);
+}
+
+.image-vignette {
+  position: relative;
+}
+
+.image-vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(33,29,23,0.15) 100%);
+  pointer-events: none;
+}
+
+/* ============================================================
    GLASS MATERIAL â€” for floating nav, cart drawer, hero
    overlays, product metadata, contextual controls.
    Use with restraint: a material, not a design system.
@@ -266,8 +526,8 @@ h3,
   opacity: 0;
   transform: translateY(20px);
   transition:
-    opacity 600ms var(--ease-smooth),
-    transform 600ms var(--ease-smooth);
+    opacity var(--dur-reveal) var(--ease-premium),
+    transform var(--dur-reveal) var(--ease-premium);
 }
 
 [data-reveal][data-reveal-visible="true"] {
@@ -310,21 +570,21 @@ h3,
     ============================================================ */
 
 .glass-nav {
-  background: rgba(251, 248, 241, 0.78);
+  background: rgba(251, 248, 241, 0.72);
   border: 1px solid rgba(26, 20, 16, 0.06);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 10px 36px -14px rgba(60, 45, 30, 0.20);
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 8px 32px -12px rgba(60, 45, 30, 0.16);
 }
 
 .glass-nav-scrolled {
-  background: rgba(251, 248, 241, 0.94);
-  border-color: rgba(184, 134, 11, 0.20);
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(184, 134, 11, 0.15);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 16px 48px -20px rgba(60, 45, 30, 0.28);
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 12px 40px -16px rgba(60, 45, 30, 0.22);
 }
 
 .glass-cta {
@@ -373,7 +633,7 @@ h3,
 .gradient-hover {
   background-size: 200% 200%;
   background-position: 0% 50%;
-  transition: background-position 600ms var(--ease-smooth);
+  transition: background-position var(--dur-slow) var(--ease-premium);
 }
 
 @media (hover: hover) {
@@ -408,11 +668,11 @@ h3,
   user-select: none;
   border: 1px solid transparent;
   transition:
-    background-color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out),
-    box-shadow var(--dur-fast) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+    background-color var(--dur-quick) var(--ease-settle),
+    border-color var(--dur-quick) var(--ease-settle),
+    color var(--dur-quick) var(--ease-settle),
+    box-shadow var(--dur-quick) var(--ease-settle),
+    transform var(--dur-quick) var(--ease-settle);
 }
 
 .btn:focus-visible {
@@ -1215,7 +1475,10 @@ textarea.field-light {
    ============================================================ */
 
 .surface-footer {
-  background: var(--ink);
+  background:
+    radial-gradient(40% 30% at 80% 20%, rgba(184,134,11,0.03) 0%, transparent 60%),
+    radial-gradient(50% 40% at 20% 80%, rgba(107,140,86,0.02) 0%, transparent 50%),
+    linear-gradient(175deg, #1a1610 0%, #12100c 50%, #0a0806 100%);
   color: var(--ivory);
 }
 
@@ -1232,8 +1495,8 @@ textarea.field-light {
   opacity: 0;
   transform: translateY(20px);
   transition:
-    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--dur-reveal) var(--ease-premium),
+    transform var(--dur-reveal) var(--ease-premium);
 }
 
 [data-reveal-light][data-reveal-visible="true"] {
@@ -1448,15 +1711,15 @@ textarea.field-light {
   cursor: pointer;
   box-shadow: var(--shadow-elite);
   transition:
-    background-position 600ms var(--ease-smooth),
-    transform 400ms var(--ease-smooth),
-    box-shadow 400ms var(--ease-smooth);
+    background-position var(--dur-slow) var(--ease-premium),
+    transform var(--dur-normal) var(--ease-premium),
+    box-shadow var(--dur-normal) var(--ease-premium);
 }
 
 @media (hover: hover) {
   .btn-cta:hover {
     background-position: 100% 50%;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-elite), var(--shadow-glow-gold);
   }
 }
@@ -1528,15 +1791,15 @@ textarea.field-light {
   line-height: 1;
   cursor: pointer;
   transition:
-    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-color var(--dur-normal) var(--ease-premium),
+    color var(--dur-normal) var(--ease-premium),
+    transform var(--dur-normal) var(--ease-premium),
+    box-shadow var(--dur-normal) var(--ease-premium);
 }
 
 @media (hover: hover) {
   .btn-cta-ghost:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     border-color: var(--gold-deep);
     box-shadow: var(--shadow-glow-gold);
   }
@@ -1651,23 +1914,27 @@ textarea.field-light {
   justify-content: space-between;
   gap: 1.5rem;
   min-height: 62px;
-  padding: 0 1.5rem;
+  padding: 0 1.75rem;
   border-radius: 16px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: var(--shadow-soft);
+  background: rgba(251, 248, 241, 0.72);
+  border: 1px solid rgba(26, 20, 16, 0.06);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 8px 32px -12px rgba(60, 45, 30, 0.16);
   transition:
-    background-color 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
+    background-color 0.4s var(--ease-settle),
+    border-color 0.4s var(--ease-settle),
+    box-shadow 0.4s var(--ease-settle);
 }
 
 .nav-pill.is-scrolled {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(184, 134, 11, 0.22);
-  box-shadow: var(--shadow-elite);
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(184, 134, 11, 0.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 12px 40px -16px rgba(60, 45, 30, 0.22);
 }
 
 @media (max-width: 767px) {
@@ -1730,7 +1997,10 @@ textarea.field-light {
   position: relative;
   color: var(--ink-soft);
   padding: 0.25rem 0;
-  transition: color 0.35s ease;
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color var(--dur-quick) var(--ease-settle);
 }
 
 .nav-link::after {
@@ -1739,12 +2009,12 @@ textarea.field-light {
   left: 0;
   right: 0;
   bottom: -2px;
-  height: 2px;
+  height: 1.5px;
   border-radius: 2px;
   background: var(--gold-gradient);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.35s ease;
+  transition: transform var(--dur-normal) var(--ease-premium);
 }
 
 @media (hover: hover) {
@@ -1803,10 +2073,25 @@ textarea.field-light {
   }
 }
 
+/* SLICE 28 — Hero Atmospheric System: multi-layer luminous gradient */
 .hero-atmosphere {
   background:
-    radial-gradient(85% 65% at 80% 15%, rgba(184, 134, 11, 0.09) 0%, transparent 55%),
-    linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 100%);
+    radial-gradient(50% 40% at 82% 18%, rgba(184, 134, 11, 0.07) 0%, transparent 55%),
+    radial-gradient(60% 45% at 15% 80%, rgba(122, 158, 122, 0.05) 0%, transparent 50%),
+    radial-gradient(40% 30% at 60% 50%, rgba(255, 248, 241, 0.4) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-base) 0%, var(--bg-warm) 50%, rgba(184,134,11,0.04) 100%);
+  position: relative;
+}
+
+.hero-atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .hero-image {
@@ -1852,13 +2137,14 @@ textarea.field-light {
   }
 }
 
+/* SLICE 28 — Hero overlay: luminous gradient, not heavy blackout */
 .hero-overlay {
   background: linear-gradient(
     90deg,
-    rgba(26, 20, 16, 0.95) 0%,
-    rgba(26, 20, 16, 0.7) 30%,
-    rgba(26, 20, 16, 0.35) 50%,
-    rgba(26, 20, 16, 0.1) 70%,
+    rgba(26, 20, 16, 0.88) 0%,
+    rgba(26, 20, 16, 0.55) 25%,
+    rgba(26, 20, 16, 0.22) 50%,
+    rgba(26, 20, 16, 0.04) 75%,
     transparent 100%
   );
 }
@@ -1867,11 +2153,11 @@ textarea.field-light {
   .hero-overlay {
     background: linear-gradient(
       180deg,
-      rgba(26, 20, 16, 0.05) 0%,
-      rgba(26, 20, 16, 0.18) 30%,
-      rgba(26, 20, 16, 0.50) 55%,
-      rgba(26, 20, 16, 0.80) 78%,
-      rgba(26, 20, 16, 0.93) 100%
+      rgba(26, 20, 16, 0.02) 0%,
+      rgba(26, 20, 16, 0.12) 25%,
+      rgba(26, 20, 16, 0.42) 50%,
+      rgba(26, 20, 16, 0.76) 75%,
+      rgba(26, 20, 16, 0.90) 100%
     );
   }
 }
@@ -1906,14 +2192,78 @@ textarea.field-light {
   background: var(--gold-gradient);
 }
 
+/* SLICE 28 — Hero headline: cinematic editorial display */
 .hero-headline {
   font-family: var(--font-display), serif;
   font-weight: 600;
-  font-size: clamp(3rem, 7vw, 6rem);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
   color: var(--warm-white);
-  text-shadow: 0 2px 12px rgba(26, 20, 16, 0.5);
+  text-shadow: 0 2px 16px rgba(26, 20, 16, 0.4);
+}
+
+/* SLICE 28 — Hero entrance animations (CSS-only, no JS) */
+@keyframes hero-settle {
+  from { opacity: 0; transform: scale(1.06); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes hero-gold-rule {
+  from { opacity: 0; transform: scaleX(0); transform-origin: left; }
+  to { opacity: 1; transform: scaleX(1); transform-origin: left; }
+}
+
+@keyframes hero-meta-settle {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.hero-image {
+  animation: hero-settle 1.2s var(--ease-premium) both;
+}
+
+.hero-gold-rule {
+  animation: hero-gold-rule 0.8s var(--ease-premium) 0.2s both;
+}
+
+.hero-eyebrow {
+  animation: hero-fade-up 0.7s var(--ease-premium) 0.15s both;
+}
+
+.hero-headline {
+  animation: hero-fade-up 0.8s var(--ease-premium) 0.3s both;
+}
+
+.hero-content > div > p:not(.hero-eyebrow):not(.hero-stat-pill):not([class*="hero-stat"]) {
+  animation: hero-fade-up 0.7s var(--ease-premium) 0.5s both;
+}
+
+.hero-content > div > div:last-child {
+  animation: hero-fade-up 0.7s var(--ease-premium) 0.65s both;
+}
+
+.hero-stat-pill {
+  animation: hero-meta-settle 0.6s var(--ease-premium) 0.85s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-image,
+  .hero-gold-rule,
+  .hero-eyebrow,
+  .hero-headline,
+  .hero-stat-pill,
+  .hero-content > div > p:not(.hero-eyebrow):not(.hero-stat-pill):not([class*="hero-stat"]),
+  .hero-content > div > div:last-child {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .hero-accent-line {
@@ -1964,27 +2314,34 @@ textarea.field-light {
   }
 }
 
+/* SLICE 28 — Hero stat metadata: refined gold-glass treatment */
 .hero-stat-pill {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.35);
-  color: #F5F5F0;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, rgba(184,134,11,0.12) 0%, rgba(14,11,8,0.35) 100%);
+  border: 1px solid rgba(184,134,11,0.18);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #F0EDE5;
   font-family: var(--font-mono), sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .hero-stat-value {
-  color: #F5F5F0;
+  color: var(--gold-light);
+  font-weight: 600;
 }
 
 .hero-stat-label {
-  color: #E5E5E0;
+  color: rgba(240, 237, 229, 0.65);
   font-weight: 400;
+  letter-spacing: 0.12em;
 }
 
 .scroll-cue {
@@ -2307,6 +2664,156 @@ textarea.field-light {
   background: var(--gold-gradient);
 }
 
+/* ============================================================
+   HOVER GUARDS — desktop-only transforms for storefront cards
+   ============================================================ */
+
+/* ProductCard */
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover {
+    box-shadow: var(--shadow-lift);
+  }
+
+  .product-card:hover img {
+    transform: scale(1.03) translateY(-3px);
+  }
+
+  .product-card:hover .product-card-scrim {
+    opacity: 1;
+  }
+
+  .product-card:hover .product-card-watermark {
+    opacity: 0.4;
+  }
+}
+
+/* FeaturedSection — lead card */
+@media (hover: hover) and (pointer: fine) {
+  .featured-lead:hover img {
+    transform: scale(1.025);
+  }
+
+  .featured-lead:hover .featured-lead-visual {
+    transform: translateY(-4px);
+  }
+
+  .featured-lead:hover .featured-lead-line {
+    width: 3.5rem;
+  }
+}
+
+/* FeaturedSection — mini cards */
+@media (hover: hover) and (pointer: fine) {
+  .featured-mini:hover img {
+    transform: scale(1.04);
+  }
+
+  .featured-mini:hover .featured-mini-line {
+    width: 2.5rem;
+  }
+}
+
+/* JournalPreview — journal cards */
+@media (hover: hover) and (pointer: fine) {
+  .journal-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(184, 134, 11, 0.4);
+    box-shadow: var(--shadow-elite);
+  }
+
+  .journal-card:hover img {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+
+  .journal-card:hover .journal-line {
+    width: 4rem;
+  }
+}
+
+/* ProductGallery — nav buttons */
+@media (hover: hover) and (pointer: fine) {
+  .gallery-nav-btn:hover {
+    background: rgba(20, 15, 11, 0.65);
+  }
+}
+
+/* HeroSlideshow — accent line scale */
+@media (hover: hover) and (pointer: fine) {
+  .hero-accent-hover:hover .hero-accent-line-inner {
+    transform: scaleX(1);
+  }
+}
+
+/* ── WhatsApp CTA (Slice 22) ─────────────────────────────────────────── */
+
+.wa-cta {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.92), rgba(30, 170, 80, 0.95));
+  color: #fff;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow:
+    0 4px 14px rgba(37, 211, 102, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.wa-cta:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wa-cta:hover {
+    box-shadow:
+      0 6px 20px rgba(37, 211, 102, 0.3),
+      0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+}
+
+.wa-cta:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+.wa-cta-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.wa-cta-label {
+  line-height: 1;
+}
+
+/* Mobile: compact pill — icon + label, tighter padding */
+@media (max-width: 639px) {
+  .wa-cta {
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    font-size: 0.8125rem;
+  }
+
+  .wa-cta-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 .surface-footer a {
   position: relative;
   text-decoration: none;
@@ -2322,7 +2829,7 @@ textarea.field-light {
   background: var(--gold-gradient);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.35s ease;
+  transition: transform var(--dur-normal) var(--ease-premium);
 }
 
 @media (hover: hover) {
@@ -2333,4 +2840,566 @@ textarea.field-light {
   .surface-footer a:hover::after {
     transform: scaleX(1);
   }
+}
+
+/* ============================================================
+   SLICE 28 — HOMEPAGE CINEMATIC EDITORIAL ENHANCEMENTS
+   ============================================================ */
+
+/* --- Category Color Worlds (atmospheric accents, not backgrounds) --- */
+.category-world-coffee {
+  --cat-world-accent: var(--accent-coffee);
+  --cat-world-gradient: linear-gradient(165deg, rgba(168,70,31,0.06) 0%, rgba(201,154,61,0.04) 50%, transparent 100%);
+  --cat-world-tint: rgba(168,70,31,0.08);
+}
+
+.category-world-tea {
+  --cat-world-accent: var(--botanical);
+  --cat-world-gradient: linear-gradient(165deg, rgba(107,140,86,0.06) 0%, rgba(92,116,64,0.04) 50%, transparent 100%);
+  --cat-world-tint: rgba(92,116,64,0.08);
+}
+
+.category-world-horticulture {
+  --cat-world-accent: var(--accent-horticulture);
+  --cat-world-gradient: linear-gradient(165deg, rgba(147,161,60,0.07) 0%, rgba(107,140,86,0.04) 50%, transparent 100%);
+  --cat-world-tint: rgba(147,161,60,0.08);
+}
+
+.category-world-grains {
+  --cat-world-accent: var(--accent-grains);
+  --cat-world-gradient: linear-gradient(165deg, rgba(201,154,61,0.06) 0%, rgba(196,173,132,0.04) 50%, transparent 100%);
+  --cat-world-tint: rgba(201,154,61,0.08);
+}
+
+/* --- Product Worlds — Editorial Mosaic Interactions --- */
+@media (hover: hover) and (pointer: fine) {
+  .pw-primary-card:hover .pw-primary-image {
+    transform: scale(1.03);
+  }
+  .pw-primary-card:hover .pw-primary-line {
+    width: 3.5rem;
+  }
+  .pw-primary-card:hover .pw-accent-glow {
+    opacity: 1;
+  }
+}
+
+.pw-primary-image {
+  transition: transform 1200ms var(--ease-premium);
+}
+
+.pw-primary-line {
+  height: 1px;
+  transition: width 600ms var(--ease-premium);
+}
+
+/* --- Product Worlds — Primary stage responsive aspect --- */
+.pw-primary-stage {
+  aspect-ratio: 16 / 7;
+}
+
+@media (max-width: 767px) {
+  .pw-primary-stage {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.pw-accent-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 800ms var(--ease-premium);
+  pointer-events: none;
+}
+
+/* --- Product Edit — Lead Product Glass Panel Hover --- */
+@media (hover: hover) and (pointer: fine) {
+  .pe-lead-card:hover .pe-glass-panel {
+    background: rgba(255, 255, 255, 0.72);
+    border-color: rgba(184, 134, 11, 0.22);
+  }
+}
+
+.pe-glass-panel {
+  transition: background 500ms var(--ease-premium), border-color 500ms var(--ease-premium);
+}
+
+/* --- Quality Section — Premium Dark Verification Panel --- */
+.quality-panel {
+  background:
+    radial-gradient(60% 40% at 20% 80%, rgba(184,134,11,0.06) 0%, transparent 60%),
+    radial-gradient(50% 35% at 80% 20%, rgba(184,134,11,0.04) 0%, transparent 50%),
+    linear-gradient(180deg, var(--soil) 0%, var(--espresso) 50%, #1c1510 100%);
+}
+
+.quality-number {
+  font-family: var(--font-display), serif;
+  font-weight: 300;
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --- Enquiry Section — Cinematic Closing Frame --- */
+.enquiry-cinematic {
+  background:
+    radial-gradient(50% 40% at 50% 30%, rgba(184,134,11,0.04) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-base) 0%, var(--ivory) 40%, var(--bg-warm) 100%);
+  position: relative;
+}
+
+.enquiry-cinematic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+}
+
+/* --- Editorial Section Transitions --- */
+.section-editorial-warm {
+  background:
+    linear-gradient(180deg, var(--bg-base) 0%, var(--ivory) 30%, var(--bg-warm) 100%);
+}
+
+.section-editorial-deep {
+  background:
+    linear-gradient(180deg, var(--bg-warm) 0%, var(--bone) 50%, var(--bg-base) 100%);
+}
+
+/* --- Export Section — Maritime Authority --- */
+.export-maritime {
+  background:
+    radial-gradient(40% 30% at 80% 50%, rgba(100,120,140,0.04) 0%, transparent 60%),
+    radial-gradient(50% 40% at 20% 70%, rgba(184,134,11,0.03) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg-base) 0%, var(--ivory) 50%, var(--bg-warm) 100%);
+}
+
+/* --- Journal Section — Editorial Magazine --- */
+.journal-editorial {
+  background:
+    linear-gradient(180deg, var(--warm-white) 0%, var(--bone) 60%, var(--bg-warm) 100%);
+}
+
+/* --- Footer Grid — proper column allocation so the Contact
+   email/phone fit on one line at desktop widths. 5-column ratio
+   grid (brand · explore · work · company · contact) instead of a
+   12-track layout that starved the Contact column. --- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1.8fr 1fr 1fr 1fr 1.5fr;
+    gap: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    gap: 4rem;
+  }
+}
+
+/* ============================================================
+   CATEGORY SHOP — HERO + TABS + PRODUCT GRID
+   Premium editorial visual system for /shop/* pages
+   ============================================================ */
+
+/* --- Category Hero --- */
+.cat-hero {
+  background: var(--bg-base);
+}
+
+/* Text-contrast scrims — shared premium treatment built on the
+   soil-muted brand token. Guarantees a readable text zone over
+   bright sky, backlight, or pale agriculture regardless of category. */
+.cat-hero-scrim {
+  background: linear-gradient(
+    100deg,
+    rgba(14, 11, 8, 0.82) 0%,
+    rgba(14, 11, 8, 0.62) 28%,
+    rgba(14, 11, 8, 0.20) 52%,
+    rgba(14, 11, 8, 0) 72%
+  );
+}
+
+.cat-hero-scrim-bottom {
+  background: linear-gradient(to top, rgba(14, 11, 8, 0.45) 0%, rgba(14, 11, 8, 0) 60%);
+}
+
+/* Guaranteed text-column scrim — keeps eyebrow + title + description
+   legible even over bright sky / backlight without darkening the
+   rest of the photograph. */
+.cat-hero-scrim-content {
+  width: min(560px, 100%);
+  background: linear-gradient(
+    100deg,
+    rgba(14, 11, 8, 1) 0%,
+    rgba(14, 11, 8, 0.95) 22%,
+    rgba(14, 11, 8, 0.85) 45%,
+    rgba(14, 11, 8, 0.55) 68%,
+    rgba(14, 11, 8, 0) 88%
+  );
+}
+
+/* Editorial hero variant — same graduated scrim, wider text column so
+   long headline/paragraph copy (about / quality / export) stays over
+   the protected zone to its last glyph. The gradient plateaus through
+   the lower text band so long paragraphs never sit on the raw brighter
+   photo mid-band; CategoryHero keeps its own tighter scrim. */
+.photo-hero-scrim-content {
+  width: min(720px, 100%);
+  background: linear-gradient(
+    100deg,
+    rgba(14, 11, 8, 0.9) 0%,
+    rgba(14, 11, 8, 0.82) 18%,
+    rgba(14, 11, 8, 0.72) 38%,
+    rgba(14, 11, 8, 0.62) 56%,
+    rgba(14, 11, 8, 0.58) 70%,
+    rgba(14, 11, 8, 0.48) 82%,
+    rgba(14, 11, 8, 0) 100%
+  );
+}
+@media (max-width: 767px) {
+  .photo-hero-scrim-content {
+    width: 100%;
+  }
+}
+
+/* Mobile — bottom-weighted scrim protects the full-width text column */
+@media (max-width: 767px) {
+  .cat-hero-scrim {
+    background: linear-gradient(
+      to top,
+      rgba(14, 11, 8, 0.86) 0%,
+      rgba(14, 11, 8, 0.55) 45%,
+      rgba(14, 11, 8, 0.10) 100%
+    );
+  }
+  .cat-hero-scrim-content {
+    width: 100%;
+    background: linear-gradient(
+      to top,
+      rgba(14, 11, 8, 0.95) 0%,
+      rgba(14, 11, 8, 0.80) 45%,
+      rgba(14, 11, 8, 0.35) 80%,
+      rgba(14, 11, 8, 0) 100%
+    );
+  }
+}
+
+/* ============================================================
+   PHOTO CAPTION SYSTEM — one visual treatment, positioned variants
+   Reference: .cat-hero-scrim* (approved CategoryHero treatment).
+   Principles: graduated protection directly behind the caption,
+   gradual falloff, photograph stays visibly photographic.
+   No full-image washes, no near-opaque ghost overlays.
+   ============================================================ */
+
+/* Bottom-anchored card caption (homepage product-worlds cards).
+   Strong near the caption, fully gone by 65% up the card so the
+   crop stays visible. */
+.photo-card-scrim {
+  background: linear-gradient(
+    to top,
+    rgba(14, 11, 8, 0.80) 0%,
+    rgba(14, 11, 8, 0.45) 35%,
+    rgba(14, 11, 8, 0) 65%
+  );
+}
+
+@media (max-width: 767px) {
+  .photo-card-scrim {
+    background: linear-gradient(
+      to top,
+      rgba(14, 11, 8, 0.88) 0%,
+      rgba(14, 11, 8, 0.55) 40%,
+      rgba(14, 11, 8, 0) 68%
+    );
+  }
+}
+
+.cat-hero-image img {
+  object-position: center 40%;
+}
+
+/* ============================================================
+   SLICE 30 — SHARED CATEGORY GLASS-PILL GOLD BADGE
+   Single source of truth for the homepage category-card eyebrow.
+   All four cards (Coffee, Tea, Horticulture, Grains) use the same
+   pill; only the accent dot (category token) differs via the
+   --cat-badge-dot custom property. Gold label text reuses the
+   navigation wordmark gradient token (--nav-logo-gradient).
+   ============================================================ */
+
+.cat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(20, 15, 10, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  font-family: var(--font-mono), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.cat-badge-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--cat-badge-dot, var(--gold));
+  box-shadow:
+    inset 0 0 0 1px rgba(250, 247, 240, 0.16),
+    0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.cat-badge-label {
+  color: #d4af37; /* solid fallback — must precede gradient clip */
+  background: var(--nav-logo-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mobile focal adjustments per category */
+.cat-hero[data-category="coffee"] .cat-hero-image img {
+  object-position: 20% 40%;
+}
+.cat-hero[data-category="tea"] .cat-hero-image img {
+  object-position: 25% 38%;
+}
+.cat-hero[data-category="horticulture"] .cat-hero-image img {
+  object-position: 30% 42%;
+}
+.cat-hero[data-category="grains"] .cat-hero-image img {
+  object-position: 22% 40%;
+}
+
+@media (min-width: 768px) {
+  .cat-hero-image img {
+    object-position: center 40%;
+  }
+  .cat-hero[data-category="coffee"] .cat-hero-image img {
+    object-position: center 40%;
+  }
+  .cat-hero[data-category="tea"] .cat-hero-image img {
+    object-position: center 38%;
+  }
+  .cat-hero[data-category="horticulture"] .cat-hero-image img {
+    object-position: center 42%;
+  }
+  .cat-hero[data-category="grains"] .cat-hero-image img {
+    object-position: center 40%;
+  }
+}
+
+/* Eyebrow — light champagne on scrim */
+.cat-hero-eyebrow {
+  color: #f6f0e2;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* Title — gradient text for category personality */
+.cat-hero-title {
+  text-shadow: none;
+}
+
+/* Description — warm ivory, readable over the scrim */
+.cat-hero-description {
+  color: rgba(250, 247, 240, 0.94);
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+/* Micro labels — subtle light identity pills */
+.cat-hero-micro {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 3px;
+  background: rgba(250, 247, 240, 0.08);
+  border: 1px solid rgba(250, 247, 240, 0.22);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 240, 0.9);
+}
+
+/* CTA — text link with expanding line */
+.cat-hero-cta {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  transition: color 0.25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cat-hero-cta:hover {
+    color: var(--warm-white);
+  }
+}
+
+/* Mobile hero adjustments */
+@media (max-width: 767px) {
+  .cat-hero {
+    min-height: 380px;
+  }
+  .cat-hero .cat-hero-title {
+    max-width: 12ch;
+  }
+}
+
+/* --- Category Tabs --- */
+.cat-tabs {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.cat-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.cat-tab {
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cat-tab:hover {
+    color: var(--ink);
+  }
+}
+
+/* --- Category Product Grid — premium canvas --- */
+.cat-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .cat-product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cat-product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.75rem;
+  }
+}
+
+/* --- Category Product Card — light tone, premium --- */
+.cat-product-card {
+  position: relative;
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow var(--dur-normal) var(--ease-premium), transform var(--dur-normal) var(--ease-premium);
+}
+
+.cat-product-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cat-product-card:hover {
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-3px);
+  }
+  .cat-product-card:hover .cat-product-image {
+    transform: scale(1.03);
+  }
+  .cat-product-card:hover .cat-product-accent-bar {
+    transform: scaleX(1);
+  }
+}
+
+/* Image container */
+.cat-product-image-wrap {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+}
+
+.cat-product-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-premium);
+}
+
+/* Accent bar — thin category-colored line under image */
+.cat-product-accent-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  transform: scaleX(0.6);
+  transform-origin: left;
+  transition: transform var(--dur-normal) var(--ease-premium);
+}
+
+/* Card text area */
+.cat-product-info {
+  padding: 0.875rem 1rem 1rem;
+}
+
+.cat-product-name {
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.cat-product-cta {
+  margin-top: 0.375rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+/* --- Category Empty State — premium editorial --- */
+.cat-empty-surface {
+  background: linear-gradient(135deg, rgba(184,134,11,0.03) 0%, rgba(250,247,240,0.5) 50%, rgba(184,134,11,0.02) 100%);
+  border: 1px solid var(--line-on-light);
+  border-radius: 12px;
 }

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCategories, getCategoryBySlug, getProducts } from "@/lib/queries";
 import CategoryTabs from "@/components/CategoryTabs";
+import CategoryHero from "@/components/CategoryHero";
 import Reveal from "@/components/Reveal";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
@@ -13,6 +14,25 @@ import { BreadcrumbJsonLd } from "@/lib/structured-data";
 export const revalidate = 0;
 
 const SITE_URL = "https://treadville.co.ke";
+
+const CATEGORY_MICRO: Record<string, { eyebrow: string; labels: string[] }> = {
+  coffee: {
+    eyebrow: "Specialty Kenyan Arabica",
+    labels: ["ORIGIN · KENYA", "SPECIALTY ARABICA", "HIGHLANDS · MT. KENYA"],
+  },
+  tea: {
+    eyebrow: "Selected Kenyan Teas",
+    labels: ["ORIGIN · KENYA", "HIGH-GROWN TEA", "LEAF · CRAFT · CHARACTER"],
+  },
+  horticulture: {
+    eyebrow: "Fresh Produce & Export",
+    labels: ["FRESH PRODUCE · KENYA", "GROWN WITH PURPOSE"],
+  },
+  grains: {
+    eyebrow: "Agricultural Commodities",
+    labels: ["HARVEST · KENYA", "GRAINS · PULSES · ORIGIN"],
+  },
+};
 
 export async function generateMetadata({
   params,
@@ -45,6 +65,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   if (!category) notFound();
 
   const heroImage = content[`category_hero_${slug}` as keyof typeof content] as string | undefined;
+  const micro = CATEGORY_MICRO[slug];
 
   return (
     <main className="surface-warm">
@@ -55,115 +76,51 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           { name: category.name, url: `${SITE_URL}/shop/${slug}` },
         ]}
       />
-      {heroImage ? (
-        <div className="relative h-[400px] w-full overflow-hidden md:h-[480px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={heroImage}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-          {/* Directional scrim — soft left-to-right dark gradient behind text column only */}
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-2/3 md:w-1/2"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(250,247,240,0.90) 0%, rgba(250,247,240,0.55) 50%, rgba(250,247,240,0.05) 100%)",
-            }}
-          />
-          {/* Text content over the image */}
-          <div className="absolute inset-0 flex items-end">
-            <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)] px-6 pb-10 md:px-10 md:pb-14">
-              <Reveal variant="light" as="div" delay={0}>
-                <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--gold-deep)]">
-                  Catalogue · {category.name}
-                </p>
-                <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
-                  {category.name}
-                </h1>
-                {category.description && (
-                  <p className="mt-3 max-w-[44ch] text-[15px] leading-relaxed text-[var(--ink-soft)] md:text-[16px]">
-                    {category.description}
-                  </p>
-                )}
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      ) : category.image_url ? (
-        /* Category image hero — editorial composition */
-        <div className="relative h-[400px] w-full overflow-hidden md:h-[480px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={category.image_url}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-2/3 md:w-1/2"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(250,247,240,0.90) 0%, rgba(250,247,240,0.55) 50%, rgba(250,247,240,0.05) 100%)",
-            }}
-          />
-          <div className="absolute inset-0 flex items-end">
-            <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)] px-6 pb-10 md:px-10 md:pb-14">
-              <Reveal variant="light" as="div" delay={0}>
-                <p className="font-mono text-[12px] uppercase tracking-[0.20em] text-[var(--gold-deep)]">
-                  Catalogue · {category.name}
-                </p>
-                <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
-                  {category.name}
-                </h1>
-                {category.description && (
-                  <p className="mt-3 max-w-[44ch] text-[15px] leading-relaxed text-[var(--ink-soft)] md:text-[16px]">
-                    {category.description}
-                  </p>
-                )}
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      ) : (
-        /* No hero image — clean editorial header */
-        <div className="border-b border-[var(--line-on-light)]">
-          <div className="mx-auto max-w-[var(--content-wide)] px-6 pt-28 pb-10 md:px-10 md:pt-32 md:pb-14">
-            <Reveal variant="light" as="div" delay={0}>
-              <p className="font-mono text-[12px] uppercase tracking-[0.20em] eyebrow-gold">
-                Catalogue · {category.name}
-              </p>
-              <h1 className="mt-2 max-w-[16ch] font-display text-4xl italic leading-[1.02] tracking-[-0.015em] text-[var(--ink)] md:text-5xl lg:text-6xl">
-                {category.name}
-              </h1>
-              {category.description && (
-                <p className="mt-3 max-w-[44ch] text-[15px] leading-relaxed text-[var(--ink-soft)] md:text-[16px]">
-                  {category.description}
-                </p>
-              )}
-            </Reveal>
-          </div>
-        </div>
-      )}
 
-      {/* Category navigation — dedicated light surface */}
-      <div className="border-b border-[var(--line-on-light)] bg-[var(--warm-white)]">
-        <div className="mx-auto max-w-[var(--content-wide)] px-6 py-5 md:px-10">
+      {/* Category Hero — premium editorial composition */}
+      <CategoryHero
+        slug={slug}
+        name={category.name}
+        description={category.description}
+        imageUrl={heroImage ?? category.image_url}
+      />
+
+      {/* Category navigation — luminous surface */}
+      <div className="border-b border-[var(--line-on-light)] bg-[var(--bg-elevated)]">
+        <div className="mx-auto max-w-[var(--content-wide)] px-6 py-4 md:px-10">
           <CategoryTabs categories={categories} activeSlug={slug} />
         </div>
       </div>
 
-      {/* Catalogue area */}
-      <div className="mx-auto max-w-[var(--content-wide)] px-6 py-12 md:px-10 md:py-16">
+      {/* Micro labels bar — category identity */}
+      {micro && (
+        <div className="border-b border-[var(--line-on-light)] bg-[var(--bg-base)]">
+          <div className="mx-auto max-w-[var(--content-wide)] px-6 py-4 md:px-10">
+            <div className="flex flex-wrap items-center gap-3">
+              <span
+                className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
+                style={{ color: accentFor(slug) }}
+              >
+                {micro.eyebrow}
+              </span>
+              <span className="h-px w-4 bg-[var(--line-on-light)]" />
+              {micro.labels.map((label) => (
+                <span
+                  key={label}
+                  className="font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--ink-faint)]"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Catalogue area — premium canvas */}
+      <div id="catalogue" className="mx-auto max-w-[var(--content-wide)] px-6 py-12 md:px-10 md:py-16 scroll-mt-20">
         {products.length > 0 ? (
-          <div className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+          <div className="cat-product-grid">
             {products.map((p, i) => (
               <Reveal
                 key={p.id}
@@ -195,47 +152,40 @@ function CategoryProductCard({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+      className="cat-product-card group"
       aria-label={`View ${product.name}`}
       style={{ ["--accent" as string]: accent }}
     >
-      <div className="stage-product-card relative aspect-[4/5] w-full overflow-hidden">
+      <div className="cat-product-image-wrap">
         {product.image_url ? (
           <ProductImage
             src={product.image_url}
             alt={product.name}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.03] group-hover:translate-y-[-3px] motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-hover:translate-y-0"
+            className="cat-product-image"
           />
         ) : (
-          <div className="absolute inset-0 flex flex-col justify-between p-5 md:p-7">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-25"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle at 1px 1px, rgba(26, 20, 16, 0.12) 1px, transparent 0)",
-                backgroundSize: "5px 5px",
-              }}
-            />
+          <div className="absolute inset-0 flex flex-col justify-between p-5 md:p-6" style={{ background: `linear-gradient(135deg, rgba(184,134,11,0.04) 0%, var(--bg-warm) 100%)` }}>
             <div className="flex flex-1 items-center justify-center">
               <CategoryMark
                 slug={categorySlug}
-                className="h-20 w-20 opacity-[0.22] transition-opacity duration-700 ease-out group-hover:opacity-35"
+                className="h-16 w-16 opacity-[0.18] transition-opacity duration-700 ease-out group-hover:opacity-30"
               />
             </div>
-            <div className="relative">
-              <p className="font-display text-base italic leading-tight text-[var(--ink)]">
-                {product.name}
-              </p>
-            </div>
+            <p className="font-display text-sm italic leading-tight text-[var(--ink)]">
+              {product.name}
+            </p>
           </div>
         )}
+        {/* Category accent bar */}
+        <div
+          className="cat-product-accent-bar"
+          style={{ background: accent }}
+          aria-hidden
+        />
       </div>
-      <div className="mt-4">
-        <p className="font-display text-base italic leading-tight text-[var(--ink)]">
-          {product.name}
-        </p>
-        <p className="mt-1 font-mono text-[12px] uppercase tracking-[0.12em]" style={{ color: accent }}>
+      <div className="cat-product-info">
+        <p className="cat-product-name">{product.name}</p>
+        <p className="cat-product-cta" style={{ color: accent }}>
           Enquire
         </p>
       </div>
@@ -291,7 +241,7 @@ function CategoryEmptyState({
           style={{ background: accent }}
         />
         <p
-          className="font-mono text-[12px] font-semibold uppercase tracking-[0.22em]"
+          className="font-mono text-[11px] font-semibold uppercase tracking-[0.20em]"
           style={{ color: accent }}
         >
           {desc.eyebrow}
@@ -299,7 +249,7 @@ function CategoryEmptyState({
         <h2 className="mx-auto mt-5 max-w-[18ch] font-display text-3xl italic leading-[1.08] tracking-[-0.02em] text-[var(--ink)] md:text-[2.75rem]">
           {desc.headline}
         </h2>
-        <p className="mx-auto mt-6 max-w-[46ch] text-[1.0625rem] leading-relaxed text-[var(--ink-soft)]">
+        <p className="mx-auto mt-6 max-w-[46ch] text-[1rem] leading-relaxed text-[var(--ink-soft)]">
           {desc.body}
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">

@@ -36,6 +36,7 @@ const PILLARS = [
 export default async function AboutPage() {
   const content = await getSiteContent();
   const heroImage = content.about_hero || "";
+  const heroPhoto = !!heroImage;
   return (
     <main className="surface-base">
       {/* Hero */}
@@ -60,35 +61,51 @@ export default async function AboutPage() {
             <img
               src={heroImage}
               alt=""
-              className="h-full w-full object-cover opacity-[0.16]"
+              className="h-full w-full object-cover"
               loading="lazy"
             />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(250,247,240,0.88) 0%, rgba(250,247,240,0.55) 45%, rgba(250,247,240,0.90) 100%)",
-              }}
-            />
+            {/* Approved graduated hero scrim — strong behind the text
+                column, descending across the rest of the photograph */}
+            <div className="cat-hero-scrim absolute inset-0" />
+            <div className="cat-hero-scrim-content photo-hero-scrim-content absolute inset-y-0 left-0" />
+            <div className="cat-hero-scrim-bottom absolute inset-x-0 bottom-0 h-3/4" />
           </div>
         ) : null}
 
         <div className="relative z-10 mx-auto w-full max-w-[var(--content-wide)]">
           <Reveal as="div" delay={0}>
-            <p className="font-mono text-[12px] uppercase eyebrow-gold">
+            <p
+              className={`font-mono text-[12px] uppercase ${
+                heroPhoto ? "cat-hero-eyebrow" : "eyebrow-gold"
+              }`}
+            >
               Treadville · About
             </p>
           </Reveal>
           <Reveal as="div" delay={1} className="mt-6">
-            <h1 className="max-w-[14ch] font-display text-5xl italic leading-[1.0] tracking-[-0.02em] text-[var(--ink)] md:text-7xl lg:text-8xl">
+            <h1
+              className={`max-w-[14ch] font-display text-5xl italic leading-[1.0] tracking-[-0.02em] md:text-7xl lg:text-8xl ${
+                heroPhoto
+                  ? "text-[var(--warm-white)] [text-shadow:0_2px_14px_rgba(14,11,8,0.5)]"
+                  : "text-[var(--ink)]"
+              }`}
+            >
               A platform for{" "}
-              <span className="text-[var(--ink-soft)]">
+              <span
+                className={
+                  heroPhoto ? "text-[var(--warm-white)]/75" : "text-[var(--ink-soft)]"
+                }
+              >
                 Kenyan agriculture.
               </span>
             </h1>
           </Reveal>
           <Reveal as="div" delay={2} className="mt-8 max-w-[52ch]">
-            <p className="text-[1.0625rem] leading-relaxed text-[var(--ink-soft)] md:text-[1.125rem]">
+            <p
+              className={`text-[1.0625rem] leading-relaxed md:text-[1.125rem] ${
+                heroPhoto ? "cat-hero-description" : "text-[var(--ink-soft)]"
+              }`}
+            >
               Treadville works to transform agricultural resources into real
               wealth — through market development, processing, value addition,
               and sustainable global networking.

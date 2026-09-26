@@ -120,7 +120,7 @@ function FeaturedLead({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group/lead block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
+      className="featured-lead group/lead block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)]"
       aria-label={`View ${product.name}`}
     >
       <div
@@ -131,7 +131,7 @@ function FeaturedLead({
           <ProductImage
             src={product.image_url}
             alt={product.name}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-out)] group-hover/lead:scale-[1.025]"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-out)]"
           />
         ) : (
           <div
@@ -170,7 +170,7 @@ function FeaturedLead({
 
         <div className="absolute inset-x-0 bottom-0 p-7 md:p-10">
           <div
-            className="mx-auto w-full max-w-lg transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover/lead:-translate-y-1"
+            className="featured-lead-visual mx-auto w-full max-w-lg transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)]"
             style={
               {
                 ["--accent" as string]: accent,
@@ -218,7 +218,7 @@ function FeaturedLead({
               </span>
               <span
                 aria-hidden
-                className="inline-block h-px w-8 bg-current transition-all duration-500 group-hover/lead:w-14"
+                className="featured-lead-line inline-block h-px w-8 bg-current transition-all duration-500"
                 style={{ color: accent }}
               />
             </div>
@@ -241,7 +241,7 @@ function FeaturedMini({
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group/mini flex gap-5 rounded-sm border-t border-[var(--line-on-light)] py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)] lg:border-none lg:py-0"
+      className="featured-mini group/mini flex gap-5 rounded-sm border-t border-[var(--line-on-light)] py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)] lg:border-none lg:py-0"
       aria-label={`View ${product.name}`}
     >
       <div className="relative h-28 w-24 shrink-0 overflow-hidden rounded-lg shadow-[var(--shadow-card-light)]">
@@ -249,7 +249,7 @@ function FeaturedMini({
           <ProductImage
             src={product.image_url}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-[900ms] ease-[var(--ease-out)] group-hover/mini:scale-[1.04]"
+            className="h-full w-full object-cover transition-transform duration-[900ms] ease-[var(--ease-out)]"
           />
         ) : (
           <div
@@ -279,7 +279,7 @@ function FeaturedMini({
         </p>
         <div
           aria-hidden
-          className="mt-3 h-px w-0 bg-current transition-all duration-500 group-hover/mini:w-10"
+          className="featured-mini-line mt-3 h-px w-0 bg-current transition-all duration-500"
           style={{ color: accent }}
         />
       </div>

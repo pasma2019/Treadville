@@ -31,6 +31,7 @@ const OWNER_NAV: NavSection[] = [
     links: [
       { href: "/admin/enquiries", label: "Enquiries" },
       { href: "/admin/orders", label: "Orders" },
+      { href: "/admin/payments", label: "Payments" },
     ],
   },
   {
@@ -55,6 +56,7 @@ const SYSTEM_ADMIN_NAV: NavSection[] = [
     links: [
       { href: "/admin/enquiries", label: "Enquiries" },
       { href: "/admin/orders", label: "Orders" },
+      { href: "/admin/payments", label: "Payments" },
     ],
   },
   {

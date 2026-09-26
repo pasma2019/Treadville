@@ -14,7 +14,7 @@ export default function CategoryTabs({
   return (
     <nav
       aria-label="Shop categories"
-      className="flex flex-wrap items-center gap-x-8 gap-y-3"
+      className="cat-tabs flex items-center gap-x-1 overflow-x-auto scrollbar-none"
     >
       {categories.map((cat) => {
         const active = cat.slug === activeSlug;
@@ -24,14 +24,25 @@ export default function CategoryTabs({
             key={cat.id}
             href={`/shop/${cat.slug}`}
             aria-current={active ? "page" : undefined}
-            className={
-              active
-                ? "relative pb-2 text-[15px] font-medium tracking-[-0.005em] text-[var(--ink)] after:absolute after:inset-x-0 after:bottom-0 after:h-[2px] after:bg-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)] rounded-sm"
-                : "relative pb-2 text-[15px] tracking-[-0.005em] text-[var(--ink-soft)]/70 transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--warm-white)] rounded-sm"
-            }
+            className="cat-tab group relative shrink-0 px-4 py-2.5 text-[13px] font-medium uppercase tracking-[0.12em] transition-colors md:px-5 md:text-[14px]"
             style={active ? { color: accent } : undefined}
           >
             {cat.name}
+            {/* Active indicator — gold/accent underline */}
+            <span
+              className="cat-tab-indicator absolute inset-x-2 bottom-0 h-[2px] origin-left transition-transform duration-300"
+              style={{
+                background: active ? accent : "transparent",
+                transform: active ? "scaleX(1)" : "scaleX(0)",
+              }}
+            />
+            {/* Hover indicator — subtle */}
+            {!active && (
+              <span
+                className="absolute inset-x-3 bottom-0 h-px origin-left bg-[var(--ink-faint)] transition-transform duration-300 group-hover:scale-x-100"
+                style={{ transform: "scaleX(0)" }}
+              />
+            )}
           </Link>
         );
       })}
