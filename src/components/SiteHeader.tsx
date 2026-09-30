@@ -204,15 +204,15 @@ export default function SiteHeader({ categories }: { categories: Category[] }) {
         inert={!menuOpen}
         className={`nav-mobile-panel ${menuOpen ? "is-open" : ""}`}
       >
-        <nav aria-label="Mobile navigation" className="flex flex-col gap-0 px-8 py-28">
+        <nav aria-label="Mobile navigation" className="flex flex-col gap-0 px-8 pb-10 pt-24">
           {/* Shop section */}
-          <div className="mb-2 mt-2">
+          <div className="mb-2">
             <Link
               ref={firstLinkRef}
               href="/shop"
               onClick={handleMenuClose}
               aria-current={isActive("/shop") ? "page" : undefined}
-              className="mb-3 block rounded-sm text-[1.25rem] font-semibold text-[var(--gold-deep)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+              className="mb-1 block rounded-sm py-3 text-[1.25rem] font-semibold text-[var(--gold-deep)] transition-colors hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               Shop
             </Link>

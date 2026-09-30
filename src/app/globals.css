@@ -2050,11 +2050,16 @@ textarea.field-light {
 .nav-mobile-panel {
   position: fixed;
   inset: 0;
+  /* Stays below .nav-pill (z-index 11) so the close button and cart stay
+     reachable while the panel is open. */
   z-index: 10;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background: rgba(251, 248, 241, 0.9);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: auto;
+  background: rgba(251, 248, 241, 0.98);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
   backdrop-filter: blur(20px) saturate(150%);
   border-left: 1px solid rgba(184, 134, 11, 0.18);
@@ -2100,7 +2105,7 @@ textarea.field-light {
 
 @media (max-width: 767px) {
   .hero-image {
-    object-position: 8% 42%;
+    object-position: 40% 38%;
   }
 }
 
@@ -2153,11 +2158,13 @@ textarea.field-light {
   .hero-overlay {
     background: linear-gradient(
       180deg,
-      rgba(26, 20, 16, 0.02) 0%,
-      rgba(26, 20, 16, 0.12) 25%,
-      rgba(26, 20, 16, 0.42) 50%,
-      rgba(26, 20, 16, 0.76) 75%,
-      rgba(26, 20, 16, 0.90) 100%
+      rgba(26, 20, 16, 0.06) 0%,
+      rgba(26, 20, 16, 0.24) 16%,
+      rgba(26, 20, 16, 0.46) 30%,
+      rgba(26, 20, 16, 0.60) 46%,
+      rgba(26, 20, 16, 0.74) 64%,
+      rgba(26, 20, 16, 0.84) 82%,
+      rgba(26, 20, 16, 0.88) 100%
     );
   }
 }
@@ -3076,24 +3083,28 @@ textarea.field-light {
   }
 }
 
-/* Mobile — bottom-weighted scrim protects the full-width text column */
+/* Mobile — bottom-weighted scrim protects the full-width text column.
+   The text band sits roughly 12–70% up from the bottom, so protection is held
+   steady across that range and lightened only above it, keeping the photograph
+   readable instead of crushing the whole frame. */
 @media (max-width: 767px) {
   .cat-hero-scrim {
     background: linear-gradient(
       to top,
-      rgba(14, 11, 8, 0.86) 0%,
-      rgba(14, 11, 8, 0.55) 45%,
-      rgba(14, 11, 8, 0.10) 100%
+      rgba(14, 11, 8, 0.30) 0%,
+      rgba(14, 11, 8, 0.18) 45%,
+      rgba(14, 11, 8, 0) 100%
     );
   }
   .cat-hero-scrim-content {
     width: 100%;
     background: linear-gradient(
       to top,
-      rgba(14, 11, 8, 0.95) 0%,
-      rgba(14, 11, 8, 0.80) 45%,
-      rgba(14, 11, 8, 0.35) 80%,
-      rgba(14, 11, 8, 0) 100%
+      rgba(14, 11, 8, 0.72) 0%,
+      rgba(14, 11, 8, 0.70) 25%,
+      rgba(14, 11, 8, 0.62) 50%,
+      rgba(14, 11, 8, 0.34) 75%,
+      rgba(14, 11, 8, 0.04) 100%
     );
   }
 }
@@ -3180,18 +3191,21 @@ textarea.field-light {
   -webkit-text-fill-color: transparent;
 }
 
-/* Mobile focal adjustments per category */
+/* Mobile focal adjustments per category.
+   Narrow portrait crops show a different slice than the desktop crop; these
+   values are chosen so the visible region carries roughly the same tonal
+   weight as the desktop view instead of landing on a dark edge. */
 .cat-hero[data-category="coffee"] .cat-hero-image img {
-  object-position: 20% 40%;
+  object-position: 50% 40%;
 }
 .cat-hero[data-category="tea"] .cat-hero-image img {
-  object-position: 25% 38%;
+  object-position: 50% 38%;
 }
 .cat-hero[data-category="horticulture"] .cat-hero-image img {
-  object-position: 30% 42%;
+  object-position: 50% 42%;
 }
 .cat-hero[data-category="grains"] .cat-hero-image img {
-  object-position: 22% 40%;
+  object-position: 40% 40%;
 }
 
 @media (min-width: 768px) {

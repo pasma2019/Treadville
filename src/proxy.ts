@@ -150,7 +150,14 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
+  // Static assets served from `public/` are excluded here. They are already
+  // public, and routing them through this proxy made the /admin auth guard
+  // 307-redirect them to /admin/login — e.g. `GET /admin/admin-auth.jpg`
+  // returned the login HTML with Content-Type: text/html, so the admin auth
+  // screen's own background image failed to decode. Security headers are
+  // unaffected: next.config.ts applies them via `headers()` on `/(.*)`,
+  // independently of this proxy.
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|images|design-reference).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|images|design-reference|.*\\.[a-zA-Z0-9]{2,5}$).*)",
   ],
 };
