@@ -1,26 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useState, useActionState } from "react";
+import { useEffect, useMemo, useActionState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
 import Reveal from "@/components/Reveal";
 import CategoryMark from "@/components/CategoryMark";
 import { submitOrderAction, type OrderFormState } from "@/lib/order-actions";
-import { getEnabledPaymentMethods, type EnabledPaymentMethod } from "@/lib/payment-config";
 
-// Register payment providers (side effect import)
-import "@/lib/payment";
+// Deliberately NOT imported: @/lib/payment-config and the @/lib/payment
+// provider registry. Checkout is an enquiry basket only. Payment configuration
+// must never gate a customer-facing payment surface, because no payment
+// execution exists (no provider API calls, no webhook routes, no payment
+// records). See Docs/slice-24-payment-architecture.md and the V1 quote-first
+// boundary: commercial terms are agreed after enquiry review.
 
 const initialState: OrderFormState = {};
-
-const enabledMethods = getEnabledPaymentMethods();
 
 export default function CheckoutPage() {
   const { lines, removeFromCart, clearCart } = useCart();
   const [state, formAction, pending] = useActionState(submitOrderAction, initialState);
-  const [selectedProvider, setSelectedProvider] = useState<string>(
-    enabledMethods[0]?.provider ?? ""
-  );
   const totalItems = lines.reduce((sum, l) => sum + l.qty, 0);
 
   const itemsJson = useMemo(
@@ -240,49 +238,20 @@ export default function CheckoutPage() {
                     />
                   </div>
 
-                  {enabledMethods.length > 0 ? (
-                    <div>
-                      <p className="mb-3 text-[1rem] text-[var(--ink)]">
-                        Payment method
-                      </p>
-                      <div className="space-y-2">
-                        {enabledMethods.map((method) => (
-                          <label
-                            key={method.provider}
-                            className={`flex cursor-pointer items-center gap-3 rounded border px-4 py-3 transition-colors ${
-                              selectedProvider === method.provider
-                                ? "border-[var(--gold-deep)] bg-[rgba(184,134,11,0.06)]"
-                                : "border-[var(--line-on-light)] hover:border-[var(--ink-faint)]"
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name="payment_provider"
-                              value={method.provider}
-                              checked={selectedProvider === method.provider}
-                              onChange={(e) => setSelectedProvider(e.target.value)}
-                              className="accent-[var(--gold-deep)]"
-                            />
-                            <div>
-                              <p className="text-[0.9375rem] font-medium text-[var(--ink)]">
-                                {method.label}
-                              </p>
-                              <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--ink-faint)]">
-                                {method.currencies.join(" · ")}
-                              </p>
-                            </div>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="rounded border border-[rgba(184,134,11,0.20)] bg-[rgba(184,134,11,0.04)] px-4 py-3">
-                      <p className="text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
-                        Payment methods are currently being configured. Please
-                        contact us to complete your order.
-                      </p>
-                    </div>
-                  )}
+                  {/* Payment is not collected at this stage. This block is
+                      intentionally static: it must not be conditional on any
+                      environment variable, because no payment execution exists
+                      to activate. */}
+                  <div className="rounded border border-[rgba(184,134,11,0.20)] bg-[rgba(184,134,11,0.04)] px-4 py-3">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--ink-faint)]">
+                      Payment
+                    </p>
+                    <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-[var(--ink-soft)]">
+                      No payment is taken at this stage. Once we receive your
+                      enquiry we respond with a quotation, and confirm payment
+                      arrangements with you directly.
+                    </p>
+                  </div>
 
                   {state.error && (
                     <div

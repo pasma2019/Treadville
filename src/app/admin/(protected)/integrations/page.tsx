@@ -3,30 +3,36 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-const DARAJA_VARS = [
-  { key: "DARAJA_CONSUMER_KEY", label: "Consumer Key" },
-  { key: "DARAJA_CONSUMER_SECRET", label: "Consumer Secret", secret: true },
-  { key: "DARAJA_SHORTCODE", label: "Business Shortcode" },
-  { key: "DARAJA_PASSKEY", label: "Passkey", secret: true },
-  { key: "DARAJA_ENVIRONMENT", label: "Environment", options: ["sandbox", "live"] },
-  { key: "DARAJA_CALLBACK_URL", label: "Callback URL" },
+// Reserved payment-provider configuration contract. These are the names read by
+// src/lib/payment-config.ts. They are NOT read by this page, and setting them
+// does not enable payment collection — no provider call, webhook, or payment
+// record exists yet. Listed here for reference only; see
+// Docs/slice-24-payment-architecture.md.
+const MPESA_VARS = [
+  { key: "PAYMENT_MPESA_CONSUMER_KEY", label: "Consumer Key" },
+  { key: "PAYMENT_MPESA_CONSUMER_SECRET", label: "Consumer Secret", secret: true },
+  { key: "PAYMENT_MPESA_PASSKEY", label: "Passkey", secret: true },
+  { key: "PAYMENT_MPESA_SHORTCODE", label: "Business Shortcode" },
+  { key: "PAYMENT_MPESA_TILL_NUMBER", label: "Till Number" },
+  { key: "PAYMENT_MPESA_PAYBILL_NUMBER", label: "Paybill Number" },
+  { key: "PAYMENT_MPESA_CALLBACK_URL", label: "Callback URL" },
 ];
 
 const STRIPE_VARS = [
-  { key: "STRIPE_SECRET_KEY", label: "Secret Key", secret: true },
-  { key: "STRIPE_PUBLISHABLE_KEY", label: "Publishable Key" },
-  { key: "STRIPE_WEBHOOK_SECRET", label: "Webhook Secret", secret: true },
+  { key: "PAYMENT_STRIPE_SECRET_KEY", label: "Secret Key", secret: true },
+  { key: "PAYMENT_STRIPE_PUBLISHABLE_KEY", label: "Publishable Key" },
+  { key: "PAYMENT_STRIPE_WEBHOOK_SECRET", label: "Webhook Secret", secret: true },
 ];
 
-type VarStatus = { key: string; label: string; value: string | null; secret?: boolean; options?: string[] };
+type VarStatus = { key: string; label: string; value: string | null; secret?: boolean };
 
-async function checkVars(vars: typeof DARAJA_VARS): Promise<VarStatus[]> {
-  // We cannot read server-side env vars from the client,
-  // but we can indicate configuration state from the page.
-  // The actual presence check happens at runtime.
+async function checkVars(vars: typeof MPESA_VARS): Promise<VarStatus[]> {
+  // Intentionally does not read process.env. Nothing here reports live
+  // configuration state, because no payment integration is operational — a
+  // "configured" reading would imply a capability that does not exist.
   return vars.map((v) => ({
     ...v,
-    value: null, // populated server-side only
+    value: null,
   }));
 }
 
@@ -48,10 +54,8 @@ export default async function AdminIntegrationsPage() {
     redirect("/admin");
   }
 
-  const darajaVars = await checkVars(DARAJA_VARS);
+  const mpesaVars = await checkVars(MPESA_VARS);
   const stripeVars = await checkVars(STRIPE_VARS);
-
-  const isConfigured = (vars: VarStatus[]) => vars.some((v) => v.value !== null);
 
   return (
     <div className="max-w-[900px]">
@@ -73,28 +77,29 @@ export default async function AdminIntegrationsPage() {
                   M-PESA / Safaricom Daraja
                 </h2>
                 <span className="border border-[var(--sand)] bg-[var(--champagne)]/20 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--ink)]">
-                  Payments
+                  Not implemented
                 </span>
               </div>
               <p className="mt-2 body-on-light">
-                Accept mobile money payments via Safaricom&apos;s Daraja API (STK Push, C2B).
-                Currently accepts sandbox credentials for testing.
+                Mobile money payments via Safaricom&apos;s Daraja API are
+                planned. No Daraja request is made today: there is no API call,
+                no callback endpoint, and no payment record. Payment will be
+                introduced with the quote layer, once an approved merchant
+                arrangement exists.
               </p>
             </div>
             <div className="shrink-0 text-right">
-              <p className={`font-mono text-[10px] uppercase tracking-[0.18em] ${
-                isConfigured(darajaVars) ? "text-[var(--accent)]" : "text-[var(--ink-faint)]"
-              }`}>
-                {isConfigured(darajaVars) ? "Configured" : "Not configured"}
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+                Unavailable
               </p>
               <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-faint)]">
-                {isConfigured(darajaVars) ? "Ready" : "Set environment variables"}
+                Reserved configuration
               </p>
             </div>
           </div>
 
           <div className="mt-6 space-y-3">
-            {darajaVars.map((v) => (
+            {mpesaVars.map((v) => (
               <div key={v.key} className="grid grid-cols-[200px_1fr] items-center gap-4">
                 <div>
                   <p className="font-mono text-[11px] text-[var(--ink)]">{v.label}</p>
@@ -114,12 +119,12 @@ export default async function AdminIntegrationsPage() {
 
           <div className="mt-6 border-t border-[var(--line-on-light)] pt-5">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--ink-muted)]">
-              Environment variables
+              Reserved environment variables
             </p>
             <p className="mt-2 font-mono text-[11px] text-[var(--ink-faint)]">
-              Set these in your <code className="bg-[var(--bone)] px-1 py-0.5">.env.local</code> or hosting environment — not in the browser.
-              <br />
-              Required: DARAJA_CONSUMER_KEY, DARAJA_CONSUMER_SECRET, DARAJA_SHORTCODE, DARAJA_PASSKEY
+              Reference only. These names are read by <code className="bg-[var(--bone)] px-1 py-0.5">src/lib/payment-config.ts</code> and are listed here for
+              documentation. They are not read by this page, and setting them
+              does not enable payments.
             </p>
           </div>
         </section>
@@ -130,14 +135,16 @@ export default async function AdminIntegrationsPage() {
             <div>
               <h2 className="font-display text-xl italic text-[var(--ink)]">Stripe</h2>
               <p className="mt-2 body-on-light">
-                Card and international payment processing. Optional — M-PESA is primary.
+                Card and international payment processing are planned. Not
+                implemented, and not yet required.
               </p>
             </div>
             <div className="shrink-0 text-right">
-              <p className={`font-mono text-[10px] uppercase tracking-[0.18em] ${
-                isConfigured(stripeVars) ? "text-[var(--accent)]" : "text-[var(--ink-faint)]"
-              }`}>
-                {isConfigured(stripeVars) ? "Configured" : "Not configured"}
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+                Unavailable
+              </p>
+              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--ink-faint)]">
+                Reserved configuration
               </p>
             </div>
           </div>
@@ -186,9 +193,10 @@ export default async function AdminIntegrationsPage() {
       <div className="mt-10 border-t border-[var(--line-on-light)] pt-8">
         <p className="label-on-light">Security notice</p>
         <p className="mt-3 max-w-[65ch] body-on-light">
-          Integration secrets (Consumer Key, Passkey, Stripe Secret Key, etc.) are stored as server-side
-          environment variables. They are never exposed to the browser. All payment operations
-          are processed server-side through authenticated endpoints.
+          Integration secrets, should they be introduced, are read from
+          server-side environment variables only and are never exposed to the
+          browser. No payment integration is currently configured or active,
+          and no payment endpoint exists at this time.
         </p>
       </div>
     </div>

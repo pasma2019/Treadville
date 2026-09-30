@@ -3,6 +3,34 @@
 **Status:** COMPLETE  
 **Date:** 2026-09-19
 
+> **Corrected by Payment Phase 0 — read §3 with this notice.**
+>
+> This document describes provider *scaffolding*, not a working payment
+> integration. As of the V1 baseline there is **no payment execution**: no
+> Daraja request, no Stripe request, no webhook or callback route, no payment
+> record written to the `payments` table, and no payment step in checkout.
+>
+> Specifically, the fail-closed logic in §3 must **not** be read as an
+> activation path. `PAYMENT_MPESA_ENABLED=true` (or `PAYMENT_STRIPE_ENABLED=true`)
+> with complete credentials does **not** make payment available to a customer.
+> It only makes provider availability resolvable inside server-side provider
+> code that is not wired to any customer-facing surface.
+>
+> `/checkout` is an enquiry basket only. It does not present a payment method
+> selector, and its rendering is deliberately **not** conditional on these
+> variables. The `payment_provider` form field has been removed, and
+> `submitOrderAction` never read it.
+>
+> This removes a live false-payment-expectation defect: an operator setting
+> `PAYMENT_MPESA_ENABLED=true` previously caused checkout to display provider
+> radios whose selection was silently discarded, so a customer could believe
+> they had chosen to pay and be charged nothing.
+>
+> The provider abstraction, both handler stubs, the `payments` table and the
+> payment types are all retained unchanged as preparation for the quote and
+> payment slices. See `Docs/PHASE19-COMMERCE-FOUNDATION.md` warning: that
+> document is superseded and describes a schema that was never built.
+
 ---
 
 ## 1. Architecture
